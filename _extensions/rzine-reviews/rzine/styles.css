@@ -1,0 +1,10 @@
+/* TODO: Use css to format the HTML output */
+
+.quarto-title-block .quarto-title-banner {
+  background-image: url(logo.png);
+  background-size: 120px;
+  background-position: right;
+  background-repeat: no-repeat;
+  padding-right: 120px;
+  background-origin: content-box;
+}

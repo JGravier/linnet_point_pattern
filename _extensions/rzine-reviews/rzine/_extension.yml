@@ -1,0 +1,56 @@
+title: Rzine
+author: T. Giraud
+version: 1.0.0
+quarto-required: ">=1.5.0"
+contributes:
+  formats:
+    common:
+      toc: true
+    html:
+      theme: styles.scss
+      fontsize: 0.9em
+      css: styles.css
+      tbl-cap-location: margin
+      cap-location: margin
+      csl: universite-de-montreal-apa.csl
+      title-block-banner: "#0c3762"
+      title-block-banner-color: "#f0aa0c"
+      license: "CC BY-SA"
+      reference-section-title: "Bibliographie"
+      date-format: long
+      hover-citations: true
+      hover-footnotes: true
+      fig-format: svg
+      highlight-style: github
+      code-block-background: true
+      code-tools:
+        source: false
+        toggle: false
+        caption: "source"
+      code-copy: true
+      code-summary: "Cacher/Montrer le code"
+      code-fold: false
+      anchor-sections: true
+      link-external-icon: false
+      link-external-newwindow: true
+      crossref:
+      sec-prefix: Section
+      eq-prefix: Equation
+      fig-prefix: Figure
+      tbl-prefix: Table
+      html-math-method: katex
+      bibliography: bibliography.bib  
+      citation:
+        type: article-journal
+        container-title: Rzine
+      lang: fr
+      language: 
+        fr:
+          section-title-footnotes: "Glossaire"
+      include-in-header: 
+        text: |
+          <style>
+          h1 {
+          color: #f0aa0c;
+          }
+          </style>

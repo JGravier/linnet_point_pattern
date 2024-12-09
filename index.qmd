@@ -1,0 +1,78 @@
+---
+title: Titre de l'article
+subtitle: Sous-titre (éventuel) de l'article
+format:
+  rzine-html: default
+lang: fr-FR
+date: "2024-10-10"
+authors:
+  - name: Prénom 1 Nom 1
+    affiliations:
+      - name: Laboratoire d'appartenance 1
+        department: Organisme employeur 1
+        address: Adresse du laboratoire d'appartenance 1
+        city: Ville 1
+        country: Pays 1 
+        postal-code: Code postal 1
+    orcid: Identifiant ORCID 1 (si existe) 
+    url: Page web personnelle 1 (si existe)
+  - name: Prénom 2 Nom 2 (si plusieurs auteurs)
+    affiliations:
+      - name: Laboratoire d'appartenance 2
+        department: Organisme employeur 2
+        address: Adresse du laboratoire d'appartenance 2
+        city: Ville 2       
+        country: Pays 2
+    orcid: Identifiant ORCID 2 (si existe)
+    url: Page web personnelle 2 (si existe)
+doi: 10.888.222
+abstract: |
+    Résumé court de la contribution (50 mots maximum)
+keywords: [ mot-clé 1, mot-clé 2, etc.]
+---
+
+## Modèle Rzine
+
+Il s'agit d'un modèle adapté [Quarto](https://quarto.org/) qui permet de combiner du texte en Markdown et du code exécutable en R.
+
+Les consignes éditoriales et le processus de soumission d'un article à la revue Rzine sont détaillées dans [cette documentation](lien à rajouter) :
+
+- Critères d'acceptation
+- Processus éditorial
+- Modèle Rzine et contenu attendu (YAML, markdown, chunks, références)
+- Données mobilisées pour la démonstration.
+
+
+## Exécuter du code
+
+Cliquer sur **Render** dans l'IDE RStudio générera un article au format HTML suivant le modèle de mise en page Rzin qui contiendra votre article et son code embarqué :
+
+```{r}
+#| fenced: true
+
+1 + 1
+```
+
+
+## Insérer une image
+
+Pour incorporer une figure externe au code R, citable dans le corps du texte (@fig-1). 
+
+```{r fig1}
+#| fenced: true
+#| label: fig-1
+#| fig-cap: "Les articles rzine"
+
+knitr::include_graphics("figures/article_rzine.png")
+```
+
+Ou issu du code (@fig-2)
+
+```{r plot_basique}
+#| fenced: true
+#| label: fig-2
+#| fig-cap: "Un plot de base"
+
+plot(1:10)
+```
+
