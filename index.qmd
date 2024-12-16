@@ -1,14 +1,19 @@
 ---
-title: Titre de l'article
+title: Analyse de semis de points sur un réseau
 subtitle: Sous-titre (éventuel) de l'article
+bibliography: bibliography.bib
+link-citations: true
+---
+nocite: '@*'
+---
 format:
   rzine-html: default
 lang: fr-FR
 date: "2024-10-10"
 authors:
-  - name: Prénom 1 Nom 1
+  - name: Laurent Beauguitte
     affiliations:
-      - name: Laboratoire d'appartenance 1
+      - name: UMR Géographie-cités
         department: Organisme employeur 1
         address: Adresse du laboratoire d'appartenance 1
         city: Ville 1
@@ -16,9 +21,9 @@ authors:
         postal-code: Code postal 1
     orcid: Identifiant ORCID 1 (si existe) 
     url: Page web personnelle 1 (si existe)
-  - name: Prénom 2 Nom 2 (si plusieurs auteurs)
+  - name: Julie Gravier
     affiliations:
-      - name: Laboratoire d'appartenance 2
+      - name: UMR Théma
         department: Organisme employeur 2
         address: Adresse du laboratoire d'appartenance 2
         city: Ville 2       
@@ -31,9 +36,9 @@ abstract: |
 keywords: [ mot-clé 1, mot-clé 2, etc.]
 ---
 
-## Modèle Rzine
+## Introduction
 
-Il s'agit d'un modèle adapté [Quarto](https://quarto.org/) qui permet de combiner du texte en Markdown et du code exécutable en R.
+<!---Il s'agit d'un modèle adapté [Quarto](https://quarto.org/) qui permet de combiner du texte en Markdown et du code exécutable en R.
 
 Les consignes éditoriales et le processus de soumission d'un article à la revue Rzine sont détaillées dans [cette documentation](lien à rajouter) :
 
@@ -41,7 +46,6 @@ Les consignes éditoriales et le processus de soumission d'un article à la revu
 - Processus éditorial
 - Modèle Rzine et contenu attendu (YAML, markdown, chunks, références)
 - Données mobilisées pour la démonstration.
-
 
 ## Exécuter du code
 
@@ -75,4 +79,41 @@ Ou issu du code (@fig-2)
 
 plot(1:10)
 ```
+--->
 
+## Définitions et questions de recherche
+
+## Le package linnet
+
+## Préparer ses données
+
+La première étape consiste à créer un objet <tt>linnet</tt> (*linear network*) à l'aide de deux fichiers : un fichier correspondant aux sommets (intersections et extrémités des liens), un fichier correspondant aux liens entre ces sommets. Le fichier des sommets comprend trois colonnes correspondant au nom et aux coordonnées de chaque sommet ; le fichier des liens comprend deux colonnes correspondant aux deux extrémités de chaque lien. L'orientation des liens n'est pas prise en compte : un lien *a-b* implique nécessairement un lien *b-a*, il n'est donc pas utile d'avoir deux lignes différentes.
+
+Créer un objet lpp (*linear point pattern*) suppose d'ajouter à ce réseau planaire un semis de points. Le fichier correspondant comprend *a minima* les coordonnées de chacun des points ; il peut comprendre autant de colonnes supplémentaires que d'attributs, les attributs pouvant être de type différents (entiers, flottants, chaîne de caractère, booléen).
+
+Le jeu de données utilisé tout au long de ce tutoriel est issu du projet XXX. Il recense les épiceries et les bijouteries à Paris en XXX.
+
+## Propriétés des objets linnet et lpp
+
+
+
+
+## Analyser les distances
+
+### Analyser un semis de points
+
+### Analyser la relation entre deux semis de points
+
+## Modéliser la géographie du semis de points
+
+### Analyser un semis de points
+
+### Analyser la relation entre deux semis de points
+
+## Intérêts et limites du package
+
+## Pour aller plus loin
+
+Le manuel le plus complet et le plus clair concernant l'analyse de semis de points sur un réseau est celui signé Okabe et Sugihara [-@okabe2012] ; toutes les méthodes abordées par les auteurs ne peuvent être mises en oeuvre avec <tt>linnet</tt> (autocorrélation spatiale, modèle de Huff, etc.). L'article de Baddeley et Turner consacré à la première version du *package* [-@baddeley2005] gagne à être complété par le chapitre 17 de l'ouvrage de Baddeley *et al.* [-@baddeley2012]. À compléter par une mise à jour bibliographique récente co-signé du même Baddeley [-@baddeley2021].
+
+## Références
