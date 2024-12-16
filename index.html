@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="dcterms.date" content="2024-10-10">
-<meta name="keywords" content="mot-clé 1, mot-clé 2, etc.">
+<meta name="keywords" content="semis de points, réseau spatial, analyse spatiale">
 
 <title>Analyse de semis de points sur un réseau</title>
 <style>
@@ -145,7 +145,7 @@ color: #f0aa0c;
   <div>
     <div class="keywords">
       <div class="block-title">Mots clés</div>
-      <p>mot-clé 1, mot-clé 2, etc.</p>
+      <p>semis de points, réseau spatial, analyse spatiale</p>
     </div>
   </div>
   
@@ -155,16 +155,16 @@ color: #f0aa0c;
     <h2 id="toc-title">Table des matières</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#définitions-et-questions-de-recherche" id="toc-définitions-et-questions-de-recherche" class="nav-link" data-scroll-target="#définitions-et-questions-de-recherche">Définitions et questions de recherche</a></li>
+  <li><a href="#définitions-et-questions-de-recherche" id="toc-définitions-et-questions-de-recherche" class="nav-link active" data-scroll-target="#définitions-et-questions-de-recherche">Définitions et questions de recherche</a></li>
   <li><a href="#le-package-linnet" id="toc-le-package-linnet" class="nav-link" data-scroll-target="#le-package-linnet">Le package linnet</a></li>
   <li><a href="#préparer-ses-données" id="toc-préparer-ses-données" class="nav-link" data-scroll-target="#préparer-ses-données">Préparer ses données</a></li>
   <li><a href="#propriétés-des-objets-linnet-et-lpp" id="toc-propriétés-des-objets-linnet-et-lpp" class="nav-link" data-scroll-target="#propriétés-des-objets-linnet-et-lpp">Propriétés des objets linnet et lpp</a></li>
-  <li><a href="#analyser-les-distances" id="toc-analyser-les-distances" class="nav-link" data-scroll-target="#analyser-les-distances">Analyser les distances</a>
+  <li><a href="#étudier-les-voisinages" id="toc-étudier-les-voisinages" class="nav-link" data-scroll-target="#étudier-les-voisinages">Étudier les voisinages</a>
   <ul class="collapse">
   <li><a href="#analyser-un-semis-de-points" id="toc-analyser-un-semis-de-points" class="nav-link" data-scroll-target="#analyser-un-semis-de-points">Analyser un semis de points</a></li>
   <li><a href="#analyser-la-relation-entre-deux-semis-de-points" id="toc-analyser-la-relation-entre-deux-semis-de-points" class="nav-link" data-scroll-target="#analyser-la-relation-entre-deux-semis-de-points">Analyser la relation entre deux semis de points</a></li>
   </ul></li>
+  <li><a href="#rechercher-les-clusters" id="toc-rechercher-les-clusters" class="nav-link" data-scroll-target="#rechercher-les-clusters">Rechercher les clusters</a></li>
   <li><a href="#modéliser-la-géographie-du-semis-de-points" id="toc-modéliser-la-géographie-du-semis-de-points" class="nav-link" data-scroll-target="#modéliser-la-géographie-du-semis-de-points">Modéliser la géographie du semis de points</a>
   <ul class="collapse">
   <li><a href="#analyser-un-semis-de-points-1" id="toc-analyser-un-semis-de-points-1" class="nav-link" data-scroll-target="#analyser-un-semis-de-points-1">Analyser un semis de points</a></li>
@@ -184,8 +184,6 @@ color: #f0aa0c;
 
 
 <p>nocite: ‘<span class="citation" data-cites="*"></span>’</p>
-<section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <!---Il s'agit d'un modèle adapté [Quarto](https://quarto.org/) qui permet de combiner du texte en Markdown et du code exécutable en R.
 
 Les consignes éditoriales et le processus de soumission d'un article à la revue Rzine sont détaillées dans [cette documentation](lien à rajouter) :
@@ -256,40 +254,83 @@ plot(1:10)
 
 
 --->
-</section>
 <section id="définitions-et-questions-de-recherche" class="level2">
 <h2 class="anchored" data-anchor-id="définitions-et-questions-de-recherche">Définitions et questions de recherche</h2>
+<p>L’analyse d’un semis de points sur un réseau désigne un ensemble de méthodes statistiques permettant de caractériser des événements ponctuels, appelés points dans la suite du texte, prenant place sur un réseau spatial planaire, appelé réseau dans la suite du texte.</p>
+<p>Un réseau planaire est constitué par un ensemble de sommets et un ensemble de liens entre ces sommets. Tout sommet est soit une intersection soit une extremité. Chaque sommet est caractérisé par un couple de coordonnées, chaque lien est caractérisée par une distance. Un lien peut par ailleurs être porteur d’attributs supplémentaires.</p>
+<p>Deux des sujets les plus traités dans la littérature sont les accidents de la circulation et les actes criminels commis dans l’espace public. Dans les deux cas, des événements dramatiques pouvant être caractérisés par des attributs de types différents se produisent dans un espace pouvant être modélisé sous forme de réseau planaire (réseau routier, réseau viaire). Il est possible d’imaginer d’autres thématiques, qu’il s’agisse de l’offre commerciale dans un espace donné, du collage militant ou publicitaire, de la présence d’équipements sur l’espace public (bancs, toilettes), etc.</p>
+<p>Trois grands types de question sont généralement posées à ces données :</p>
+<ul>
+<li>les points sont-ils significativement proches (ou éloignés) les uns des autres (étude du voisinage) ?</li>
+<li>existe-il des endroits où la concentration des points est notable (<em>hot spots</em>) ?</li>
+<li>quel modèle statistique est susceptible d’expliquer la géographie de ce semis de points ?</li>
+</ul>
 </section>
 <section id="le-package-linnet" class="level2">
 <h2 class="anchored" data-anchor-id="le-package-linnet">Le package linnet</h2>
+<p><tt>linnet</tt> est un sous-<em>package</em> du <em>package</em> <tt>spatstat</tt> consacré à la statistique spatiale et notamment à l’analyse de semis de points.</p>
 </section>
 <section id="préparer-ses-données" class="level2">
 <h2 class="anchored" data-anchor-id="préparer-ses-données">Préparer ses données</h2>
 <p>La première étape consiste à créer un objet <tt>linnet</tt> (<em>linear network</em>) à l’aide de deux fichiers : un fichier correspondant aux sommets (intersections et extrémités des liens), un fichier correspondant aux liens entre ces sommets. Le fichier des sommets comprend trois colonnes correspondant au nom et aux coordonnées de chaque sommet ; le fichier des liens comprend deux colonnes correspondant aux deux extrémités de chaque lien. L’orientation des liens n’est pas prise en compte : un lien <em>a-b</em> implique nécessairement un lien <em>b-a</em>, il n’est donc pas utile d’avoir deux lignes différentes.</p>
 <p>Créer un objet lpp (<em>linear point pattern</em>) suppose d’ajouter à ce réseau planaire un semis de points. Le fichier correspondant comprend <em>a minima</em> les coordonnées de chacun des points ; il peut comprendre autant de colonnes supplémentaires que d’attributs, les attributs pouvant être de type différents (entiers, flottants, chaîne de caractère, booléen).</p>
 <p>Le jeu de données utilisé tout au long de ce tutoriel est issu du projet XXX. Il recense les épiceries et les bijouteries à Paris en XXX.</p>
+<p>Le script suivant permet l’importation des données et leur transformation en objet linnet puis en objet lpp.</p>
 </section>
 <section id="propriétés-des-objets-linnet-et-lpp" class="level2">
 <h2 class="anchored" data-anchor-id="propriétés-des-objets-linnet-et-lpp">Propriétés des objets linnet et lpp</h2>
 <p>Un certain nombre de fonctions permettent de connaître les propriétés basiques du réseau viaire d’une part, du semis de points de l’autre.</p>
 <p>Sur l’objet <tt>linnet</tt> <em>N</em>, il est possible notamment de connaître :</p>
 <ul>
+<li>le nombre de sommets et de liens</li>
+<li>le degré de chaque sommet (<tt>vertexdegree(N)</tt>)</li>
 <li>la longueur totale du réseau (<tt>volume(N)</tt>)</li>
 <li>la distance moyenne entre sommets (<tt></tt>)</li>
 <li>la distance entre toutes les paires de sommets (<tt>pairdist(N)</tt>)</li>
-<li>le degré de chaque sommet (<tt>vertexdegree(N)</tt>)</li>
 <li>le diamètre du réseau planaire (<tt>diameter(N)</tt>)</li>
+<li>le rayon du réseau (distance entre le ou les sommets centraux et les sommets les plus périphériques) (<tt>boundingradius(N)</tt>)</li>
 </ul>
-<p>Toutes ces distances sont données en fonction de l’unité de mesure (mètres, kilomètres, etc.). Il ne s’agit <strong>jamais</strong> de la distance topologique (nombre de liens) entre sommets. Cette remarque s’applique aux calculs effectués sur le semis de points.</p>
+<p>La fonction <tt>summary(N)</tt> permet d’obtenir la plupart de ces informations (nombre de sommets et de liens, longueur totale, diamètre et rayon, degré maximal). Elle permet également de savoir si le réseau est connexe ou non.</p>
+<p>Il est enfin possible de visualiser ce réseau à l’aide de la fonction <tt>plot</tt>.</p>
+<p>Toutes les distances sont données en fonction de l’unité de mesure (mètres, kilomètres, etc.). Il ne s’agit <strong>jamais</strong> de la distance topologique (nombre de liens) entre sommets. Cette remarque s’applique aux calculs effectués sur le semis de points.</p>
+<p>Sur l’objet <tt>lpp</tt> <em>X</em>, les principales mesures proposées sont les suivantes :</p>
+<ul>
+<li>nombre de points (<tt>npoints(X)</tt>)</li>
+<li>nombre de points par unité de mesure (<tt>intensity(X)</tt>)</li>
+<li>matrice des plus courtes distances entre points (<tt>pairdist(X)</tt>)</li>
+<li>distance au plus proche voisin (<tt>nndist(X)</tt>)</li>
+<li>identifiant du plus proche voisin (<tt>nnwhich(X)</tt>)</li>
+</ul>
+<p>La fonction <tt>summary(X)</tt> permet là encore d’obtenir certaines de ces informations (nombre de points, nombre de points par unité), elle rappelle les caractéristiques principales du réseau (nombre de sommets, de liens et volume total) et enfin, elle fournit quartiles, médiane et moyenne des attributs numériques des points.</p>
+<p>Le script qui suit permet de calculer ces différents éléments sur le semis des épiceries et des bijouteries à Paris.</p>
+<p>Si l’on exécute la fonction <tt>plot(X)</tt>, par défaut <tt>linnet</tt> propose un nombre de visualisations égal au nombre d’attributs des points, ces attributs étant appelés <tt>marks</tt>. Si je souhaite visualiser la répartion d’un attribut <em>Z</em> donné , j’utilise la syntaxe <tt>plot(X, which.marks=‘Z’)</tt>.</p>
+<p><strong>Script d’exemple</strong></p>
 </section>
-<section id="analyser-les-distances" class="level2">
-<h2 class="anchored" data-anchor-id="analyser-les-distances">Analyser les distances</h2>
+<section id="étudier-les-voisinages" class="level2">
+<h2 class="anchored" data-anchor-id="étudier-les-voisinages">Étudier les voisinages</h2>
+<p>Différences d’approche entre fonction K et méthode du plus proche voisin</p>
+<p>Questions selon qu’on étudie un ou deux semis de points</p>
+<p>Quelques points de comparaison :</p>
+<ul>
+<li>processus poissonien : <tt>rpoislpp</tt></li>
+<li>processus aléatoire uniforme : <tt>runiflpp</tt></li>
+<li>processus aléatoire : <tt>rlpp</tt></li>
+</ul>
 <section id="analyser-un-semis-de-points" class="level3">
 <h3 class="anchored" data-anchor-id="analyser-un-semis-de-points">Analyser un semis de points</h3>
+<p>Fonctions:</p>
+<p>linearK (plus court chemin) et linearKinhom (pcc et non homogène)</p>
+<p>linearKEuclid (distance euclidienne), linearKEuclidInhom (distance euclidienne et non homogène)</p>
 </section>
 <section id="analyser-la-relation-entre-deux-semis-de-points" class="level3">
 <h3 class="anchored" data-anchor-id="analyser-la-relation-entre-deux-semis-de-points">Analyser la relation entre deux semis de points</h3>
+<p>Fonctions: linearKcross, linearKdot</p>
 </section>
+</section>
+<section id="rechercher-les-clusters" class="level2">
+<h2 class="anchored" data-anchor-id="rechercher-les-clusters">Rechercher les clusters</h2>
+<p>Plusieurs méthodes sont disponibles pour contrôler si le semis de points étudié s’écarte d’une répartition aléatoire pour présenter soit une répartition régulière soit une répartition concentrée sur le réseau.</p>
+<p>Fonctions: density</p>
 </section>
 <section id="modéliser-la-géographie-du-semis-de-points" class="level2">
 <h2 class="anchored" data-anchor-id="modéliser-la-géographie-du-semis-de-points">Modéliser la géographie du semis de points</h2>

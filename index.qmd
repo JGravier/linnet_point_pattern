@@ -33,10 +33,8 @@ authors:
 doi: 10.888.222
 abstract: |
     Résumé court de la contribution (50 mots maximum)
-keywords: [ mot-clé 1, mot-clé 2, etc.]
+keywords: [semis de points, réseau spatial, analyse spatiale]
 ---
-
-## Introduction
 
 <!---Il s'agit d'un modèle adapté [Quarto](https://quarto.org/) qui permet de combiner du texte en Markdown et du code exécutable en R.
 
@@ -83,7 +81,21 @@ plot(1:10)
 
 ## Définitions et questions de recherche
 
+L'analyse d'un semis de points sur un réseau désigne un ensemble de méthodes statistiques permettant de caractériser des événements ponctuels, appelés points dans la suite du texte, prenant place sur un réseau spatial planaire, appelé réseau dans la suite du texte. 
+
+Un réseau planaire est constitué par un ensemble de sommets et un ensemble de liens entre ces sommets. Tout sommet est soit une intersection soit une extremité. Chaque sommet est caractérisé par un couple de coordonnées, chaque lien est caractérisée par une distance. Un lien peut par ailleurs être porteur d'attributs supplémentaires.
+
+Deux des sujets les plus traités dans la littérature sont les accidents de la circulation et les actes criminels commis dans l'espace public. Dans les deux cas, des événements dramatiques pouvant être caractérisés par des attributs de types différents se produisent dans un espace pouvant être modélisé sous forme de réseau planaire (réseau routier, réseau viaire). Il est possible d'imaginer d'autres thématiques, qu'il s'agisse de l'offre commerciale dans un espace donné, du collage militant ou publicitaire, de la présence d'équipements sur l'espace public (bancs, toilettes), etc.
+
+Trois  grands types de question sont généralement posées à ces données :
+
+* les points sont-ils significativement proches (ou éloignés) les uns des autres (étude du voisinage) ?
+* existe-il des endroits où la concentration des points est notable (*hot spots*) ?
+* quel modèle statistique est susceptible d'expliquer la géographie de ce semis de points ?
+
 ## Le package linnet
+
+<tt>linnet</tt> est un sous-*package* du *package* <tt>spatstat</tt> consacré à la statistique spatiale et notamment à l'analyse de semis de points. 
 
 ## Préparer ses données
 
@@ -93,6 +105,8 @@ Créer un objet lpp (*linear point pattern*) suppose d'ajouter à ce réseau pla
 
 Le jeu de données utilisé tout au long de ce tutoriel est issu du projet XXX. Il recense les épiceries et les bijouteries à Paris en XXX.
 
+Le script suivant permet l'importation des données et leur transformation en objet linnet puis en objet lpp.
+
 ## Propriétés des objets linnet et lpp
 
 Un certain nombre de fonctions permettent de connaître les propriétés basiques du réseau viaire d'une part, du semis de points de l'autre.
@@ -100,25 +114,66 @@ Un certain nombre de fonctions permettent de connaître les propriétés basique
 Sur l'objet <tt>linnet</tt> *N*, il est possible notamment de connaître :
 
 * le nombre de sommets et de liens
+* le degré de chaque sommet (<tt>vertexdegree(N)</tt>)
 * la longueur totale du réseau (<tt>volume(N)</tt>)
 * la distance moyenne entre sommets (<tt></tt>)
 * la distance entre toutes les paires de sommets (<tt>pairdist(N)</tt>)
-* le degré de chaque sommet (<tt>vertexdegree(N)</tt>)
 * le diamètre du réseau planaire (<tt>diameter(N)</tt>)
+* le rayon du réseau (distance entre le ou les sommets centraux et les sommets les plus périphériques) (<tt>boundingradius(N)</tt>)
 
-La fonction <tt>summary(N)</tt> permet d'obtenir...
+La fonction <tt>summary(N)</tt> permet d'obtenir la plupart de ces informations (nombre de sommets et de liens, longueur totale, diamètre et rayon, degré maximal). Elle permet également de savoir si le réseau est connexe ou non.
 
 Il est enfin possible de visualiser ce réseau à l'aide de la fonction <tt>plot</tt>.
 
-
 Toutes les distances sont données en fonction de l'unité de mesure (mètres, kilomètres, etc.). Il ne s'agit **jamais** de la distance topologique (nombre de liens) entre sommets. Cette remarque s'applique aux calculs effectués sur le semis de points.
 
+Sur l'objet <tt>lpp</tt> *X*, les principales mesures proposées sont les suivantes :
 
-## Analyser les distances
+* nombre de points (<tt>npoints(X)</tt>)
+* nombre de points par unité de mesure (<tt>intensity(X)</tt>)
+* matrice des plus courtes distances entre points (<tt>pairdist(X)</tt>)
+* distance au plus proche voisin (<tt>nndist(X)</tt>)
+* identifiant du plus proche voisin (<tt>nnwhich(X)</tt>)
+
+La fonction <tt>summary(X)</tt> permet là encore d'obtenir certaines de ces informations (nombre de points, nombre de points par unité), elle rappelle les caractéristiques principales du réseau (nombre de sommets, de liens et volume total) et enfin, elle fournit quartiles, médiane et moyenne des attributs numériques des points.
+
+Le script qui suit permet de calculer ces différents éléments sur le semis des épiceries et des bijouteries à Paris.
+
+Si l'on exécute la fonction <tt>plot(X)</tt>, par défaut <tt>linnet</tt> propose un nombre de visualisations égal au nombre d'attributs des points, ces attributs étant appelés  <tt>marks</tt>. Si je souhaite visualiser la répartion d'un attribut *Z* donné , j'utilise la syntaxe <tt>plot(X, which.marks='Z')</tt>.
+
+**Script d'exemple**
+
+## Étudier les voisinages
+
+Différences d'approche entre fonction K et méthode du plus proche voisin
+
+Questions selon qu'on étudie un ou deux semis de points
+
+Quelques points de comparaison :
+
+* processus poissonien : <tt>rpoislpp</tt>
+* processus aléatoire uniforme : <tt>runiflpp</tt>
+* processus aléatoire : <tt>rlpp</tt>
+
+
 
 ### Analyser un semis de points
 
+Fonctions: 
+
+linearK (plus court chemin) et linearKinhom (pcc et non homogène)
+
+linearKEuclid (distance euclidienne), linearKEuclidInhom (distance euclidienne et non homogène)
+
 ### Analyser la relation entre deux semis de points
+
+Fonctions: linearKcross, linearKdot
+
+## Rechercher les clusters
+
+Plusieurs méthodes sont disponibles pour contrôler si le semis de points étudié s'écarte d'une répartition aléatoire pour présenter soit une répartition régulière soit une répartition concentrée sur le réseau. 
+
+Fonctions: density
 
 ## Modéliser la géographie du semis de points
 
