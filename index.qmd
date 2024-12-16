@@ -95,7 +95,23 @@ Le jeu de données utilisé tout au long de ce tutoriel est issu du projet XXX. 
 
 ## Propriétés des objets linnet et lpp
 
+Un certain nombre de fonctions permettent de connaître les propriétés basiques du réseau viaire d'une part, du semis de points de l'autre.
 
+Sur l'objet <tt>linnet</tt> *N*, il est possible notamment de connaître :
+
+* le nombre de sommets et de liens
+* la longueur totale du réseau (<tt>volume(N)</tt>)
+* la distance moyenne entre sommets (<tt></tt>)
+* la distance entre toutes les paires de sommets (<tt>pairdist(N)</tt>)
+* le degré de chaque sommet (<tt>vertexdegree(N)</tt>)
+* le diamètre du réseau planaire (<tt>diameter(N)</tt>)
+
+La fonction <tt>summary(N)</tt> permet d'obtenir...
+
+Il est enfin possible de visualiser ce réseau à l'aide de la fonction <tt>plot</tt>.
+
+
+Toutes les distances sont données en fonction de l'unité de mesure (mètres, kilomètres, etc.). Il ne s'agit **jamais** de la distance topologique (nombre de liens) entre sommets. Cette remarque s'applique aux calculs effectués sur le semis de points.
 
 
 ## Analyser les distances

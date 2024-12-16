@@ -271,6 +271,16 @@ plot(1:10)
 </section>
 <section id="propriétés-des-objets-linnet-et-lpp" class="level2">
 <h2 class="anchored" data-anchor-id="propriétés-des-objets-linnet-et-lpp">Propriétés des objets linnet et lpp</h2>
+<p>Un certain nombre de fonctions permettent de connaître les propriétés basiques du réseau viaire d’une part, du semis de points de l’autre.</p>
+<p>Sur l’objet <tt>linnet</tt> <em>N</em>, il est possible notamment de connaître :</p>
+<ul>
+<li>la longueur totale du réseau (<tt>volume(N)</tt>)</li>
+<li>la distance moyenne entre sommets (<tt></tt>)</li>
+<li>la distance entre toutes les paires de sommets (<tt>pairdist(N)</tt>)</li>
+<li>le degré de chaque sommet (<tt>vertexdegree(N)</tt>)</li>
+<li>le diamètre du réseau planaire (<tt>diameter(N)</tt>)</li>
+</ul>
+<p>Toutes ces distances sont données en fonction de l’unité de mesure (mètres, kilomètres, etc.). Il ne s’agit <strong>jamais</strong> de la distance topologique (nombre de liens) entre sommets. Cette remarque s’applique aux calculs effectués sur le semis de points.</p>
 </section>
 <section id="analyser-les-distances" class="level2">
 <h2 class="anchored" data-anchor-id="analyser-les-distances">Analyser les distances</h2>
