@@ -22,6 +22,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 /* CSS for citations */
 div.csl-bib-body { }
 div.csl-entry {
@@ -274,25 +308,107 @@ plot(1:10)
 <h2 class="anchored" data-anchor-id="préparer-ses-données">Préparer ses données</h2>
 <p>La première étape consiste à créer un objet <tt>linnet</tt> (<em>linear network</em>) à l’aide de deux fichiers : un fichier correspondant aux sommets (intersections et extrémités des liens), un fichier correspondant aux liens entre ces sommets. Le fichier des sommets comprend trois colonnes correspondant au nom et aux coordonnées de chaque sommet ; le fichier des liens comprend deux colonnes correspondant aux deux extrémités de chaque lien. L’orientation des liens n’est pas prise en compte : un lien <em>a-b</em> implique nécessairement un lien <em>b-a</em>, il n’est donc pas utile d’avoir deux lignes différentes.</p>
 <p>Créer un objet lpp (<em>linear point pattern</em>) suppose d’ajouter à ce réseau planaire un semis de points. Le fichier correspondant comprend <em>a minima</em> les coordonnées de chacun des points ; il peut comprendre autant de colonnes supplémentaires que d’attributs, les attributs pouvant être de type différents (entiers, flottants, chaîne de caractère, booléen).</p>
-<p>Le jeu de données utilisé tout au long de ce tutoriel est issu du projet XXX. Il recense les épiceries et les bijouteries à Paris en XXX.</p>
+<p>Le jeu de données utilisé tout au long de ce tutoriel est issu du projet XXX. Il recense les épiceries et les bijouteries à Paris en 1839.</p>
 <p>Le script suivant permet l’importation des données et leur transformation en objet linnet puis en objet lpp.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#chargement des packages</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spatstat)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># import du réseau viaire parisien en 1838</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>paris <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">'data/1836_jacoubet.shp'</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading layer `1836_jacoubet' from data source 
+  `C:\Users\Laurent\Documents\linnet_point_pattern\data\1836_jacoubet.shp' 
+  using driver `ESRI Shapefile'
+Simple feature collection with 4266 features and 2 fields
+Geometry type: LINESTRING
+Dimension:     XY
+Bounding box:  xmin: 647640.1 ymin: 6859014 xmax: 656138.1 ymax: 6865167
+Projected CRS: RGF93 Lambert 93</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import des semis de points</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>dataG <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">'data/grocers_1839.gpkg'</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading layer `grocers_1839' from data source 
+  `C:\Users\Laurent\Documents\linnet_point_pattern\data\grocers_1839.gpkg' 
+  using driver `GPKG'
+Simple feature collection with 1028 features and 4 fields
+Geometry type: POINT
+Dimension:     XY
+Bounding box:  xmin: 648447.8 ymin: 6859096 xmax: 655618 ymax: 6865142
+Projected CRS: +proj=lcc +lat_0=46.5 +lon_0=3 +lat_1=49 +lat_2=44 +x_0=700000 +y_0=6600000 +ellps=GRS80 +units=m +no_defs</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>dataJ <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">'data/jewellers_1839.gpkg'</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading layer `jewellers_1839' from data source 
+  `C:\Users\Laurent\Documents\linnet_point_pattern\data\jewellers_1839.gpkg' 
+  using driver `GPKG'
+Simple feature collection with 341 features and 4 fields
+Geometry type: POINT
+Dimension:     XY
+Bounding box:  xmin: 648631.2 ymin: 6860188 xmax: 654177.7 ymax: 6865008
+Projected CRS: +proj=lcc +lat_0=46.5 +lon_0=3 +lat_1=49 +lat_2=44 +x_0=700000 +y_0=6600000 +ellps=GRS80 +units=m +no_defs</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># contrôle visuel des objets importés</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(paris<span class="sc">$</span>geometry)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dataG<span class="sc">$</span>geom, <span class="at">pch =</span> <span class="dv">15</span>, <span class="at">col=</span><span class="st">'blue'</span>, <span class="at">add=</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dataJ<span class="sc">$</span>geom, <span class="at">pch =</span> <span class="dv">15</span>, <span class="at">col=</span><span class="st">'red'</span>, <span class="at">bg=</span><span class="st">'red'</span>, <span class="at">add=</span><span class="cn">TRUE</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-2-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>La transformation des semis de points en objets spatstat se fait à l’aide de la fonction <code>as.ppp</code> (planar point pattern). Pour transformer le réseau viaire en objet <code>linnet</code>, deux étapes sont nécessaires : transformer le shapefile en objet <code>psp</code> (planar segment pattern) puis en objet <code>linnet</code> (linear network). La fonction <code>summary</code> permet de connaître les principales propriétés des objets créés.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ppG <span class="ot">&lt;-</span> <span class="fu">as.ppp</span>(<span class="fu">st_geometry</span>(dataG))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>ppJ <span class="ot">&lt;-</span> <span class="fu">as.ppp</span>(<span class="fu">st_geometry</span>(dataJ))</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>Paris <span class="ot">&lt;-</span> <span class="fu">as.psp</span>(<span class="fu">st_geometry</span>(paris))</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>Paris <span class="ot">&lt;-</span> <span class="fu">as.linnet</span>(Paris)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(Paris)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Linear network with 7237 vertices and 8730 lines
+Total length 461193.7 units
+Maximum vertex degree: 7
+[Non-sparse matrix representation]
+Network is connected
+Diameter: 10017.93 units
+Bounding radius: 5058.732 units
+Numerical tolerance: 1.673106e-07 units
+Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</code></pre>
+</div>
+</div>
+<p>Concernant les informations sur le réseau viaire, la fonction <code>summary</code> renvoie :</p>
+<ul>
+<li>le nombre de sommets et de liens</li>
+<li>la longueur totale du réseau (total length)</li>
+<li>le degré maximal (maximum vertex degree)</li>
+<li>la connexité du réseau</li>
+<li>le diamètre</li>
+<li>le rayon</li>
+</ul>
+<p>Longueur totale, diamètre et rayon se basent sur la distance géographique sur le réseau planaire et non sur la distance topologique. Le diamètre donne donc ici la longueur en mètres, et non en nombre de liens, du plus long des plus courts chemins. De manière générale, toutes les méthodes implémentées dans <code>linnet</code> se basents sur les distances géographiques sur le réseau planaire étudié.</p>
 </section>
 <section id="propriétés-des-objets-linnet-et-lpp" class="level2">
 <h2 class="anchored" data-anchor-id="propriétés-des-objets-linnet-et-lpp">Propriétés des objets linnet et lpp</h2>
-<p>Un certain nombre de fonctions permettent de connaître les propriétés basiques du réseau viaire d’une part, du semis de points de l’autre.</p>
-<p>Sur l’objet <tt>linnet</tt> <em>N</em>, il est possible notamment de connaître :</p>
+<p>Si on souhaite utiliser une mesure précise, il est possible d’obtenir ces informations avec des fonctions spécifiques :</p>
 <ul>
-<li>le nombre de sommets et de liens</li>
-<li>le degré de chaque sommet (<tt>vertexdegree(N)</tt>)</li>
-<li>la longueur totale du réseau (<tt>volume(N)</tt>)</li>
-<li>la distance moyenne entre sommets (<tt></tt>)</li>
-<li>la distance entre toutes les paires de sommets (<tt>pairdist(N)</tt>)</li>
-<li>le diamètre du réseau planaire (<tt>diameter(N)</tt>)</li>
-<li>le rayon du réseau (distance entre le ou les sommets centraux et les sommets les plus périphériques) (<tt>boundingradius(N)</tt>)</li>
+<li>nombre de sommets (<code>nvertices</code>)</li>
+<li>nombre de liens (<code>nsegments</code>)</li>
+<li>longueur totale du réseau (<tt>volume</tt>)</li>
+<li>diamètre du réseau planaire (<tt>diameter</tt>)</li>
+<li>rayon du réseau (distance entre le ou les sommets centraux et les sommets les plus périphériques) (<code>boundingradius</code>)</li>
 </ul>
-<p>La fonction <tt>summary(N)</tt> permet d’obtenir la plupart de ces informations (nombre de sommets et de liens, longueur totale, diamètre et rayon, degré maximal). Elle permet également de savoir si le réseau est connexe ou non.</p>
-<p>Il est enfin possible de visualiser ce réseau à l’aide de la fonction <tt>plot</tt>.</p>
-<p>Toutes les distances sont données en fonction de l’unité de mesure (mètres, kilomètres, etc.). Il ne s’agit <strong>jamais</strong> de la distance topologique (nombre de liens) entre sommets. Cette remarque s’applique aux calculs effectués sur le semis de points.</p>
+<p>D’autres mesures sont également disponibles :</p>
+<ul>
+<li>degré de chaque sommet (vertexdegree)</li>
+<li>distance entre toutes les paires de sommets (<tt>pairdist(N)</tt>)</li>
+</ul>
 <p>Sur l’objet <tt>lpp</tt> <em>X</em>, les principales mesures proposées sont les suivantes :</p>
 <ul>
 <li>nombre de points (<tt>npoints(X)</tt>)</li>
@@ -301,7 +417,7 @@ plot(1:10)
 <li>distance au plus proche voisin (<tt>nndist(X)</tt>)</li>
 <li>identifiant du plus proche voisin (<tt>nnwhich(X)</tt>)</li>
 </ul>
-<p>La fonction <tt>summary(X)</tt> permet là encore d’obtenir certaines de ces informations (nombre de points, nombre de points par unité), elle rappelle les caractéristiques principales du réseau (nombre de sommets, de liens et volume total) et enfin, elle fournit quartiles, médiane et moyenne des attributs numériques des points.</p>
+<p>La fonction <tt>summary(X)</tt> permet là encore d’obtenir certaines de ces informations (nombre de points, nombre de points par unité), elle rappelle les caractéristiques principales du réseau (nombre de sommets, de liens et volume total) et enfin, elle fournit quartiles, médiane et moyenne des éventuels attributs numériques des points.</p>
 <p>Le script qui suit permet de calculer ces différents éléments sur le semis des épiceries et des bijouteries à Paris.</p>
 <p>Si l’on exécute la fonction <tt>plot(X)</tt>, par défaut <tt>linnet</tt> propose un nombre de visualisations égal au nombre d’attributs des points, ces attributs étant appelés <tt>marks</tt>. Si je souhaite visualiser la répartion d’un attribut <em>Z</em> donné , j’utilise la syntaxe <tt>plot(X, which.marks=‘Z’)</tt>.</p>
 <p><strong>Script d’exemple</strong></p>

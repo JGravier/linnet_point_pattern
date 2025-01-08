@@ -103,29 +103,65 @@ La première étape consiste à créer un objet <tt>linnet</tt> (*linear network
 
 Créer un objet lpp (*linear point pattern*) suppose d'ajouter à ce réseau planaire un semis de points. Le fichier correspondant comprend *a minima* les coordonnées de chacun des points ; il peut comprendre autant de colonnes supplémentaires que d'attributs, les attributs pouvant être de type différents (entiers, flottants, chaîne de caractère, booléen).
 
-Le jeu de données utilisé tout au long de ce tutoriel est issu du projet XXX. Il recense les épiceries et les bijouteries à Paris en XXX.
+Le jeu de données utilisé tout au long de ce tutoriel est issu du projet XXX. Il recense les épiceries et les bijouteries à Paris en 1839.
 
 Le script suivant permet l'importation des données et leur transformation en objet linnet puis en objet lpp.
 
-## Propriétés des objets linnet et lpp
+```{r, warning=FALSE, message=FALSE}
+#chargement des packages
+library(sf)
+library(spatstat)
 
-Un certain nombre de fonctions permettent de connaître les propriétés basiques du réseau viaire d'une part, du semis de points de l'autre.
+# import du réseau viaire parisien en 1838
+paris <- st_read('data/1836_jacoubet.shp')
 
-Sur l'objet <tt>linnet</tt> *N*, il est possible notamment de connaître :
+# import des semis de points
+dataG <- st_read('data/grocers_1839.gpkg')
+dataJ <- st_read('data/jewellers_1839.gpkg')
+
+# contrôle visuel des objets importés
+plot(paris$geometry)
+plot(dataG$geom, pch = 15, col='blue', add= TRUE)
+plot(dataJ$geom, pch = 15, col='red', bg='red', add=TRUE)
+```
+
+La transformation des semis de points en objets spatstat se fait à l'aide de la fonction `as.ppp` (planar point pattern). Pour transformer le réseau viaire en objet `linnet`, deux étapes sont nécessaires : transformer le shapefile en objet `psp` (planar segment pattern) puis en objet `linnet` (linear network). La fonction `summary` permet de connaître les principales propriétés des objets créés.
+
+```{r}
+ppG <- as.ppp(st_geometry(dataG))
+ppJ <- as.ppp(st_geometry(dataJ))
+
+Paris <- as.psp(st_geometry(paris))
+Paris <- as.linnet(Paris)
+
+summary(Paris)
+```
+
+Concernant les informations sur le réseau viaire, la fonction `summary` renvoie :
 
 * le nombre de sommets et de liens
-* le degré de chaque sommet (<tt>vertexdegree(N)</tt>)
-* la longueur totale du réseau (<tt>volume(N)</tt>)
-* la distance moyenne entre sommets (<tt></tt>)
-* la distance entre toutes les paires de sommets (<tt>pairdist(N)</tt>)
-* le diamètre du réseau planaire (<tt>diameter(N)</tt>)
-* le rayon du réseau (distance entre le ou les sommets centraux et les sommets les plus périphériques) (<tt>boundingradius(N)</tt>)
+* la longueur totale du réseau (total length)
+* le degré maximal (maximum vertex degree)
+* la connexité du réseau
+* le diamètre 
+* le rayon
 
-La fonction <tt>summary(N)</tt> permet d'obtenir la plupart de ces informations (nombre de sommets et de liens, longueur totale, diamètre et rayon, degré maximal). Elle permet également de savoir si le réseau est connexe ou non.
+Longueur totale, diamètre et rayon se basent sur la distance géographique sur le réseau planaire et non sur la distance topologique. Le diamètre donne donc ici la longueur en mètres, et non en nombre de liens, du plus long des plus courts chemins. De manière générale, toutes les méthodes implémentées dans `linnet` se basents sur les distances géographiques sur le réseau planaire étudié.
 
-Il est enfin possible de visualiser ce réseau à l'aide de la fonction <tt>plot</tt>.
+## Propriétés des objets linnet et lpp
 
-Toutes les distances sont données en fonction de l'unité de mesure (mètres, kilomètres, etc.). Il ne s'agit **jamais** de la distance topologique (nombre de liens) entre sommets. Cette remarque s'applique aux calculs effectués sur le semis de points.
+Si on souhaite utiliser une mesure précise, il est possible d'obtenir ces informations avec des fonctions spécifiques :
+
+* nombre de sommets (`nvertices`) 
+* nombre de liens (`nsegments`)
+* longueur totale du réseau (<tt>volume</tt>)
+* diamètre du réseau planaire (<tt>diameter</tt>)
+* rayon du réseau (distance entre le ou les sommets centraux et les sommets les plus périphériques) (`boundingradius`)
+
+D'autres mesures sont également disponibles :
+
+* degré de chaque sommet (vertexdegree)
+* distance entre toutes les paires de sommets (<tt>pairdist(N)</tt>)
 
 Sur l'objet <tt>lpp</tt> *X*, les principales mesures proposées sont les suivantes :
 
@@ -135,7 +171,7 @@ Sur l'objet <tt>lpp</tt> *X*, les principales mesures proposées sont les suivan
 * distance au plus proche voisin (<tt>nndist(X)</tt>)
 * identifiant du plus proche voisin (<tt>nnwhich(X)</tt>)
 
-La fonction <tt>summary(X)</tt> permet là encore d'obtenir certaines de ces informations (nombre de points, nombre de points par unité), elle rappelle les caractéristiques principales du réseau (nombre de sommets, de liens et volume total) et enfin, elle fournit quartiles, médiane et moyenne des attributs numériques des points.
+La fonction <tt>summary(X)</tt> permet là encore d'obtenir certaines de ces informations (nombre de points, nombre de points par unité), elle rappelle les caractéristiques principales du réseau (nombre de sommets, de liens et volume total) et enfin, elle fournit quartiles, médiane et moyenne des éventuels attributs numériques des points.
 
 Le script qui suit permet de calculer ces différents éléments sur le semis des épiceries et des bijouteries à Paris.
 
