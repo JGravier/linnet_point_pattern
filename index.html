@@ -206,7 +206,6 @@ color: #f0aa0c;
   </ul></li>
   <li><a href="#intérêts-et-limites-du-package" id="toc-intérêts-et-limites-du-package" class="nav-link" data-scroll-target="#intérêts-et-limites-du-package">Intérêts et limites du package</a></li>
   <li><a href="#pour-aller-plus-loin" id="toc-pour-aller-plus-loin" class="nav-link" data-scroll-target="#pour-aller-plus-loin">Pour aller plus loin</a></li>
-  <li><a href="#références" id="toc-références" class="nav-link" data-scroll-target="#références">Références</a></li>
   <li><a href="#bibliography" id="toc-bibliography" class="nav-link" data-scroll-target="#bibliography">Bibliographie</a></li>
   </ul>
 </nav>
@@ -362,7 +361,7 @@ Projected CRS: +proj=lcc +lat_0=46.5 +lon_0=3 +lat_1=49 +lat_2=44 +x_0=700000 +y
 </div>
 </div>
 </div>
-<p>La transformation des semis de points en objets spatstat se fait à l’aide de la fonction <code>as.ppp</code> (planar point pattern). Pour transformer le réseau viaire en objet <code>linnet</code>, deux étapes sont nécessaires : transformer le shapefile en objet <code>psp</code> (planar segment pattern) puis en objet <code>linnet</code> (linear network). La fonction <code>summary</code> permet de connaître les principales propriétés des objets créés.</p>
+<p>La transformation des semis de points en objets spatstat se fait à l’aide de la fonction <code>as.ppp</code> (<em>planar point pattern</em>). Pour transformer le réseau viaire en objet <code>linnet</code>, deux étapes sont nécessaires : transformer le shapefile en objet <code>psp</code> (<em>planar segment pattern</em>) puis en objet <code>linnet</code> (<em>linear network</em>). La fonction <code>summary</code> permet de connaître les principales propriétés des objets créés.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ppG <span class="ot">&lt;-</span> <span class="fu">as.ppp</span>(<span class="fu">st_geometry</span>(dataG))</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>ppJ <span class="ot">&lt;-</span> <span class="fu">as.ppp</span>(<span class="fu">st_geometry</span>(dataJ))</span>
@@ -385,12 +384,12 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 </div>
 <p>Concernant les informations sur le réseau viaire, la fonction <code>summary</code> renvoie :</p>
 <ul>
-<li>le nombre de sommets et de liens</li>
-<li>la longueur totale du réseau (total length)</li>
-<li>le degré maximal (maximum vertex degree)</li>
-<li>la connexité du réseau</li>
-<li>le diamètre</li>
-<li>le rayon</li>
+<li>le nombre de sommets et de liens (<em>7237 vertices and 8730 lines</em>)</li>
+<li>la longueur totale du réseau (<em>total length 461193.7</em>)</li>
+<li>le degré maximal (<em>maximum vertex degree 7</em>)</li>
+<li>la connexité du réseau (<em>network is connected</em>)</li>
+<li>le diamètre (<em>diameter 10017.93</em>)</li>
+<li>le rayon (<em>bouding radius: 5058.732</em>)</li>
 </ul>
 <p>Longueur totale, diamètre et rayon se basent sur la distance géographique sur le réseau planaire et non sur la distance topologique. Le diamètre donne donc ici la longueur en mètres, et non en nombre de liens, du plus long des plus courts chemins. De manière générale, toutes les méthodes implémentées dans <code>linnet</code> se basents sur les distances géographiques sur le réseau planaire étudié.</p>
 </section>
@@ -398,29 +397,112 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <h2 class="anchored" data-anchor-id="propriétés-des-objets-linnet-et-lpp">Propriétés des objets linnet et lpp</h2>
 <p>Si on souhaite utiliser une mesure précise, il est possible d’obtenir ces informations avec des fonctions spécifiques :</p>
 <ul>
-<li>nombre de sommets (<code>nvertices</code>)</li>
-<li>nombre de liens (<code>nsegments</code>)</li>
+<li>nombre de sommets (<tt>nvertices</tt>)</li>
+<li>nombre de liens (<tt>nsegments</tt>)</li>
 <li>longueur totale du réseau (<tt>volume</tt>)</li>
 <li>diamètre du réseau planaire (<tt>diameter</tt>)</li>
-<li>rayon du réseau (distance entre le ou les sommets centraux et les sommets les plus périphériques) (<code>boundingradius</code>)</li>
+<li>rayon du réseau (distance entre le ou les sommets centraux et les sommets les plus périphériques) (<tt>boundingradius</tt>)</li>
 </ul>
-<p>D’autres mesures sont également disponibles :</p>
+<p>D’autres mesures sont également disponibles et notamment le degré de chaque sommet (<tt>vertexdegree</tt>)</p>
+<p>Le script suivant montre quelques uns des résultats obtenus à l’aide de ces fonctions.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># nombre de sommets</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nvertices</span>(Paris)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 7237</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># longueur totale du réseau viaire (en mètres)</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">volume</span>(Paris)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 461193.7</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># degré</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">vertexdegree</span>(Paris))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.412602</code></pre>
+</div>
+</div>
+<p>Sur un objet de type <tt>lpp</tt> (<em>linear point pattern</em>), les principales mesures proposées sont les suivantes :</p>
 <ul>
-<li>degré de chaque sommet (vertexdegree)</li>
-<li>distance entre toutes les paires de sommets (<tt>pairdist(N)</tt>)</li>
+<li>nombre de points (<tt>npoints</tt>)</li>
+<li>nombre de points par unité de mesure (<tt>intensity</tt>)</li>
+<li>matrice des plus courtes distances entre points (<tt>pairdist</tt>)</li>
+<li>distance au plus proche voisin (<tt>nndist</tt>)</li>
+<li>identifiant du plus proche voisin (<tt>nnwhich</tt>)</li>
 </ul>
-<p>Sur l’objet <tt>lpp</tt> <em>X</em>, les principales mesures proposées sont les suivantes :</p>
-<ul>
-<li>nombre de points (<tt>npoints(X)</tt>)</li>
-<li>nombre de points par unité de mesure (<tt>intensity(X)</tt>)</li>
-<li>matrice des plus courtes distances entre points (<tt>pairdist(X)</tt>)</li>
-<li>distance au plus proche voisin (<tt>nndist(X)</tt>)</li>
-<li>identifiant du plus proche voisin (<tt>nnwhich(X)</tt>)</li>
-</ul>
-<p>La fonction <tt>summary(X)</tt> permet là encore d’obtenir certaines de ces informations (nombre de points, nombre de points par unité), elle rappelle les caractéristiques principales du réseau (nombre de sommets, de liens et volume total) et enfin, elle fournit quartiles, médiane et moyenne des éventuels attributs numériques des points.</p>
+<p>La fonction <tt>summary</tt> permet là encore d’obtenir certaines de ces informations (nombre de points, nombre de points par unité), elle rappelle les caractéristiques principales du réseau (nombre de sommets, de liens et volume total) et enfin, elle fournit quartiles, médiane et moyenne des éventuels attributs numériques des points.</p>
 <p>Le script qui suit permet de calculer ces différents éléments sur le semis des épiceries et des bijouteries à Paris.</p>
-<p>Si l’on exécute la fonction <tt>plot(X)</tt>, par défaut <tt>linnet</tt> propose un nombre de visualisations égal au nombre d’attributs des points, ces attributs étant appelés <tt>marks</tt>. Si je souhaite visualiser la répartion d’un attribut <em>Z</em> donné , j’utilise la syntaxe <tt>plot(X, which.marks=‘Z’)</tt>.</p>
-<p><strong>Script d’exemple</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># semis des épiceries</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># nombre de points et nombre de points par mètre</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">npoints</span>(ppG)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1028</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">intensity</span>(ppG)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.371364e-05</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plus court chemin (géographique et non topologique) entre paires de points</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pairdist</span>(ppG)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         [,1]      [,2]      [,3]     [,4]     [,5]
+[1,]    0.000 1422.0420 1801.8448 2484.028 2519.840
+[2,] 1422.042    0.0000  935.2616 1768.920 2550.447
+[3,] 1801.845  935.2616    0.0000 2669.784 1748.318
+[4,] 2484.028 1768.9197 2669.7838    0.000 4314.051
+[5,] 2519.840 2550.4468 1748.3184 4314.051    0.000</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># distance géographique au plus court voisin</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nndist</span>(ppG)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>] </span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 138.1796741   0.8380856  54.8029292 168.5354131  45.1379248</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># identifiant du plus proche voisin</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nnwhich</span>(ppG)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>] </span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 110 263 990 847 429</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># semis des bijouteries</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">npoints</span>(ppJ)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 341</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">intensity</span>(ppG)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.371364e-05</code></pre>
+</div>
+</div>
+<p><em>Faire les mesures pour les deux semis et proposer un court commentaire thématique ?</em></p>
+<p>Si l’on exécute la fonction <tt>plot</tt> sur un objet <tt>lpp</tt>, par défaut <tt>linnet</tt> propose un nombre de visualisations égal au nombre d’attributs des points, ces attributs étant appelés <tt>marks</tt>. Si je souhaite visualiser la répartion d’un attribut <em>Z</em> donné , j’utilise la syntaxe <tt>plot(X, which.marks=‘Z’)</tt> - le jeu de données utilisés ne comportant pas d’attributs pour les semis de points, cette option n’est pas mise en oeuvre dans ce tutoriel.</p>
+<p>La visualisation de certaines mesures est intégrée par défaut dans le <em>package</em> et c’est notamment le cas pour la densité (nombre de points par unité de mesure du réseau).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># option couleur (par défaut)</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(paris)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">density</span>(ppG), <span class="at">add=</span><span class="cn">TRUE</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co">#option épaisseur</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(paris)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">density</span>(ppG),</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">style=</span><span class="st">"width"</span>,</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">adjust=</span><span class="fl">0.5</span>,</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">add=</span><span class="cn">TRUE</span>)    <span class="co"># épaisseur maximale</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-7-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="étudier-les-voisinages" class="level2">
 <h2 class="anchored" data-anchor-id="étudier-les-voisinages">Étudier les voisinages</h2>
@@ -440,6 +522,28 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 </section>
 <section id="analyser-la-relation-entre-deux-semis-de-points" class="level3">
 <h3 class="anchored" data-anchor-id="analyser-la-relation-entre-deux-semis-de-points">Analyser la relation entre deux semis de points</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># étudier un semis par rapport à un autre</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">crossdist</span>(ppG,ppJ)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>] <span class="co">#shortest-path distances between pairs of ‘things’ taken from two different datasets.</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         [,1]     [,2]     [,3]     [,4]      [,5]
+[1,] 1725.354 1189.305 1524.982 2715.270 1354.0494
+[2,] 2198.302  680.736 1924.450 1321.922  243.2868
+[3,] 3039.742 1575.508 2769.227 1735.172 1173.2468
+[4,] 1721.839 1377.616 1569.930 1631.090 1569.6652
+[5,] 4199.966 3024.996 3964.274 3468.329 2745.1090</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nncross</span>(ppG, ppJ)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,]  <span class="co">#sGiven two point patterns X and Y, finds the nearest neighbour in Y of each point of X.</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      dist which
+1 174.5787   257
+2 105.8595    71
+3 100.6455   122
+4 248.2634   312
+5 592.7533   163</code></pre>
+</div>
+</div>
 <p>Fonctions: linearKcross, linearKdot</p>
 </section>
 </section>
@@ -463,9 +567,6 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <section id="pour-aller-plus-loin" class="level2">
 <h2 class="anchored" data-anchor-id="pour-aller-plus-loin">Pour aller plus loin</h2>
 <p>Le manuel le plus complet et le plus clair concernant l’analyse de semis de points sur un réseau est celui signé Okabe et Sugihara <span class="citation" data-cites="okabe2012">(<a href="#ref-okabe2012" role="doc-biblioref">2012</a>)</span> ; toutes les méthodes abordées par les auteurs ne peuvent être mises en oeuvre avec <tt>linnet</tt> (autocorrélation spatiale, modèle de Huff, etc.). L’article de Baddeley et Turner consacré à la première version du <em>package</em> <span class="citation" data-cites="baddeley2005">(<a href="#ref-baddeley2005" role="doc-biblioref">2005</a>)</span> gagne à être complété par le chapitre 17 de l’ouvrage de Baddeley <em>et al.</em> <span class="citation" data-cites="baddeley2012">(<a href="#ref-baddeley2012" role="doc-biblioref">2012</a>)</span>. À compléter par une mise à jour bibliographique récente co-signé du même Baddeley <span class="citation" data-cites="baddeley2021">(<a href="#ref-baddeley2021" role="doc-biblioref">2021</a>)</span>.</p>
-</section>
-<section id="références" class="level2">
-<h2 class="anchored" data-anchor-id="références">Références</h2>
 </section>
 <section id="bibliography" class="level1 unnumbered">
 

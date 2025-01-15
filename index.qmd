@@ -125,7 +125,7 @@ plot(dataG$geom, pch = 15, col='blue', add= TRUE)
 plot(dataJ$geom, pch = 15, col='red', bg='red', add=TRUE)
 ```
 
-La transformation des semis de points en objets spatstat se fait à l'aide de la fonction `as.ppp` (planar point pattern). Pour transformer le réseau viaire en objet `linnet`, deux étapes sont nécessaires : transformer le shapefile en objet `psp` (planar segment pattern) puis en objet `linnet` (linear network). La fonction `summary` permet de connaître les principales propriétés des objets créés.
+La transformation des semis de points en objets spatstat se fait à l'aide de la fonction `as.ppp` (*planar point pattern*). Pour transformer le réseau viaire en objet `linnet`, deux étapes sont nécessaires : transformer le shapefile en objet `psp` (*planar segment pattern*) puis en objet `linnet` (*linear network*). La fonction `summary` permet de connaître les principales propriétés des objets créés.
 
 ```{r}
 ppG <- as.ppp(st_geometry(dataG))
@@ -139,12 +139,12 @@ summary(Paris)
 
 Concernant les informations sur le réseau viaire, la fonction `summary` renvoie :
 
-* le nombre de sommets et de liens
-* la longueur totale du réseau (total length)
-* le degré maximal (maximum vertex degree)
-* la connexité du réseau
-* le diamètre 
-* le rayon
+* le nombre de sommets et de liens (*7237 vertices and 8730 lines*)
+* la longueur totale du réseau (*total length 461193.7*)
+* le degré maximal (*maximum vertex degree 7*)
+* la connexité du réseau (*network is connected*)
+* le diamètre (*diameter 10017.93*)
+* le rayon (*bouding radius: 5058.732*)
 
 Longueur totale, diamètre et rayon se basent sur la distance géographique sur le réseau planaire et non sur la distance topologique. Le diamètre donne donc ici la longueur en mètres, et non en nombre de liens, du plus long des plus courts chemins. De manière générale, toutes les méthodes implémentées dans `linnet` se basents sur les distances géographiques sur le réseau planaire étudié.
 
@@ -152,32 +152,86 @@ Longueur totale, diamètre et rayon se basent sur la distance géographique sur 
 
 Si on souhaite utiliser une mesure précise, il est possible d'obtenir ces informations avec des fonctions spécifiques :
 
-* nombre de sommets (`nvertices`) 
-* nombre de liens (`nsegments`)
+* nombre de sommets (<tt>nvertices</tt>) 
+* nombre de liens (<tt>nsegments</tt>)
 * longueur totale du réseau (<tt>volume</tt>)
 * diamètre du réseau planaire (<tt>diameter</tt>)
-* rayon du réseau (distance entre le ou les sommets centraux et les sommets les plus périphériques) (`boundingradius`)
+* rayon du réseau (distance entre le ou les sommets centraux et les sommets les plus périphériques) (<tt>boundingradius</tt>)
 
-D'autres mesures sont également disponibles :
+D'autres mesures sont également disponibles et notamment le degré de chaque sommet (<tt>vertexdegree</tt>)
 
-* degré de chaque sommet (vertexdegree)
-* distance entre toutes les paires de sommets (<tt>pairdist(N)</tt>)
+Le script suivant montre quelques uns des résultats obtenus à l'aide de ces fonctions.
 
-Sur l'objet <tt>lpp</tt> *X*, les principales mesures proposées sont les suivantes :
+```{r}
+# nombre de sommets
+nvertices(Paris)
 
-* nombre de points (<tt>npoints(X)</tt>)
-* nombre de points par unité de mesure (<tt>intensity(X)</tt>)
-* matrice des plus courtes distances entre points (<tt>pairdist(X)</tt>)
-* distance au plus proche voisin (<tt>nndist(X)</tt>)
-* identifiant du plus proche voisin (<tt>nnwhich(X)</tt>)
+# longueur totale du réseau viaire (en mètres)
+volume(Paris)
 
-La fonction <tt>summary(X)</tt> permet là encore d'obtenir certaines de ces informations (nombre de points, nombre de points par unité), elle rappelle les caractéristiques principales du réseau (nombre de sommets, de liens et volume total) et enfin, elle fournit quartiles, médiane et moyenne des éventuels attributs numériques des points.
+# degré
+mean(vertexdegree(Paris))
+
+```
+
+
+Sur un objet de type <tt>lpp</tt> (*linear point pattern*), les principales mesures proposées sont les suivantes :
+
+* nombre de points (<tt>npoints</tt>)
+* nombre de points par unité de mesure (<tt>intensity</tt>)
+* matrice des plus courtes distances entre points (<tt>pairdist</tt>)
+* distance au plus proche voisin (<tt>nndist</tt>)
+* identifiant du plus proche voisin (<tt>nnwhich</tt>)
+
+La fonction <tt>summary</tt> permet là encore d'obtenir certaines de ces informations (nombre de points, nombre de points par unité), elle rappelle les caractéristiques principales du réseau (nombre de sommets, de liens et volume total) et enfin, elle fournit quartiles, médiane et moyenne des éventuels attributs numériques des points.
 
 Le script qui suit permet de calculer ces différents éléments sur le semis des épiceries et des bijouteries à Paris.
 
-Si l'on exécute la fonction <tt>plot(X)</tt>, par défaut <tt>linnet</tt> propose un nombre de visualisations égal au nombre d'attributs des points, ces attributs étant appelés  <tt>marks</tt>. Si je souhaite visualiser la répartion d'un attribut *Z* donné , j'utilise la syntaxe <tt>plot(X, which.marks='Z')</tt>.
+```{r}
+# semis des épiceries
+# nombre de points et nombre de points par mètre
+npoints(ppG)
+intensity(ppG)
 
-**Script d'exemple**
+# plus court chemin (géographique et non topologique) entre paires de points
+pairdist(ppG)[1:5,1:5]
+
+# distance géographique au plus court voisin
+nndist(ppG)[1:5] 
+
+# identifiant du plus proche voisin
+nnwhich(ppG)[1:5] 
+
+# semis des bijouteries
+npoints(ppJ)
+intensity(ppG)
+```
+*Faire les mesures pour les deux semis et proposer un court commentaire thématique ?*
+
+Si l'on exécute la fonction <tt>plot</tt> sur un objet <tt>lpp</tt>, par défaut <tt>linnet</tt> propose un nombre de visualisations égal au nombre d'attributs des points, ces attributs étant appelés  <tt>marks</tt>. Si je souhaite visualiser la répartion d'un attribut *Z* donné , j'utilise la syntaxe <tt>plot(X, which.marks='Z')</tt> - le jeu de données utilisés ne comportant pas d'attributs pour les semis de points, cette option n'est pas mise en oeuvre dans ce tutoriel.
+
+La visualisation de certaines mesures est intégrée par défaut dans le *package* et c'est notamment le cas pour la densité (nombre de points par unité de mesure du réseau).
+
+*Ce n'est pas tout à fait ce que je veux faire en vrai... ;)*
+
+```{r}
+# option couleur (par défaut)
+plot(paris)
+plot(density(ppG), add=TRUE)
+```
+
+*à reprendre...*
+
+```{r}
+#option épaisseur
+plot(paris)
+plot(density(ppG),
+     style="width",
+     adjust=0.5,
+     add=TRUE)    # épaisseur maximale
+```
+
+
 
 ## Étudier les voisinages
 
@@ -192,7 +246,6 @@ Quelques points de comparaison :
 * processus aléatoire : <tt>rlpp</tt>
 
 
-
 ### Analyser un semis de points
 
 Fonctions: 
@@ -202,6 +255,16 @@ linearK (plus court chemin) et linearKinhom (pcc et non homogène)
 linearKEuclid (distance euclidienne), linearKEuclidInhom (distance euclidienne et non homogène)
 
 ### Analyser la relation entre deux semis de points
+
+
+```{r}
+# étudier un semis par rapport à un autre
+
+crossdist(ppG,ppJ)[1:5,1:5] #shortest-path distances between pairs of ‘things’ taken from two different datasets.
+
+nncross(ppG, ppJ)[1:5,]  #sGiven two point patterns X and Y, finds the nearest neighbour in Y of each point of X.
+```
+
 
 Fonctions: linearKcross, linearKdot
 
@@ -222,5 +285,3 @@ Fonctions: density
 ## Pour aller plus loin
 
 Le manuel le plus complet et le plus clair concernant l'analyse de semis de points sur un réseau est celui signé Okabe et Sugihara [-@okabe2012] ; toutes les méthodes abordées par les auteurs ne peuvent être mises en oeuvre avec <tt>linnet</tt> (autocorrélation spatiale, modèle de Huff, etc.). L'article de Baddeley et Turner consacré à la première version du *package* [-@baddeley2005] gagne à être complété par le chapitre 17 de l'ouvrage de Baddeley *et al.* [-@baddeley2012]. À compléter par une mise à jour bibliographique récente co-signé du même Baddeley [-@baddeley2021].
-
-## Références
