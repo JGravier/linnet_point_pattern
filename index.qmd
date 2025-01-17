@@ -206,31 +206,41 @@ nnwhich(ppG)[1:5]
 npoints(ppJ)
 intensity(ppG)
 ```
+
+La dernière étape consiste à intégrer dans le même objet le réseau linéaire et le semis de points à l'aide de la fonction <tt>lpp</tt>.
+
+```{r}
+LG <- lpp(ppG, Paris)
+summary(LG)
+
+LJ <- lpp(ppJ, Paris)
+summary(LJ)
+```
+
 *Faire les mesures pour les deux semis et proposer un court commentaire thématique ?*
 
 Si l'on exécute la fonction <tt>plot</tt> sur un objet <tt>lpp</tt>, par défaut <tt>linnet</tt> propose un nombre de visualisations égal au nombre d'attributs des points, ces attributs étant appelés  <tt>marks</tt>. Si je souhaite visualiser la répartion d'un attribut *Z* donné , j'utilise la syntaxe <tt>plot(X, which.marks='Z')</tt> - le jeu de données utilisés ne comportant pas d'attributs pour les semis de points, cette option n'est pas mise en oeuvre dans ce tutoriel.
 
 La visualisation de certaines mesures est intégrée par défaut dans le *package* et c'est notamment le cas pour la densité (nombre de points par unité de mesure du réseau).
 
-*Ce n'est pas tout à fait ce que je veux faire en vrai... ;)*
+
 
 ```{r}
+par(mfrow=c(1,2))
+
+# calcul de la densité de points par unité de réseau
+# l'option finespacing n'est pas nécessaire pour un réseau de petite taille
+DEN_LJ <- density(LJ, finespacing=FALSE)
+DEN_LG <- density(LJ, finespacing=FALSE)
+
 # option couleur (par défaut)
-plot(paris)
-plot(density(ppG), add=TRUE)
+plot(DEN_LG)
+
+# option épaisseur des liens du réseau
+plot(DEN_LG, 
+     style="width", 
+     adjust=0.5)  # contrôler épaisseur max
 ```
-
-*à reprendre...*
-
-```{r}
-#option épaisseur
-plot(paris)
-plot(density(ppG),
-     style="width",
-     adjust=0.5,
-     add=TRUE)    # épaisseur maximale
-```
-
 
 
 ## Étudier les voisinages
@@ -264,7 +274,6 @@ crossdist(ppG,ppJ)[1:5,1:5] #shortest-path distances between pairs of ‘things�
 
 nncross(ppG, ppJ)[1:5,]  #sGiven two point patterns X and Y, finds the nearest neighbour in Y of each point of X.
 ```
-
 
 Fonctions: linearKcross, linearKdot
 
