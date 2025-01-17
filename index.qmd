@@ -85,25 +85,25 @@ plot(1:10)
 
 ## Définitions et questions de recherche
 
-L'analyse d'un semis de points sur un réseau désigne un ensemble de méthodes statistiques permettant de caractériser des événements ponctuels, appelés points dans la suite du texte, prenant place sur un réseau spatial planaire, appelé réseau dans la suite du texte. 
+L'analyse d'un semis de points sur un réseau désigne un ensemble de méthodes statistiques permettant de caractériser des événements ponctuels dans le temps et dans l'espace, appelés points dans la suite du texte, prenant place sur un réseau spatial planaire, appelé réseau dans la suite du texte.
 
-Un réseau planaire est constitué par un ensemble de sommets et un ensemble de liens entre ces sommets. Tout sommet est soit une intersection soit une extremité. Chaque sommet est caractérisé par un couple de coordonnées, chaque lien est caractérisée par une distance. Un lien peut par ailleurs être porteur d'attributs supplémentaires.
+Un réseau planaire est constitué par un ensemble de sommets et un ensemble de liens entre ces sommets. Tout sommet est soit une intersection soit une extrémité. Chaque sommet est composé par un couple de coordonnées, chaque lien est caractérisable par une distance. Un lien peut par ailleurs être porteur d'attributs supplémentaires.
 
-Deux des sujets les plus traités dans la littérature sont les accidents de la circulation et les actes criminels commis dans l'espace public. Dans les deux cas, des événements dramatiques pouvant être caractérisés par des attributs de types différents se produisent dans un espace pouvant être modélisé sous forme de réseau planaire (réseau routier, réseau viaire). Il est possible d'imaginer d'autres thématiques, qu'il s'agisse de l'offre commerciale dans un espace donné, du collage militant ou publicitaire, de la présence d'équipements sur l'espace public (bancs, toilettes), etc.
+Deux des sujets les plus traités dans la bibliographie sont les accidents de la circulation et les actes criminels commis dans l'espace public. Dans les deux cas, des événements dramatiques pouvant être caractérisés par des attributs de types différents se produisent dans un espace pouvant être modélisé sous forme de réseau planaire (réseau routier, réseau viaire). Il est possible d'imaginer d'autres thématiques plus ou moins ponctuelles dans le temps, qu'il s'agisse de l'offre commerciale dans un espace donné, du collage militant ou publicitaire, de la présence d'équipements dans l'espace public (bancs, toilettes), etc.
 
-Trois  grands types de question sont généralement posées à ces données :
+Trois grands types de question sont généralement posées à ces données :
 
 * les points sont-ils significativement proches (ou éloignés) les uns des autres (étude du voisinage) ?
-* existe-il des endroits où la concentration des points est notable (*hot spots*) ?
+* existe-il des lieux où la concentration des points est notable (*hot spots*) ?
 * quel modèle statistique est susceptible d'expliquer la géographie de ce semis de points ?
 
 ## Le package linnet
 
-<tt>linnet</tt> est un sous-*package* du *package* <tt>spatstat</tt> consacré à la statistique spatiale et notamment à l'analyse de semis de points. 
+`linnet` est un sous-*package* du *package* `spatstat` consacré à la statistique spatiale et notamment à l'analyse de semis de points. 
 
 ## Préparer ses données
 
-La première étape consiste à créer un objet <tt>linnet</tt> (*linear network*) à l'aide de deux fichiers : un fichier correspondant aux sommets (intersections et extrémités des liens), un fichier correspondant aux liens entre ces sommets. Le fichier des sommets comprend trois colonnes correspondant au nom et aux coordonnées de chaque sommet ; le fichier des liens comprend deux colonnes correspondant aux deux extrémités de chaque lien. L'orientation des liens n'est pas prise en compte : un lien *a-b* implique nécessairement un lien *b-a*, il n'est donc pas utile d'avoir deux lignes différentes.
+La première étape consiste à créer un objet `linnet` (*linear network*) à l'aide de deux fichiers : un fichier correspondant aux sommets (intersections et extrémités des liens), un fichier correspondant aux liens entre ces sommets. Le fichier des sommets comprend trois colonnes correspondant au nom et aux coordonnées de chaque sommet ; le fichier des liens comprend deux colonnes correspondant aux deux extrémités de chaque lien. L'orientation des liens n'est pas prise en compte : un lien *a-b* implique nécessairement un lien *b-a*, il n'est donc pas utile d'avoir deux lignes différentes.
 
 Créer un objet lpp (*linear point pattern*) suppose d'ajouter à ce réseau planaire un semis de points. Le fichier correspondant comprend *a minima* les coordonnées de chacun des points ; il peut comprendre autant de colonnes supplémentaires que d'attributs, les attributs pouvant être de type différents (entiers, flottants, chaîne de caractère, booléen).
 
@@ -159,13 +159,13 @@ Longueur totale, diamètre et rayon se basent sur la distance géographique sur 
 
 Si on souhaite utiliser une mesure précise, il est possible d'obtenir ces informations avec des fonctions spécifiques :
 
-* nombre de sommets (<tt>nvertices</tt>) 
-* nombre de liens (<tt>nsegments</tt>)
-* longueur totale du réseau (<tt>volume</tt>)
-* diamètre du réseau planaire (<tt>diameter</tt>)
-* rayon du réseau (distance entre le ou les sommets centraux et les sommets les plus périphériques) (<tt>boundingradius</tt>)
+* nombre de sommets (`nvertices`) 
+* nombre de liens (`nsegments`)
+* longueur totale du réseau (`volume`)
+* diamètre du réseau planaire (`diameter`)
+* rayon du réseau (distance entre le ou les sommets centraux et les sommets les plus périphériques) (`boundingradius`)
 
-D'autres mesures sont également disponibles et notamment le degré de chaque sommet (<tt>vertexdegree</tt>)
+D'autres mesures sont également disponibles et notamment le degré de chaque sommet (`vertexdegree`)
 
 Le script suivant montre quelques uns des résultats obtenus à l'aide de ces fonctions.
 
@@ -182,15 +182,15 @@ mean(vertexdegree(Paris))
 ```
 
 
-Sur un objet de type <tt>lpp</tt> (*linear point pattern*), les principales mesures proposées sont les suivantes :
+Sur un objet de type `lpp` (*linear point pattern*), les principales mesures proposées sont les suivantes :
 
-* nombre de points (<tt>npoints</tt>)
-* nombre de points par unité de mesure (<tt>intensity</tt>)
-* matrice des plus courtes distances entre points (<tt>pairdist</tt>)
-* distance au plus proche voisin (<tt>nndist</tt>)
-* identifiant du plus proche voisin (<tt>nnwhich</tt>)
+* nombre de points (`npoints`)
+* nombre de points par unité de mesure (`intensity`)
+* matrice des plus courtes distances entre points (`pairdist`)
+* distance au plus proche voisin (`nndist`)
+* identifiant du plus proche voisin (`nnwhich`)
 
-La fonction <tt>summary</tt> permet là encore d'obtenir certaines de ces informations (nombre de points, nombre de points par unité), elle rappelle les caractéristiques principales du réseau (nombre de sommets, de liens et volume total) et enfin, elle fournit quartiles, médiane et moyenne des éventuels attributs numériques des points.
+La fonction `summary` permet là encore d'obtenir certaines de ces informations (nombre de points, nombre de points par unité), elle rappelle les caractéristiques principales du réseau (nombre de sommets, de liens et volume total) et enfin, elle fournit quartiles, médiane et moyenne des éventuels attributs numériques des points.
 
 Le script qui suit permet de calculer ces différents éléments sur le semis des épiceries et des bijouteries à Paris.
 
@@ -214,7 +214,7 @@ npoints(ppJ)
 intensity(ppG)
 ```
 
-La dernière étape consiste à intégrer dans le même objet le réseau linéaire et le semis de points à l'aide de la fonction <tt>lpp</tt>.
+La dernière étape consiste à intégrer dans le même objet le réseau linéaire et le semis de points à l'aide de la fonction `lpp`.
 
 ```{r}
 LG <- lpp(ppG, Paris)
@@ -226,7 +226,7 @@ summary(LJ)
 
 *Faire les mesures pour les deux semis et proposer un court commentaire thématique ?*
 
-Si l'on exécute la fonction <tt>plot</tt> sur un objet <tt>lpp</tt>, par défaut <tt>linnet</tt> propose un nombre de visualisations égal au nombre d'attributs des points, ces attributs étant appelés  <tt>marks</tt>. Si je souhaite visualiser la répartion d'un attribut *Z* donné , j'utilise la syntaxe <tt>plot(X, which.marks='Z')</tt> - le jeu de données utilisés ne comportant pas d'attributs pour les semis de points, cette option n'est pas mise en oeuvre dans ce tutoriel.
+Si l'on exécute la fonction `plot` sur un objet `lpp`, par défaut `linnet` propose un nombre de visualisations égal au nombre d'attributs des points, ces attributs étant appelés  `marks`. Si je souhaite visualiser la répartion d'un attribut *Z* donné , j'utilise la syntaxe `plot(X, which.marks='Z')` - le jeu de données utilisés ne comportant pas d'attributs pour les semis de points, cette option n'est pas mise en oeuvre dans ce tutoriel.
 
 La visualisation de certaines mesures est intégrée par défaut dans le *package* et c'est notamment le cas pour la densité (nombre de points par unité de mesure du réseau).
 
@@ -258,9 +258,9 @@ Questions selon qu'on étudie un ou deux semis de points
 
 Quelques points de comparaison :
 
-* processus poissonien : <tt>rpoislpp</tt>
-* processus aléatoire uniforme : <tt>runiflpp</tt>
-* processus aléatoire : <tt>rlpp</tt>
+* processus poissonien : `rpoislpp`
+* processus aléatoire uniforme : `runiflpp`
+* processus aléatoire : `rlpp`
 
 
 ### Analyser un semis de points
@@ -299,4 +299,4 @@ Fonctions: density
 
 ## Pour aller plus loin
 
-Le manuel le plus complet et le plus clair concernant l'analyse de semis de points sur un réseau est celui signé Okabe et Sugihara [-@okabe2012] ; toutes les méthodes abordées par les auteurs ne peuvent être mises en oeuvre avec <tt>linnet</tt> (autocorrélation spatiale, modèle de Huff, etc.). L'article de Baddeley et Turner consacré à la première version du *package* [-@baddeley2005] gagne à être complété par le chapitre 17 de l'ouvrage de Baddeley *et al.* [-@baddeley2012]. À compléter par une mise à jour bibliographique récente co-signé du même Baddeley [-@baddeley2021].
+Le manuel le plus complet et le plus clair concernant l'analyse de semis de points sur un réseau est celui signé Okabe et Sugihara [-@okabe2012] ; toutes les méthodes abordées par les auteurs ne peuvent être mises en oeuvre avec `linnet` (autocorrélation spatiale, modèle de Huff, etc.). L'article de Baddeley et Turner consacré à la première version du *package* [-@baddeley2005] gagne à être complété par le chapitre 17 de l'ouvrage de Baddeley *et al.* [-@baddeley2012]. À compléter par une mise à jour bibliographique récente co-signé du même Baddeley [-@baddeley2021].

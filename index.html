@@ -291,23 +291,23 @@ plot(1:10)
 <p><em>LB: mini jeu de données</em></p>
 <section id="définitions-et-questions-de-recherche" class="level2">
 <h2 class="anchored" data-anchor-id="définitions-et-questions-de-recherche">Définitions et questions de recherche</h2>
-<p>L’analyse d’un semis de points sur un réseau désigne un ensemble de méthodes statistiques permettant de caractériser des événements ponctuels, appelés points dans la suite du texte, prenant place sur un réseau spatial planaire, appelé réseau dans la suite du texte.</p>
-<p>Un réseau planaire est constitué par un ensemble de sommets et un ensemble de liens entre ces sommets. Tout sommet est soit une intersection soit une extremité. Chaque sommet est caractérisé par un couple de coordonnées, chaque lien est caractérisée par une distance. Un lien peut par ailleurs être porteur d’attributs supplémentaires.</p>
-<p>Deux des sujets les plus traités dans la littérature sont les accidents de la circulation et les actes criminels commis dans l’espace public. Dans les deux cas, des événements dramatiques pouvant être caractérisés par des attributs de types différents se produisent dans un espace pouvant être modélisé sous forme de réseau planaire (réseau routier, réseau viaire). Il est possible d’imaginer d’autres thématiques, qu’il s’agisse de l’offre commerciale dans un espace donné, du collage militant ou publicitaire, de la présence d’équipements sur l’espace public (bancs, toilettes), etc.</p>
+<p>L’analyse d’un semis de points sur un réseau désigne un ensemble de méthodes statistiques permettant de caractériser des événements ponctuels dans le temps et dans l’espace, appelés points dans la suite du texte, prenant place sur un réseau spatial planaire, appelé réseau dans la suite du texte.</p>
+<p>Un réseau planaire est constitué par un ensemble de sommets et un ensemble de liens entre ces sommets. Tout sommet est soit une intersection soit une extrémité. Chaque sommet est composé par un couple de coordonnées, chaque lien est caractérisable par une distance. Un lien peut par ailleurs être porteur d’attributs supplémentaires.</p>
+<p>Deux des sujets les plus traités dans la bibliographie sont les accidents de la circulation et les actes criminels commis dans l’espace public. Dans les deux cas, des événements dramatiques pouvant être caractérisés par des attributs de types différents se produisent dans un espace pouvant être modélisé sous forme de réseau planaire (réseau routier, réseau viaire). Il est possible d’imaginer d’autres thématiques plus ou moins ponctuelles dans le temps, qu’il s’agisse de l’offre commerciale dans un espace donné, du collage militant ou publicitaire, de la présence d’équipements dans l’espace public (bancs, toilettes), etc.</p>
 <p>Trois grands types de question sont généralement posées à ces données :</p>
 <ul>
 <li>les points sont-ils significativement proches (ou éloignés) les uns des autres (étude du voisinage) ?</li>
-<li>existe-il des endroits où la concentration des points est notable (<em>hot spots</em>) ?</li>
+<li>existe-il des lieux où la concentration des points est notable (<em>hot spots</em>) ?</li>
 <li>quel modèle statistique est susceptible d’expliquer la géographie de ce semis de points ?</li>
 </ul>
 </section>
 <section id="le-package-linnet" class="level2">
 <h2 class="anchored" data-anchor-id="le-package-linnet">Le package linnet</h2>
-<p><tt>linnet</tt> est un sous-<em>package</em> du <em>package</em> <tt>spatstat</tt> consacré à la statistique spatiale et notamment à l’analyse de semis de points.</p>
+<p><code>linnet</code> est un sous-<em>package</em> du <em>package</em> <code>spatstat</code> consacré à la statistique spatiale et notamment à l’analyse de semis de points.</p>
 </section>
 <section id="préparer-ses-données" class="level2">
 <h2 class="anchored" data-anchor-id="préparer-ses-données">Préparer ses données</h2>
-<p>La première étape consiste à créer un objet <tt>linnet</tt> (<em>linear network</em>) à l’aide de deux fichiers : un fichier correspondant aux sommets (intersections et extrémités des liens), un fichier correspondant aux liens entre ces sommets. Le fichier des sommets comprend trois colonnes correspondant au nom et aux coordonnées de chaque sommet ; le fichier des liens comprend deux colonnes correspondant aux deux extrémités de chaque lien. L’orientation des liens n’est pas prise en compte : un lien <em>a-b</em> implique nécessairement un lien <em>b-a</em>, il n’est donc pas utile d’avoir deux lignes différentes.</p>
+<p>La première étape consiste à créer un objet <code>linnet</code> (<em>linear network</em>) à l’aide de deux fichiers : un fichier correspondant aux sommets (intersections et extrémités des liens), un fichier correspondant aux liens entre ces sommets. Le fichier des sommets comprend trois colonnes correspondant au nom et aux coordonnées de chaque sommet ; le fichier des liens comprend deux colonnes correspondant aux deux extrémités de chaque lien. L’orientation des liens n’est pas prise en compte : un lien <em>a-b</em> implique nécessairement un lien <em>b-a</em>, il n’est donc pas utile d’avoir deux lignes différentes.</p>
 <p>Créer un objet lpp (<em>linear point pattern</em>) suppose d’ajouter à ce réseau planaire un semis de points. Le fichier correspondant comprend <em>a minima</em> les coordonnées de chacun des points ; il peut comprendre autant de colonnes supplémentaires que d’attributs, les attributs pouvant être de type différents (entiers, flottants, chaîne de caractère, booléen).</p>
 <p><em>Prendre mini jeu de données et montrer les étapes (objets linnet) et les visu (marks de types différents) (LB)</em></p>
 <p>Le jeu de données utilisé tout au long de ce tutoriel est issu du projet XXX. Il recense les épiceries et les bijouteries à Paris en 1839.</p>
@@ -321,7 +321,7 @@ plot(1:10)
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>paris <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">'data/1836_jacoubet.shp'</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `1836_jacoubet' from data source 
-  `C:\Users\Laurent\Documents\linnet_point_pattern\data\1836_jacoubet.shp' 
+  `D:\jgravier\Sync\publications\linnet_point_pattern\data\1836_jacoubet.shp' 
   using driver `ESRI Shapefile'
 Simple feature collection with 4266 features and 2 fields
 Geometry type: LINESTRING
@@ -333,7 +333,7 @@ Projected CRS: RGF93 Lambert 93</code></pre>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>dataG <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">'data/grocers_1839.gpkg'</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `grocers_1839' from data source 
-  `C:\Users\Laurent\Documents\linnet_point_pattern\data\grocers_1839.gpkg' 
+  `D:\jgravier\Sync\publications\linnet_point_pattern\data\grocers_1839.gpkg' 
   using driver `GPKG'
 Simple feature collection with 1028 features and 4 fields
 Geometry type: POINT
@@ -344,7 +344,7 @@ Projected CRS: +proj=lcc +lat_0=46.5 +lon_0=3 +lat_1=49 +lat_2=44 +x_0=700000 +y
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>dataJ <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">'data/jewellers_1839.gpkg'</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `jewellers_1839' from data source 
-  `C:\Users\Laurent\Documents\linnet_point_pattern\data\jewellers_1839.gpkg' 
+  `D:\jgravier\Sync\publications\linnet_point_pattern\data\jewellers_1839.gpkg' 
   using driver `GPKG'
 Simple feature collection with 341 features and 4 fields
 Geometry type: POINT
@@ -400,13 +400,13 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <h2 class="anchored" data-anchor-id="propriétés-des-objets-linnet-et-lpp">Propriétés des objets linnet et lpp</h2>
 <p>Si on souhaite utiliser une mesure précise, il est possible d’obtenir ces informations avec des fonctions spécifiques :</p>
 <ul>
-<li>nombre de sommets (<tt>nvertices</tt>)</li>
-<li>nombre de liens (<tt>nsegments</tt>)</li>
-<li>longueur totale du réseau (<tt>volume</tt>)</li>
-<li>diamètre du réseau planaire (<tt>diameter</tt>)</li>
-<li>rayon du réseau (distance entre le ou les sommets centraux et les sommets les plus périphériques) (<tt>boundingradius</tt>)</li>
+<li>nombre de sommets (<code>nvertices</code>)</li>
+<li>nombre de liens (<code>nsegments</code>)</li>
+<li>longueur totale du réseau (<code>volume</code>)</li>
+<li>diamètre du réseau planaire (<code>diameter</code>)</li>
+<li>rayon du réseau (distance entre le ou les sommets centraux et les sommets les plus périphériques) (<code>boundingradius</code>)</li>
 </ul>
-<p>D’autres mesures sont également disponibles et notamment le degré de chaque sommet (<tt>vertexdegree</tt>)</p>
+<p>D’autres mesures sont également disponibles et notamment le degré de chaque sommet (<code>vertexdegree</code>)</p>
 <p>Le script suivant montre quelques uns des résultats obtenus à l’aide de ces fonctions.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># nombre de sommets</span></span>
@@ -425,15 +425,15 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <pre><code>[1] 2.412602</code></pre>
 </div>
 </div>
-<p>Sur un objet de type <tt>lpp</tt> (<em>linear point pattern</em>), les principales mesures proposées sont les suivantes :</p>
+<p>Sur un objet de type <code>lpp</code> (<em>linear point pattern</em>), les principales mesures proposées sont les suivantes :</p>
 <ul>
-<li>nombre de points (<tt>npoints</tt>)</li>
-<li>nombre de points par unité de mesure (<tt>intensity</tt>)</li>
-<li>matrice des plus courtes distances entre points (<tt>pairdist</tt>)</li>
-<li>distance au plus proche voisin (<tt>nndist</tt>)</li>
-<li>identifiant du plus proche voisin (<tt>nnwhich</tt>)</li>
+<li>nombre de points (<code>npoints</code>)</li>
+<li>nombre de points par unité de mesure (<code>intensity</code>)</li>
+<li>matrice des plus courtes distances entre points (<code>pairdist</code>)</li>
+<li>distance au plus proche voisin (<code>nndist</code>)</li>
+<li>identifiant du plus proche voisin (<code>nnwhich</code>)</li>
 </ul>
-<p>La fonction <tt>summary</tt> permet là encore d’obtenir certaines de ces informations (nombre de points, nombre de points par unité), elle rappelle les caractéristiques principales du réseau (nombre de sommets, de liens et volume total) et enfin, elle fournit quartiles, médiane et moyenne des éventuels attributs numériques des points.</p>
+<p>La fonction <code>summary</code> permet là encore d’obtenir certaines de ces informations (nombre de points, nombre de points par unité), elle rappelle les caractéristiques principales du réseau (nombre de sommets, de liens et volume total) et enfin, elle fournit quartiles, médiane et moyenne des éventuels attributs numériques des points.</p>
 <p>Le script qui suit permet de calculer ces différents éléments sur le semis des épiceries et des bijouteries à Paris.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># semis des épiceries</span></span>
@@ -476,7 +476,7 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <pre><code>[1] 2.371364e-05</code></pre>
 </div>
 </div>
-<p>La dernière étape consiste à intégrer dans le même objet le réseau linéaire et le semis de points à l’aide de la fonction <tt>lpp</tt>.</p>
+<p>La dernière étape consiste à intégrer dans le même objet le réseau linéaire et le semis de points à l’aide de la fonction <code>lpp</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>LG <span class="ot">&lt;-</span> <span class="fu">lpp</span>(ppG, Paris)</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(LG)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -502,7 +502,7 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 </div>
 </div>
 <p><em>Faire les mesures pour les deux semis et proposer un court commentaire thématique ?</em></p>
-<p>Si l’on exécute la fonction <tt>plot</tt> sur un objet <tt>lpp</tt>, par défaut <tt>linnet</tt> propose un nombre de visualisations égal au nombre d’attributs des points, ces attributs étant appelés <tt>marks</tt>. Si je souhaite visualiser la répartion d’un attribut <em>Z</em> donné , j’utilise la syntaxe <tt>plot(X, which.marks=‘Z’)</tt> - le jeu de données utilisés ne comportant pas d’attributs pour les semis de points, cette option n’est pas mise en oeuvre dans ce tutoriel.</p>
+<p>Si l’on exécute la fonction <code>plot</code> sur un objet <code>lpp</code>, par défaut <code>linnet</code> propose un nombre de visualisations égal au nombre d’attributs des points, ces attributs étant appelés <code>marks</code>. Si je souhaite visualiser la répartion d’un attribut <em>Z</em> donné , j’utilise la syntaxe <code>plot(X, which.marks='Z')</code> - le jeu de données utilisés ne comportant pas d’attributs pour les semis de points, cette option n’est pas mise en oeuvre dans ce tutoriel.</p>
 <p>La visualisation de certaines mesures est intégrée par défaut dans le <em>package</em> et c’est notamment le cas pour la densité (nombre de points par unité de mesure du réseau).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
@@ -534,9 +534,9 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <p>Questions selon qu’on étudie un ou deux semis de points</p>
 <p>Quelques points de comparaison :</p>
 <ul>
-<li>processus poissonien : <tt>rpoislpp</tt></li>
-<li>processus aléatoire uniforme : <tt>runiflpp</tt></li>
-<li>processus aléatoire : <tt>rlpp</tt></li>
+<li>processus poissonien : <code>rpoislpp</code></li>
+<li>processus aléatoire uniforme : <code>runiflpp</code></li>
+<li>processus aléatoire : <code>rlpp</code></li>
 </ul>
 <section id="analyser-un-semis-de-points" class="level3">
 <h3 class="anchored" data-anchor-id="analyser-un-semis-de-points">Analyser un semis de points</h3>
@@ -590,7 +590,7 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 </section>
 <section id="pour-aller-plus-loin" class="level2">
 <h2 class="anchored" data-anchor-id="pour-aller-plus-loin">Pour aller plus loin</h2>
-<p>Le manuel le plus complet et le plus clair concernant l’analyse de semis de points sur un réseau est celui signé Okabe et Sugihara <span class="citation" data-cites="okabe2012">(<a href="#ref-okabe2012" role="doc-biblioref">2012</a>)</span> ; toutes les méthodes abordées par les auteurs ne peuvent être mises en oeuvre avec <tt>linnet</tt> (autocorrélation spatiale, modèle de Huff, etc.). L’article de Baddeley et Turner consacré à la première version du <em>package</em> <span class="citation" data-cites="baddeley2005">(<a href="#ref-baddeley2005" role="doc-biblioref">2005</a>)</span> gagne à être complété par le chapitre 17 de l’ouvrage de Baddeley <em>et al.</em> <span class="citation" data-cites="baddeley2012">(<a href="#ref-baddeley2012" role="doc-biblioref">2012</a>)</span>. À compléter par une mise à jour bibliographique récente co-signé du même Baddeley <span class="citation" data-cites="baddeley2021">(<a href="#ref-baddeley2021" role="doc-biblioref">2021</a>)</span>.</p>
+<p>Le manuel le plus complet et le plus clair concernant l’analyse de semis de points sur un réseau est celui signé Okabe et Sugihara <span class="citation" data-cites="okabe2012">(<a href="#ref-okabe2012" role="doc-biblioref">2012</a>)</span> ; toutes les méthodes abordées par les auteurs ne peuvent être mises en oeuvre avec <code>linnet</code> (autocorrélation spatiale, modèle de Huff, etc.). L’article de Baddeley et Turner consacré à la première version du <em>package</em> <span class="citation" data-cites="baddeley2005">(<a href="#ref-baddeley2005" role="doc-biblioref">2005</a>)</span> gagne à être complété par le chapitre 17 de l’ouvrage de Baddeley <em>et al.</em> <span class="citation" data-cites="baddeley2012">(<a href="#ref-baddeley2012" role="doc-biblioref">2012</a>)</span>. À compléter par une mise à jour bibliographique récente co-signé du même Baddeley <span class="citation" data-cites="baddeley2021">(<a href="#ref-baddeley2021" role="doc-biblioref">2021</a>)</span>.</p>
 </section>
 <section id="bibliography" class="level1 unnumbered">
 
