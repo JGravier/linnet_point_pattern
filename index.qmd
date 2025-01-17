@@ -107,15 +107,67 @@ La première étape consiste à créer un objet `linnet` (*linear network*) à l
 
 Créer un objet lpp (*linear point pattern*) suppose d'ajouter à ce réseau planaire un semis de points. Le fichier correspondant comprend *a minima* les coordonnées de chacun des points ; il peut comprendre autant de colonnes supplémentaires que d'attributs, les attributs pouvant être de type différents (entiers, flottants, chaîne de caractère, booléen).
 
+Dans un premier temps, nous montrons comment créer les objets linnet à partir de ses propres données. Le mini jeu de données concerne des affichages politiques dans l'espace public. Deux fichiers sont utilisés pour créer le réseau planaire : un fichier de points et leurs coordonnées ; un fichier de liens entre ces points (liens non orientés).
 
-*Prendre mini jeu de données et montrer les étapes (objets linnet) et les visu (marks de types différents) (LB)*
+```{r, warning=FALSE, message=FALSE}
+#chargement des packages
+library(sf)
+library(spatstat)
 
-Le jeu de données utilisé tout au long de ce tutoriel est issu du projet XXX. Il recense les épiceries et les bijouteries à Paris en 1839.
+# import des fichiers
+miniN <- read.table("data_mini/mini_node.txt", header=TRUE, row.names = 1,sep=",")
+miniE <- read.table("data_mini/mini_edge.txt", header = FALSE, sep = ",")
+
+# transformation en objet
+NN <- ppp(miniN$x, miniN$y, c(0,10), c(0,10))
+NE <- as.matrix(miniE, ncol=2)
+
+mini <- linnet(NN, edges=NE)
+class(mini)
+plot(mini)
+```
+
+Deux semis de points sont ensuite importés. Le premier (mini_points.txt) concerne l'affichage politique et comprend les variables suivantes :
+
+* x,y : coordonnées du collage 
+* nb : nombre d'affiches (entier)
+* pol : tendance politique (fl, extrême-gauche, fe, féministe, fr: extrême-droite)
+* sti : présence d'autocollant (booléen, 0 non, 1 oui)
+
+Le deuxième semis de points (mini-points2.txt) concerne la présence d'équipements. Il est en effet probable que la présence de certains équipements facilitent ou contraignent l'affichage militant. Il comprend les coordonnées (colonnes x et y) et une typologie (bus, arrêt de bus ; sub, station de métro ; ps : commissariat).
+
+```{r}
+semis1 <- read.table("data_mini/mini_points.txt", header=TRUE,sep=",")
+
+#contrôle du typage des variables
+str(semis1)
+
+# typage de la variable sti
+semis1$sti <- as.logical(semis1$sti)
+
+semis2 <- read.table("data_mini/mini_points2.txt", header=TRUE,sep=",")
+
+# transformation en semis de points sur réseau linéaire
+semPOL <- lpp(semis1, mini)
+semEQU <- lpp(semis2, mini)
+
+```
+
+Les attributs des semis de points sont appelé <tt>marks</tt> par le package. Par défaut, la fonction <pp>plot</tt> crée une visualisation par attribut et la variable visuelle s'adapte au type de l'attribut. Si l'on souhaite visualiser un attribut et un seul, on utilise l'argument <tt>which.marks</tt>.
+
+```{r}
+plot(semPOL)
+plot(semPOL, which.marks = "pol")
+```
+
+L'objectif des lignes précédentes était de montrer comment créer un objet <tt>linnet</tt> de A à Z. Les objets créés sont trop pauvres pour montrer l'intérêt du *package* et, dans la suite du tutoriel, le jeu de données est issu du projet XXX. Il recense les épiceries et les bijouteries à Paris en 1839.
 
 Le script suivant permet l'importation des données et leur transformation en objet linnet puis en objet lpp.
 
 ```{r, warning=FALSE, message=FALSE}
 #chargement des packages
+rm(list=ls())
+
 library(sf)
 library(spatstat)
 
