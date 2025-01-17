@@ -79,6 +79,10 @@ plot(1:10)
 ```
 --->
 
+*JG: commentaires thématiques, clusters*
+
+*LB: mini jeu de données*
+
 ## Définitions et questions de recherche
 
 L'analyse d'un semis de points sur un réseau désigne un ensemble de méthodes statistiques permettant de caractériser des événements ponctuels, appelés points dans la suite du texte, prenant place sur un réseau spatial planaire, appelé réseau dans la suite du texte. 
@@ -102,6 +106,9 @@ Trois  grands types de question sont généralement posées à ces données :
 La première étape consiste à créer un objet <tt>linnet</tt> (*linear network*) à l'aide de deux fichiers : un fichier correspondant aux sommets (intersections et extrémités des liens), un fichier correspondant aux liens entre ces sommets. Le fichier des sommets comprend trois colonnes correspondant au nom et aux coordonnées de chaque sommet ; le fichier des liens comprend deux colonnes correspondant aux deux extrémités de chaque lien. L'orientation des liens n'est pas prise en compte : un lien *a-b* implique nécessairement un lien *b-a*, il n'est donc pas utile d'avoir deux lignes différentes.
 
 Créer un objet lpp (*linear point pattern*) suppose d'ajouter à ce réseau planaire un semis de points. Le fichier correspondant comprend *a minima* les coordonnées de chacun des points ; il peut comprendre autant de colonnes supplémentaires que d'attributs, les attributs pouvant être de type différents (entiers, flottants, chaîne de caractère, booléen).
+
+
+*Prendre mini jeu de données et montrer les étapes (objets linnet) et les visu (marks de types différents) (LB)*
 
 Le jeu de données utilisé tout au long de ce tutoriel est issu du projet XXX. Il recense les épiceries et les bijouteries à Paris en 1839.
 
@@ -265,7 +272,6 @@ linearK (plus court chemin) et linearKinhom (pcc et non homogène)
 linearKEuclid (distance euclidienne), linearKEuclidInhom (distance euclidienne et non homogène)
 
 ### Analyser la relation entre deux semis de points
-
 
 ```{r}
 # étudier un semis par rapport à un autre

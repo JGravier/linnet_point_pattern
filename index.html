@@ -287,6 +287,8 @@ plot(1:10)
 
 
 --->
+<p><em>JG: commentaires thématiques, clusters</em></p>
+<p><em>LB: mini jeu de données</em></p>
 <section id="définitions-et-questions-de-recherche" class="level2">
 <h2 class="anchored" data-anchor-id="définitions-et-questions-de-recherche">Définitions et questions de recherche</h2>
 <p>L’analyse d’un semis de points sur un réseau désigne un ensemble de méthodes statistiques permettant de caractériser des événements ponctuels, appelés points dans la suite du texte, prenant place sur un réseau spatial planaire, appelé réseau dans la suite du texte.</p>
@@ -307,6 +309,7 @@ plot(1:10)
 <h2 class="anchored" data-anchor-id="préparer-ses-données">Préparer ses données</h2>
 <p>La première étape consiste à créer un objet <tt>linnet</tt> (<em>linear network</em>) à l’aide de deux fichiers : un fichier correspondant aux sommets (intersections et extrémités des liens), un fichier correspondant aux liens entre ces sommets. Le fichier des sommets comprend trois colonnes correspondant au nom et aux coordonnées de chaque sommet ; le fichier des liens comprend deux colonnes correspondant aux deux extrémités de chaque lien. L’orientation des liens n’est pas prise en compte : un lien <em>a-b</em> implique nécessairement un lien <em>b-a</em>, il n’est donc pas utile d’avoir deux lignes différentes.</p>
 <p>Créer un objet lpp (<em>linear point pattern</em>) suppose d’ajouter à ce réseau planaire un semis de points. Le fichier correspondant comprend <em>a minima</em> les coordonnées de chacun des points ; il peut comprendre autant de colonnes supplémentaires que d’attributs, les attributs pouvant être de type différents (entiers, flottants, chaîne de caractère, booléen).</p>
+<p><em>Prendre mini jeu de données et montrer les étapes (objets linnet) et les visu (marks de types différents) (LB)</em></p>
 <p>Le jeu de données utilisé tout au long de ce tutoriel est issu du projet XXX. Il recense les épiceries et les bijouteries à Paris en 1839.</p>
 <p>Le script suivant permet l’importation des données et leur transformation en objet linnet puis en objet lpp.</p>
 <div class="cell">
@@ -524,22 +527,6 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 </div>
 </div>
 </div>
-<p><em>à reprendre…</em></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co">#option épaisseur</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(paris)</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">density</span>(ppG),</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">style=</span><span class="st">"width"</span>,</span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">adjust=</span><span class="fl">0.5</span>,</span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">add=</span><span class="cn">TRUE</span>)    <span class="co"># épaisseur maximale</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-8-1.svg" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
 </section>
 <section id="étudier-les-voisinages" class="level2">
 <h2 class="anchored" data-anchor-id="étudier-les-voisinages">Étudier les voisinages</h2>
@@ -560,9 +547,9 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <section id="analyser-la-relation-entre-deux-semis-de-points" class="level3">
 <h3 class="anchored" data-anchor-id="analyser-la-relation-entre-deux-semis-de-points">Analyser la relation entre deux semis de points</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># étudier un semis par rapport à un autre</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">crossdist</span>(ppG,ppJ)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>] <span class="co">#shortest-path distances between pairs of ‘things’ taken from two different datasets.</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># étudier un semis par rapport à un autre</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">crossdist</span>(ppG,ppJ)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>] <span class="co">#shortest-path distances between pairs of ‘things’ taken from two different datasets.</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         [,1]     [,2]     [,3]     [,4]      [,5]
 [1,] 1725.354 1189.305 1524.982 2715.270 1354.0494
@@ -571,7 +558,7 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 [4,] 1721.839 1377.616 1569.930 1631.090 1569.6652
 [5,] 4199.966 3024.996 3964.274 3468.329 2745.1090</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nncross</span>(ppG, ppJ)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,]  <span class="co">#sGiven two point patterns X and Y, finds the nearest neighbour in Y of each point of X.</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nncross</span>(ppG, ppJ)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,]  <span class="co">#sGiven two point patterns X and Y, finds the nearest neighbour in Y of each point of X.</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      dist which
 1 174.5787   257
