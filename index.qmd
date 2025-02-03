@@ -31,60 +31,17 @@ authors:
         postal-code: 25030
     orcid: 0000-0003-0449-6499
     url: https://thema.univ-fcomte.fr/page_personnelle/jgravier
-doi: 10.888.222
+doi: XXX
 abstract: |
-    Résumé court de la contribution (250 mots maximum)
+    L’analyse d’un semis de points sur un réseau désigne un ensemble de méthodes statistiques permettant de caractériser des événements ponctuels dans le temps et dans l’espace prenant place sur un réseau spatial planaire. Deux des sujets les plus traités dans la bibliographie sont les accidents de la circulation et les actes criminels commis dans l’espace public. Il est possible d’imaginer étudier d’autres thématiques plus ou moins ponctuelles dans le temps, qu’il s’agisse de l’offre commerciale dans un espace donné, du collage militant ou publicitaire, de la présence d’équipements dans l’espace public (bancs, toilettes), etc. Trois grands types de question sont généralement posés à ces données : (1) Les points sont-ils significativement proches (ou éloignés) les uns des autres (étude du voisinage) ? (2) Existe-t-il des lieux où la concentration des points est notable (hot spots) ? (3) Quel modèle statistique est susceptible d’expliquer la géographie de ce semis de points ? Ces trois questions seront abordées durant la séance ElementR, fondée sur le package R [spatstat.linnet](https://cran.r-project.org/web/packages/spatstat.linnet/index.html) de la famille [spatstat](https://cran.r-project.org/web/packages/spatstat/index.html).
 keywords: [semis de points, réseau spatial, analyse spatiale]
 ---
-
-<!---Il s'agit d'un modèle adapté [Quarto](https://quarto.org/) qui permet de combiner du texte en Markdown et du code exécutable en R.
-
-Les consignes éditoriales et le processus de soumission d'un article à la revue Rzine sont détaillées dans [cette documentation](lien à rajouter) :
-
-- Critères d'acceptation
-- Processus éditorial
-- Modèle Rzine et contenu attendu (YAML, markdown, chunks, références)
-- Données mobilisées pour la démonstration.
-
-## Exécuter du code
-
-Cliquer sur **Render** dans l'IDE RStudio générera un article au format HTML suivant le modèle de mise en page Rzin qui contiendra votre article et son code embarqué :
-
-```{r}
-#| fenced: true
-
-1 + 1
-```
-
-
-## Insérer une image
-
-Pour incorporer une figure externe au code R, citable dans le corps du texte (@fig-1). 
-
-```{r fig1}
-#| fenced: true
-#| label: fig-1
-#| fig-cap: "Les articles rzine"
-
-knitr::include_graphics("figures/article_rzine.png")
-```
-
-Ou issu du code (@fig-2)
-
-```{r plot_basique}
-#| fenced: true
-#| label: fig-2
-#| fig-cap: "Un plot de base"
-
-plot(1:10)
-```
---->
 
 *JG: commentaires thématiques, clusters*
 
 *LB: mini jeu de données*
 
-## Définitions et questions de recherche
+# Définitions et questions de recherche
 
 L'analyse d'un semis de points sur un réseau désigne un ensemble de méthodes statistiques permettant de caractériser des événements ponctuels dans le temps et dans l'espace, appelés points dans la suite du texte, prenant place sur un réseau spatial planaire, appelé réseau dans la suite du texte.
 
@@ -98,7 +55,7 @@ Trois grands types de question sont généralement posées à ces données :
 * Existe-il des lieux où la concentration des points est notable (*hot spots*) ?
 * Quel modèle statistique est susceptible d'expliquer la géographie de ce semis de points ?
 
-## Le package linnet
+# Le package linnet
 
 `linnet` est un _package_ de la famille de _packages_ `spatstat` consacré à la statistique spatiale et notamment à l'analyse de semis de points.
 
@@ -107,6 +64,8 @@ Trois grands types de question sont généralement posées à ces données :
 La première étape consiste à créer un objet `linnet` (*linear network*) à l'aide de deux fichiers : un fichier correspondant aux sommets (intersections et extrémités des liens), un fichier correspondant aux liens entre ces sommets. Le fichier des sommets comprend trois colonnes correspondant au nom et aux coordonnées de chaque sommet ; le fichier des liens comprend deux colonnes correspondant aux deux extrémités de chaque lien. L'orientation des liens n'est pas prise en compte : un lien *a-b* implique nécessairement un lien *b-a*, il n'est donc pas utile d'avoir deux lignes différentes.
 
 Créer un objet `lpp` (*linear point pattern*) suppose d'ajouter à ce réseau planaire un semis de points. Le fichier correspondant comprend au moins les coordonnées de chacun des points ; il peut comprendre autant de colonnes supplémentaires que d'attributs, les attributs pouvant être de type différents (entiers, flottants, chaîne de caractère, booléen).
+
+### Création des objets `linnet` et `lpp` de A à Z et visualisation pour comprendre la structure des objets
 
 Dans un premier temps, nous montrons comment créer les objets `linnet` à partir de ses propres données. Le mini jeu de données concerne des affichages politiques dans l'espace public. Deux fichiers sont utilisés pour créer le réseau planaire : un fichier de points et leurs coordonnées ; un fichier de liens entre ces points (liens non orientés).
 
@@ -151,7 +110,6 @@ semis_equipement <- read.table("data/data_mini/mini_points2.txt", header = TRUE,
 # transformation en semis de points sur réseau linéaire
 collage_lpp <- lpp(X = semis_collage, L = mini)
 equip_lpp <- lpp(X = semis_equipement, L = mini)
-
 ```
 
 Les attributs des semis de points sont appelé `marks` dans le _package_ `spatstat.linnet`. Par défaut, la fonction `plot` crée une visualisation par attribut et la variable visuelle s'adapte au type de l'attribut. Si l'on souhaite visualiser un attribut et un seul, on utilise l'argument `which.marks`.
@@ -161,7 +119,12 @@ plot(collage_lpp)
 plot(equip_lpp, which.marks = "pol")
 ```
 
-L'objectif des lignes précédentes était de montrer comment créer un objet `linnet` de A à Z. Les objets créés sont trop pauvres pour montrer l'intérêt du _package_ et, dans la suite, le jeu de données est issu du projet [SoDUCo](https://soduco.geohistoricaldata.org/). Les données sont dérivées de l'extraction des _Annuaires_ commerciaux de la ville de Paris en 1839^[Il s'agit plus précisément ici de l'extraction de la liste alphabétique de l'_Annuaire Général du Commerce_ édité par Charles Lamy en 1839. Pour plus d'information, se reporter aux métadonnées inclues dans le fichier _readme.md_ du dossier _data_.]. Les deux jeux de données listent les épiciers et les bijoutiers.
+L'objectif des lignes précédentes était de montrer comment créer un objet `linnet` de A à Z. Les objets créés sont trop pauvres pour montrer l'intérêt du _package_ et, dans la suite, le jeu de données est issu du projet [SoDUCo](https://soduco.geohistoricaldata.org/). 
+
+
+### Création et visualisation des objets depuis des données spatiales (usuelles)
+
+Les données sont dérivées de l'extraction des _Annuaires_ commerciaux de la ville de Paris en 1839^[Il s'agit plus précisément de l'extraction de la liste alphabétique de l'_Annuaire Général du Commerce_ édité par Charles Lamy en 1839. Les informations plus précises sont inclues dans les métadonnées du dossier _data_ (fichier _readme.md_).]. Les deux jeux de données listent les épiciers et les bijoutiers présents dans l'espace municipal à cette date.
 
 Le code suivant permet d'importer les données et de les transformer en objet `linnet`, puis en objet `lpp`.
 
@@ -297,7 +260,7 @@ plot(densite_bij,
 ```
 
 
-## Étudier les voisinages
+# Étudier les voisinages
 
 Différences d'approche entre fonction K et méthode du plus proche voisin
 
@@ -310,7 +273,7 @@ Quelques points de comparaison :
 * processus aléatoire : `rlpp`
 
 
-### Analyser un semis de points
+## Analyser un semis de points
 
 Fonctions: 
 
@@ -318,7 +281,7 @@ linearK (plus court chemin) et linearKinhom (pcc et non homogène)
 
 linearKEuclid (distance euclidienne), linearKEuclidInhom (distance euclidienne et non homogène)
 
-### Analyser la relation entre deux semis de points
+## Analyser la relation entre deux semis de points
 
 ```{r}
 # étudier un semis par rapport à un autre
@@ -330,20 +293,20 @@ nncross(epiciers_ppp, bijoutiers_ppp)[1:5,]  # given two point patterns X and Y,
 
 Fonctions: linearKcross, linearKdot
 
-## Rechercher les clusters
+# Rechercher les clusters
 
 Plusieurs méthodes sont disponibles pour contrôler si le semis de points étudié s'écarte d'une répartition aléatoire pour présenter soit une répartition régulière soit une répartition concentrée sur le réseau. 
 
 Fonctions: density
 
-## Modéliser la géographie du semis de points
+# Modéliser la géographie du semis de points
 
-### Analyser un semis de points
+## Analyser un semis de points
 
-### Analyser la relation entre deux semis de points
+## Analyser la relation entre deux semis de points
 
-## Intérêts et limites du package
+# Intérêts et limites du package
 
-## Pour aller plus loin
+# Pour aller plus loin
 
-Le manuel le plus complet et le plus clair concernant l'analyse de semis de points sur un réseau est celui signé Okabe et Sugihara [-@okabe2012] ; toutes les méthodes abordées par les auteurs ne peuvent être mises en oeuvre avec `linnet` (autocorrélation spatiale, modèle de Huff, etc.). L'article de Baddeley et Turner consacré à la première version du *package* [-@baddeley2005] gagne à être complété par le chapitre 17 de l'ouvrage de Baddeley *et al.* [-@baddeley2012]. À compléter par une mise à jour bibliographique récente co-signé du même Baddeley [-@baddeley2021].
+Le manuel le plus complet et le plus clair concernant l'analyse de semis de points sur un réseau est celui d'Okabe et Sugihara [-@okabe2012] ; toutes les méthodes abordées par les auteurs ne peuvent être mises en oeuvre avec `linnet` (autocorrélation spatiale, modèle de Huff, etc.). L'article de Baddeley et Turner consacré à la première version du *package* [-@baddeley2005] gagne à être complété par le chapitre 17 de l'ouvrage de Baddeley *et al.* [-@baddeley2012]. À compléter par une mise à jour bibliographique récente co-signé du même Baddeley [-@baddeley2021].

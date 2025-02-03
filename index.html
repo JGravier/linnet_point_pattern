@@ -163,7 +163,7 @@ color: #f0aa0c;
       <div class="quarto-title-meta-heading">Doi</div>
       <div class="quarto-title-meta-contents">
         <p class="doi">
-          <a href="https://doi.org/10.888.222">10.888.222</a>
+          <a href="https://doi.org/XXX">XXX</a>
         </p>
       </div>
     </div>
@@ -172,7 +172,7 @@ color: #f0aa0c;
   <div>
     <div class="abstract">
       <div class="block-title">Résumé</div>
-      <p>Résumé court de la contribution (250 mots maximum)</p>
+      <p>L’analyse d’un semis de points sur un réseau désigne un ensemble de méthodes statistiques permettant de caractériser des événements ponctuels dans le temps et dans l’espace prenant place sur un réseau spatial planaire. Deux des sujets les plus traités dans la bibliographie sont les accidents de la circulation et les actes criminels commis dans l’espace public. Il est possible d’imaginer étudier d’autres thématiques plus ou moins ponctuelles dans le temps, qu’il s’agisse de l’offre commerciale dans un espace donné, du collage militant ou publicitaire, de la présence d’équipements dans l’espace public (bancs, toilettes), etc. Trois grands types de question sont généralement posés à ces données : (1) Les points sont-ils significativement proches (ou éloignés) les uns des autres (étude du voisinage) ? (2) Existe-t-il des lieux où la concentration des points est notable (hot spots) ? (3) Quel modèle statistique est susceptible d’expliquer la géographie de ce semis de points ? Ces trois questions seront abordées durant la séance ElementR, fondée sur le package R <a href="https://cran.r-project.org/web/packages/spatstat.linnet/index.html">spatstat.linnet</a> de la famille <a href="https://cran.r-project.org/web/packages/spatstat/index.html">spatstat</a>.</p>
     </div>
   </div>
 
@@ -190,9 +190,15 @@ color: #f0aa0c;
    
   <ul>
   <li><a href="#définitions-et-questions-de-recherche" id="toc-définitions-et-questions-de-recherche" class="nav-link active" data-scroll-target="#définitions-et-questions-de-recherche">Définitions et questions de recherche</a></li>
-  <li><a href="#le-package-linnet" id="toc-le-package-linnet" class="nav-link" data-scroll-target="#le-package-linnet">Le package linnet</a></li>
-  <li><a href="#préparer-ses-données" id="toc-préparer-ses-données" class="nav-link" data-scroll-target="#préparer-ses-données">Préparer ses données</a></li>
+  <li><a href="#le-package-linnet" id="toc-le-package-linnet" class="nav-link" data-scroll-target="#le-package-linnet">Le package linnet</a>
+  <ul class="collapse">
+  <li><a href="#préparer-ses-données" id="toc-préparer-ses-données" class="nav-link" data-scroll-target="#préparer-ses-données">Préparer ses données</a>
+  <ul class="collapse">
+  <li><a href="#création-des-objets-linnet-et-lpp-de-a-à-z-et-visualisation-pour-comprendre-la-structure-des-objets" id="toc-création-des-objets-linnet-et-lpp-de-a-à-z-et-visualisation-pour-comprendre-la-structure-des-objets" class="nav-link" data-scroll-target="#création-des-objets-linnet-et-lpp-de-a-à-z-et-visualisation-pour-comprendre-la-structure-des-objets">Création des objets <code>linnet</code> et <code>lpp</code> de A à Z et visualisation pour comprendre la structure des objets</a></li>
+  <li><a href="#création-et-visualisation-des-objets-depuis-des-données-spatiales-usuelles" id="toc-création-et-visualisation-des-objets-depuis-des-données-spatiales-usuelles" class="nav-link" data-scroll-target="#création-et-visualisation-des-objets-depuis-des-données-spatiales-usuelles">Création et visualisation des objets depuis des données spatiales (usuelles)</a></li>
+  </ul></li>
   <li><a href="#propriétés-des-objets-linnet-et-lpp" id="toc-propriétés-des-objets-linnet-et-lpp" class="nav-link" data-scroll-target="#propriétés-des-objets-linnet-et-lpp">Propriétés des objets <code>linnet</code> et <code>lpp</code></a></li>
+  </ul></li>
   <li><a href="#étudier-les-voisinages" id="toc-étudier-les-voisinages" class="nav-link" data-scroll-target="#étudier-les-voisinages">Étudier les voisinages</a>
   <ul class="collapse">
   <li><a href="#analyser-un-semis-de-points" id="toc-analyser-un-semis-de-points" class="nav-link" data-scroll-target="#analyser-un-semis-de-points">Analyser un semis de points</a></li>
@@ -217,80 +223,10 @@ color: #f0aa0c;
 
 
 <p>nocite: ‘<span class="citation" data-cites="*"></span>’</p>
-<!---Il s'agit d'un modèle adapté [Quarto](https://quarto.org/) qui permet de combiner du texte en Markdown et du code exécutable en R.
-
-Les consignes éditoriales et le processus de soumission d'un article à la revue Rzine sont détaillées dans [cette documentation](lien à rajouter) :
-
-- Critères d'acceptation
-- Processus éditorial
-- Modèle Rzine et contenu attendu (YAML, markdown, chunks, références)
-- Données mobilisées pour la démonstration.
-
-## Exécuter du code
-
-Cliquer sur **Render** dans l'IDE RStudio générera un article au format HTML suivant le modèle de mise en page Rzin qui contiendra votre article et son code embarqué :
-
-
-
-::: {.cell fenced='true'}
-
-```{.r .cell-code}
-1 + 1
-```
-
-::: {.cell-output .cell-output-stdout}
-
-```
-[1] 2
-```
-
-
-:::
-:::
-
-
-
-
-## Insérer une image
-
-Pour incorporer une figure externe au code R, citable dans le corps du texte (@fig-1). 
-
-
-
-::: {.cell fenced='true'}
-
-```{.r .cell-code}
-knitr::include_graphics("figures/article_rzine.png")
-```
-
-::: {.cell-output-display}
-![Les articles rzine](figures/article_rzine.png){#fig-1 width=1080}
-:::
-:::
-
-
-
-Ou issu du code (@fig-2)
-
-
-
-::: {.cell fenced='true'}
-
-```{.r .cell-code}
-plot(1:10)
-```
-
-::: {.cell-output-display}
-![Un plot de base](index_files/figure-html/fig-2-1.svg){#fig-2}
-:::
-:::
-
-
---->
 <p><em>JG: commentaires thématiques, clusters</em></p>
 <p><em>LB: mini jeu de données</em></p>
-<section id="définitions-et-questions-de-recherche" class="level2">
-<h2 class="anchored" data-anchor-id="définitions-et-questions-de-recherche">Définitions et questions de recherche</h2>
+<section id="définitions-et-questions-de-recherche" class="level1">
+<h1>Définitions et questions de recherche</h1>
 <p>L’analyse d’un semis de points sur un réseau désigne un ensemble de méthodes statistiques permettant de caractériser des événements ponctuels dans le temps et dans l’espace, appelés points dans la suite du texte, prenant place sur un réseau spatial planaire, appelé réseau dans la suite du texte.</p>
 <p>Un réseau planaire est constitué par un ensemble de sommets et un ensemble de liens entre ces sommets. Tout sommet est soit une intersection soit une extrémité. Chaque sommet est composé par un couple de coordonnées, chaque lien est caractérisable par une distance. Un lien peut par ailleurs être porteur d’attributs supplémentaires.</p>
 <p>Deux des sujets les plus traités dans la bibliographie sont les accidents de la circulation et les actes criminels commis dans l’espace public. Dans les deux cas, des événements dramatiques pouvant être caractérisés par des attributs de types différents se produisent dans un espace pouvant être modélisé sous forme de réseau planaire (réseau routier, réseau viaire). Il est possible d’imaginer d’autres thématiques plus ou moins ponctuelles dans le temps, qu’il s’agisse de l’offre commerciale dans un espace donné, du collage militant ou publicitaire, de la présence d’équipements dans l’espace public (bancs, toilettes), etc.</p>
@@ -301,14 +237,15 @@ plot(1:10)
 <li>Quel modèle statistique est susceptible d’expliquer la géographie de ce semis de points ?</li>
 </ul>
 </section>
-<section id="le-package-linnet" class="level2">
-<h2 class="anchored" data-anchor-id="le-package-linnet">Le package linnet</h2>
+<section id="le-package-linnet" class="level1">
+<h1>Le package linnet</h1>
 <p><code>linnet</code> est un <em>package</em> de la famille de <em>packages</em> <code>spatstat</code> consacré à la statistique spatiale et notamment à l’analyse de semis de points.</p>
-</section>
 <section id="préparer-ses-données" class="level2">
 <h2 class="anchored" data-anchor-id="préparer-ses-données">Préparer ses données</h2>
 <p>La première étape consiste à créer un objet <code>linnet</code> (<em>linear network</em>) à l’aide de deux fichiers : un fichier correspondant aux sommets (intersections et extrémités des liens), un fichier correspondant aux liens entre ces sommets. Le fichier des sommets comprend trois colonnes correspondant au nom et aux coordonnées de chaque sommet ; le fichier des liens comprend deux colonnes correspondant aux deux extrémités de chaque lien. L’orientation des liens n’est pas prise en compte : un lien <em>a-b</em> implique nécessairement un lien <em>b-a</em>, il n’est donc pas utile d’avoir deux lignes différentes.</p>
 <p>Créer un objet <code>lpp</code> (<em>linear point pattern</em>) suppose d’ajouter à ce réseau planaire un semis de points. Le fichier correspondant comprend au moins les coordonnées de chacun des points ; il peut comprendre autant de colonnes supplémentaires que d’attributs, les attributs pouvant être de type différents (entiers, flottants, chaîne de caractère, booléen).</p>
+<section id="création-des-objets-linnet-et-lpp-de-a-à-z-et-visualisation-pour-comprendre-la-structure-des-objets" class="level3">
+<h3 class="anchored" data-anchor-id="création-des-objets-linnet-et-lpp-de-a-à-z-et-visualisation-pour-comprendre-la-structure-des-objets">Création des objets <code>linnet</code> et <code>lpp</code> de A à Z et visualisation pour comprendre la structure des objets</h3>
 <p>Dans un premier temps, nous montrons comment créer les objets <code>linnet</code> à partir de ses propres données. Le mini jeu de données concerne des affichages politiques dans l’espace public. Deux fichiers sont utilisés pour créer le réseau planaire : un fichier de points et leurs coordonnées ; un fichier de liens entre ces points (liens non orientés).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#chargement des packages</span></span>
@@ -332,7 +269,7 @@ plot(1:10)
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-2-1.svg" class="img-fluid figure-img"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-1-1.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -373,7 +310,7 @@ plot(1:10)
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-4-1.svg" class="img-fluid figure-img"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-3-1.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -381,12 +318,16 @@ plot(1:10)
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-4-2.svg" class="img-fluid figure-img"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-3-2.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>L’objectif des lignes précédentes était de montrer comment créer un objet <code>linnet</code> de A à Z. Les objets créés sont trop pauvres pour montrer l’intérêt du <em>package</em> et, dans la suite, le jeu de données est issu du projet <a href="https://soduco.geohistoricaldata.org/">SoDUCo</a>. Les données sont dérivées de l’extraction des <em>Annuaires</em> commerciaux de la ville de Paris en 1839<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Les deux jeux de données listent les épiciers et les bijoutiers.</p>
+<p>L’objectif des lignes précédentes était de montrer comment créer un objet <code>linnet</code> de A à Z. Les objets créés sont trop pauvres pour montrer l’intérêt du <em>package</em> et, dans la suite, le jeu de données est issu du projet <a href="https://soduco.geohistoricaldata.org/">SoDUCo</a>.</p>
+</section>
+<section id="création-et-visualisation-des-objets-depuis-des-données-spatiales-usuelles" class="level3">
+<h3 class="anchored" data-anchor-id="création-et-visualisation-des-objets-depuis-des-données-spatiales-usuelles">Création et visualisation des objets depuis des données spatiales (usuelles)</h3>
+<p>Les données sont dérivées de l’extraction des <em>Annuaires</em> commerciaux de la ville de Paris en 1839<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Les deux jeux de données listent les épiciers et les bijoutiers présents dans l’espace municipal à cette date.</p>
 <p>Le code suivant permet d’importer les données et de les transformer en objet <code>linnet</code>, puis en objet <code>lpp</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import du réseau viaire parisien en 1836</span></span>
@@ -431,7 +372,7 @@ Projected CRS: +proj=lcc +lat_0=46.5 +lon_0=3 +lat_1=49 +lat_2=44 +x_0=700000 +y
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-5-1.svg" class="img-fluid figure-img"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-4-1.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -467,6 +408,7 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <li>le rayon (<em>bouding radius: 5058.732</em>)</li>
 </ul>
 <p>Longueur totale, diamètre et rayon se basent sur la distance géographique sur le réseau planaire et non sur la distance topologique. Le diamètre donne donc ici la longueur en mètres, et non en nombre de liens, du plus long des plus courts chemins. De manière générale, toutes les méthodes implémentées dans <code>linnet</code> se basents sur les distances géographiques sur le réseau planaire étudié.</p>
+</section>
 </section>
 <section id="propriétés-des-objets-linnet-et-lpp" class="level2">
 <h2 class="anchored" data-anchor-id="propriétés-des-objets-linnet-et-lpp">Propriétés des objets <code>linnet</code> et <code>lpp</code></h2>
@@ -594,14 +536,15 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-10-1.svg" class="img-fluid figure-img"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-9-1.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="étudier-les-voisinages" class="level2">
-<h2 class="anchored" data-anchor-id="étudier-les-voisinages">Étudier les voisinages</h2>
+</section>
+<section id="étudier-les-voisinages" class="level1">
+<h1>Étudier les voisinages</h1>
 <p>Différences d’approche entre fonction K et méthode du plus proche voisin</p>
 <p>Questions selon qu’on étudie un ou deux semis de points</p>
 <p>Quelques points de comparaison :</p>
@@ -610,14 +553,14 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <li>processus aléatoire uniforme : <code>runiflpp</code></li>
 <li>processus aléatoire : <code>rlpp</code></li>
 </ul>
-<section id="analyser-un-semis-de-points" class="level3">
-<h3 class="anchored" data-anchor-id="analyser-un-semis-de-points">Analyser un semis de points</h3>
+<section id="analyser-un-semis-de-points" class="level2">
+<h2 class="anchored" data-anchor-id="analyser-un-semis-de-points">Analyser un semis de points</h2>
 <p>Fonctions:</p>
 <p>linearK (plus court chemin) et linearKinhom (pcc et non homogène)</p>
 <p>linearKEuclid (distance euclidienne), linearKEuclidInhom (distance euclidienne et non homogène)</p>
 </section>
-<section id="analyser-la-relation-entre-deux-semis-de-points" class="level3">
-<h3 class="anchored" data-anchor-id="analyser-la-relation-entre-deux-semis-de-points">Analyser la relation entre deux semis de points</h3>
+<section id="analyser-la-relation-entre-deux-semis-de-points" class="level2">
+<h2 class="anchored" data-anchor-id="analyser-la-relation-entre-deux-semis-de-points">Analyser la relation entre deux semis de points</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># étudier un semis par rapport à un autre</span></span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -643,26 +586,26 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <p>Fonctions: linearKcross, linearKdot</p>
 </section>
 </section>
-<section id="rechercher-les-clusters" class="level2">
-<h2 class="anchored" data-anchor-id="rechercher-les-clusters">Rechercher les clusters</h2>
+<section id="rechercher-les-clusters" class="level1">
+<h1>Rechercher les clusters</h1>
 <p>Plusieurs méthodes sont disponibles pour contrôler si le semis de points étudié s’écarte d’une répartition aléatoire pour présenter soit une répartition régulière soit une répartition concentrée sur le réseau.</p>
 <p>Fonctions: density</p>
 </section>
-<section id="modéliser-la-géographie-du-semis-de-points" class="level2">
-<h2 class="anchored" data-anchor-id="modéliser-la-géographie-du-semis-de-points">Modéliser la géographie du semis de points</h2>
-<section id="analyser-un-semis-de-points-1" class="level3">
-<h3 class="anchored" data-anchor-id="analyser-un-semis-de-points-1">Analyser un semis de points</h3>
+<section id="modéliser-la-géographie-du-semis-de-points" class="level1">
+<h1>Modéliser la géographie du semis de points</h1>
+<section id="analyser-un-semis-de-points-1" class="level2">
+<h2 class="anchored" data-anchor-id="analyser-un-semis-de-points-1">Analyser un semis de points</h2>
 </section>
-<section id="analyser-la-relation-entre-deux-semis-de-points-1" class="level3">
-<h3 class="anchored" data-anchor-id="analyser-la-relation-entre-deux-semis-de-points-1">Analyser la relation entre deux semis de points</h3>
+<section id="analyser-la-relation-entre-deux-semis-de-points-1" class="level2">
+<h2 class="anchored" data-anchor-id="analyser-la-relation-entre-deux-semis-de-points-1">Analyser la relation entre deux semis de points</h2>
 </section>
 </section>
-<section id="intérêts-et-limites-du-package" class="level2">
-<h2 class="anchored" data-anchor-id="intérêts-et-limites-du-package">Intérêts et limites du package</h2>
+<section id="intérêts-et-limites-du-package" class="level1">
+<h1>Intérêts et limites du package</h1>
 </section>
-<section id="pour-aller-plus-loin" class="level2">
-<h2 class="anchored" data-anchor-id="pour-aller-plus-loin">Pour aller plus loin</h2>
-<p>Le manuel le plus complet et le plus clair concernant l’analyse de semis de points sur un réseau est celui signé Okabe et Sugihara <span class="citation" data-cites="okabe2012">(<a href="#ref-okabe2012" role="doc-biblioref">2012</a>)</span> ; toutes les méthodes abordées par les auteurs ne peuvent être mises en oeuvre avec <code>linnet</code> (autocorrélation spatiale, modèle de Huff, etc.). L’article de Baddeley et Turner consacré à la première version du <em>package</em> <span class="citation" data-cites="baddeley2005">(<a href="#ref-baddeley2005" role="doc-biblioref">2005</a>)</span> gagne à être complété par le chapitre 17 de l’ouvrage de Baddeley <em>et al.</em> <span class="citation" data-cites="baddeley2012">(<a href="#ref-baddeley2012" role="doc-biblioref">2012</a>)</span>. À compléter par une mise à jour bibliographique récente co-signé du même Baddeley <span class="citation" data-cites="baddeley2021">(<a href="#ref-baddeley2021" role="doc-biblioref">2021</a>)</span>.</p>
+<section id="pour-aller-plus-loin" class="level1">
+<h1>Pour aller plus loin</h1>
+<p>Le manuel le plus complet et le plus clair concernant l’analyse de semis de points sur un réseau est celui d’Okabe et Sugihara <span class="citation" data-cites="okabe2012">(<a href="#ref-okabe2012" role="doc-biblioref">2012</a>)</span> ; toutes les méthodes abordées par les auteurs ne peuvent être mises en oeuvre avec <code>linnet</code> (autocorrélation spatiale, modèle de Huff, etc.). L’article de Baddeley et Turner consacré à la première version du <em>package</em> <span class="citation" data-cites="baddeley2005">(<a href="#ref-baddeley2005" role="doc-biblioref">2005</a>)</span> gagne à être complété par le chapitre 17 de l’ouvrage de Baddeley <em>et al.</em> <span class="citation" data-cites="baddeley2012">(<a href="#ref-baddeley2012" role="doc-biblioref">2012</a>)</span>. À compléter par une mise à jour bibliographique récente co-signé du même Baddeley <span class="citation" data-cites="baddeley2021">(<a href="#ref-baddeley2021" role="doc-biblioref">2021</a>)</span>.</p>
 </section>
 <section id="bibliography" class="level1 unnumbered">
 
@@ -686,20 +629,39 @@ Okabe, A. et Sugihara, K. (2012). <em>Spatial Analysis along Networks: Statistic
 </div></section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Glossaire</h2>
 
 <ol>
-<li id="fn1"><p>Il s’agit plus précisément ici de l’extraction de la liste alphabétique de l’<em>Annuaire Général du Commerce</em> édité par Charles Lamy en 1839. Pour plus d’information, se reporter aux métadonnées inclues dans le fichier <em>readme.md</em> du dossier <em>data</em>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>Il s’agit plus précisément de l’extraction de la liste alphabétique de l’<em>Annuaire Général du Commerce</em> édité par Charles Lamy en 1839. Les informations plus précises sont inclues dans les métadonnées du dossier <em>data</em> (fichier <em>readme.md</em>).<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section><section class="quarto-appendix-contents" id="quarto-reuse"><h2 class="anchored quarto-appendix-heading">Réutilisation</h2><div class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.fr_fr">CC BY-SA 4.0</a></div></div></section><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@article{beauguitte2024,
   author = {Beauguitte, Laurent and Gravier, Julie},
   title = {Analyse de semis de points sur un réseau spatial avec R},
   journal = {Rzine},
   date = {2024-10-10},
-  doi = {10.888.222},
+  doi = {XXX},
   langid = {fr-FR},
-  abstract = {Résumé court de la contribution (250 mots maximum)}
+  abstract = {L’analyse d’un semis de points sur un réseau désigne un
+    ensemble de méthodes statistiques permettant de caractériser des
+    événements ponctuels dans le temps et dans l’espace prenant place
+    sur un réseau spatial planaire. Deux des sujets les plus traités
+    dans la bibliographie sont les accidents de la circulation et les
+    actes criminels commis dans l’espace public. Il est possible
+    d’imaginer étudier d’autres thématiques plus ou moins ponctuelles
+    dans le temps, qu’il s’agisse de l’offre commerciale dans un espace
+    donné, du collage militant ou publicitaire, de la présence
+    d’équipements dans l’espace public (bancs, toilettes), etc. Trois
+    grands types de question sont généralement posés à ces données : (1)
+    Les points sont-ils significativement proches (ou éloignés) les uns
+    des autres (étude du voisinage)\,? (2) Existe-t-il des lieux où la
+    concentration des points est notable (hot spots)\,? (3) Quel modèle
+    statistique est susceptible d’expliquer la géographie de ce semis de
+    points\,? Ces trois questions seront abordées durant la séance
+    ElementR, fondée sur le package R
+    {[}spatstat.linnet{]}(https://cran.r-project.org/web/packages/spatstat.linnet/index.html)
+    de la famille
+    {[}spatstat{]}(https://cran.r-project.org/web/packages/spatstat/index.html).}
 }
 </code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">Veuillez citer ce travail comme suit&nbsp;:</div><div id="ref-beauguitte2024" class="csl-entry quarto-appendix-citeas" role="listitem">
 Beauguitte, L. et Gravier, J. (2024). Analyse de semis de points sur un
-réseau spatial avec R. <em>Rzine</em>. <a href="https://doi.org/10.888.222">https://doi.org/10.888.222</a>
+réseau spatial avec R. <em>Rzine</em>. <a href="https://doi.org/XXX">https://doi.org/XXX</a>
 </div></div></section></div></main>
 <!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">
