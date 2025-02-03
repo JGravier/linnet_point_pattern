@@ -1,6 +1,6 @@
 ---
-title: Analyse de semis de points sur un réseau
-subtitle: Sous-titre (éventuel) de l'article
+title: Analyse de semis de points sur un réseau spatial avec R
+subtitle: Commerces parisiens au début du XIXe s.
 bibliography: bibliography.bib
 link-citations: true
 ---
@@ -14,25 +14,26 @@ authors:
   - name: Laurent Beauguitte
     affiliations:
       - name: UMR Géographie-cités
-        department: Organisme employeur 1
-        address: Adresse du laboratoire d'appartenance 1
-        city: Ville 1
-        country: Pays 1 
-        postal-code: Code postal 1
-    orcid: Identifiant ORCID 1 (si existe) 
-    url: Page web personnelle 1 (si existe)
+        department: CNRS
+        address: 5, cours des Humanités
+        city: Aubervilliers Cedex
+        country: France
+        postal-code: 93322
+    orcid: 0000-0001-8803-6056 
+    url: https://esprad.hypotheses.org/cv-com-et-publis
   - name: Julie Gravier
     affiliations:
-      - name: UMR Théma
-        department: Organisme employeur 2
-        address: Adresse du laboratoire d'appartenance 2
-        city: Ville 2       
-        country: Pays 2
-    orcid: Identifiant ORCID 2 (si existe)
-    url: Page web personnelle 2 (si existe)
+      - name: UMR ThéMA
+        department: CNRS
+        address: 32 rue Mégevand
+        city: Besançon Cedex       
+        country: France
+        postal-code: 25030
+    orcid: 0000-0003-0449-6499
+    url: https://thema.univ-fcomte.fr/page_personnelle/jgravier
 doi: 10.888.222
 abstract: |
-    Résumé court de la contribution (50 mots maximum)
+    Résumé court de la contribution (250 mots maximum)
 keywords: [semis de points, réseau spatial, analyse spatiale]
 ---
 
@@ -93,9 +94,9 @@ Deux des sujets les plus traités dans la bibliographie sont les accidents de la
 
 Trois grands types de question sont généralement posées à ces données :
 
-* les points sont-ils significativement proches (ou éloignés) les uns des autres (étude du voisinage) ?
-* existe-il des lieux où la concentration des points est notable (*hot spots*) ?
-* quel modèle statistique est susceptible d'expliquer la géographie de ce semis de points ?
+* Les points sont-ils significativement proches (ou éloignés) les uns des autres (étude du voisinage) ?
+* Existe-il des lieux où la concentration des points est notable (*hot spots*) ?
+* Quel modèle statistique est susceptible d'expliquer la géographie de ce semis de points ?
 
 ## Le package linnet
 
