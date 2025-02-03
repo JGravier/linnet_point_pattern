@@ -106,9 +106,9 @@ Trois grands types de question sont généralement posées à ces données :
 
 La première étape consiste à créer un objet `linnet` (*linear network*) à l'aide de deux fichiers : un fichier correspondant aux sommets (intersections et extrémités des liens), un fichier correspondant aux liens entre ces sommets. Le fichier des sommets comprend trois colonnes correspondant au nom et aux coordonnées de chaque sommet ; le fichier des liens comprend deux colonnes correspondant aux deux extrémités de chaque lien. L'orientation des liens n'est pas prise en compte : un lien *a-b* implique nécessairement un lien *b-a*, il n'est donc pas utile d'avoir deux lignes différentes.
 
-Créer un objet lpp (*linear point pattern*) suppose d'ajouter à ce réseau planaire un semis de points. Le fichier correspondant comprend *a minima* les coordonnées de chacun des points ; il peut comprendre autant de colonnes supplémentaires que d'attributs, les attributs pouvant être de type différents (entiers, flottants, chaîne de caractère, booléen).
+Créer un objet `lpp` (*linear point pattern*) suppose d'ajouter à ce réseau planaire un semis de points. Le fichier correspondant comprend au moins les coordonnées de chacun des points ; il peut comprendre autant de colonnes supplémentaires que d'attributs, les attributs pouvant être de type différents (entiers, flottants, chaîne de caractère, booléen).
 
-Dans un premier temps, nous montrons comment créer les objets linnet à partir de ses propres données. Le mini jeu de données concerne des affichages politiques dans l'espace public. Deux fichiers sont utilisés pour créer le réseau planaire : un fichier de points et leurs coordonnées ; un fichier de liens entre ces points (liens non orientés).
+Dans un premier temps, nous montrons comment créer les objets `linnet` à partir de ses propres données. Le mini jeu de données concerne des affichages politiques dans l'espace public. Deux fichiers sont utilisés pour créer le réseau planaire : un fichier de points et leurs coordonnées ; un fichier de liens entre ces points (liens non orientés).
 
 ```{r, warning=FALSE, message=FALSE}
 #chargement des packages
@@ -116,85 +116,79 @@ library(sf)
 library(spatstat)
 
 # import des fichiers
-miniN <- read.table("data/data_mini/mini_node.txt", header=TRUE, row.names = 1,sep=",")
-miniE <- read.table("data/data_mini/mini_edge.txt", header = FALSE, sep = ",")
+mini_node <- read.table(file = "data/data_mini/mini_node.txt", header = TRUE, row.names = 1, sep = ",")
+mini_edge <- read.table("data/data_mini/mini_edge.txt", header = FALSE, sep = ",")
 
-# transformation en objet
-NN <- ppp(miniN$x, miniN$y, c(0,10), c(0,10))
-NE <- as.matrix(miniE, ncol=2)
+# transformation en objet ppp et matrice
+mini_node_ppp <- ppp(x = mini_node$x, y = mini_node$y, c(0,10), c(0,10))
+mini_edge_matrix <- as.matrix(mini_edge, ncol = 2)
 
-mini <- linnet(NN, edges=NE)
+mini <- linnet(vertices = mini_node_ppp, edges = mini_edge_matrix)
 class(mini)
 plot(mini)
 ```
 
-Deux semis de points sont ensuite importés. Le premier (mini_points.txt) concerne l'affichage politique et comprend les variables suivantes :
+Deux semis de points sont ensuite importés. Le premier concerne l'affichage politique et comprend les variables suivantes :
 
-* x,y : coordonnées du collage 
+* x,y : coordonnées du collage
 * nb : nombre d'affiches (entier)
-* pol : tendance politique (fl, extrême-gauche, fe, féministe, fr: extrême-droite)
-* sti : présence d'autocollant (booléen, 0 non, 1 oui)
+* pol : tendance politique (eg : extrême-gauche, fe : féministe, ed : extrême-droite)
+* sti : présence d'autocollant (0 : non, 1 : oui)
 
-Le deuxième semis de points (mini-points2.txt) concerne la présence d'équipements. Il est en effet probable que la présence de certains équipements facilitent ou contraignent l'affichage militant. Il comprend les coordonnées (colonnes x et y) et une typologie (bus, arrêt de bus ; sub, station de métro ; ps : commissariat).
+Le second semis de points concerne la présence d'équipements publics. Il est en effet probable que la présence de certains équipements facilitent ou contraignent l'affichage militant. Il comprend les coordonnées (colonnes x et y) et une typologie (bus : arrêt de bus ; sub : station de métro ; ps : commissariat).
 
 ```{r}
-semis1 <- read.table("data/data_mini/mini_points.txt", header=TRUE,sep=",")
+semis_collage <- read.table("data/data_mini/mini_points1.txt", header = TRUE, sep = ",") # premier semis sur l'affichage politique
 
-#contrôle du typage des variables
-str(semis1)
+# contrôle du typage des variables
+str(semis_collage)
 
 # typage de la variable sti
-semis1$sti <- as.logical(semis1$sti)
+semis_collage$sti <- as.logical(semis_collage$sti)
 
-semis2 <- read.table("data/data_mini/mini_points2.txt", header=TRUE,sep=",")
+semis_equipement <- read.table("data/data_mini/mini_points2.txt", header = TRUE, sep = ",") # second semis sur les équipements publics
 
 # transformation en semis de points sur réseau linéaire
-semPOL <- lpp(semis1, mini)
-semEQU <- lpp(semis2, mini)
+collage_lpp <- lpp(X = semis_collage, L = mini)
+equip_lpp <- lpp(X = semis_equipement, L = mini)
 
 ```
 
-Les attributs des semis de points sont appelé <tt>marks</tt> par le package. Par défaut, la fonction <pp>plot</tt> crée une visualisation par attribut et la variable visuelle s'adapte au type de l'attribut. Si l'on souhaite visualiser un attribut et un seul, on utilise l'argument <tt>which.marks</tt>.
+Les attributs des semis de points sont appelé `marks` dans le _package_ `spatstat.linnet`. Par défaut, la fonction `plot` crée une visualisation par attribut et la variable visuelle s'adapte au type de l'attribut. Si l'on souhaite visualiser un attribut et un seul, on utilise l'argument `which.marks`.
 
 ```{r}
-plot(semPOL)
-plot(semPOL, which.marks = "pol")
+plot(collage_lpp)
+plot(equip_lpp, which.marks = "pol")
 ```
 
-L'objectif des lignes précédentes était de montrer comment créer un objet <tt>linnet</tt> de A à Z. Les objets créés sont trop pauvres pour montrer l'intérêt du *package* et, dans la suite du tutoriel, le jeu de données est issu du projet XXX. Il recense les épiceries et les bijouteries à Paris en 1839.
+L'objectif des lignes précédentes était de montrer comment créer un objet `linnet` de A à Z. Les objets créés sont trop pauvres pour montrer l'intérêt du _package_ et, dans la suite, le jeu de données est issu du projet [SoDUCo](https://soduco.geohistoricaldata.org/). Les données sont dérivées de l'extraction des _Annuaires_ commerciaux de la ville de Paris en 1839^[Il s'agit plus précisément ici de l'extraction de la liste alphabétique de l'_Annuaire Général du Commerce_ édité par Charles Lamy en 1839. Pour plus d'information, se reporter aux métadonnées inclues dans le fichier _readme.md_ du dossier _data_.]. Les deux jeux de données listent les épiciers et les bijoutiers.
 
-Le script suivant permet l'importation des données et leur transformation en objet linnet puis en objet lpp.
+Le code suivant permet d'importer les données et de les transformer en objet `linnet`, puis en objet `lpp`.
 
 ```{r, warning=FALSE, message=FALSE}
-#chargement des packages
-rm(list=ls())
-
-library(sf)
-library(spatstat)
-
-# import du réseau viaire parisien en 1838
+# import du réseau viaire parisien en 1836
 paris <- st_read('data/1836_jacoubet.shp')
 
 # import des semis de points
-dataG <- st_read('data/grocers_1839.gpkg')
-dataJ <- st_read('data/jewellers_1839.gpkg')
+epiciers <- st_read(dsn = "data/grocers_1839.gpkg")
+bijoutiers <- st_read(dsn = "data/jewellers_1839.gpkg")
 
 # contrôle visuel des objets importés
 plot(paris$geometry)
-plot(dataG$geom, pch = 15, col='blue', add= TRUE)
-plot(dataJ$geom, pch = 15, col='red', bg='red', add=TRUE)
+plot(epiciers$geom, pch = 15, col = 'blue', add = TRUE)
+plot(bijoutiers$geom, pch = 15, col = 'red', bg = 'red', add = TRUE)
 ```
 
-La transformation des semis de points en objets spatstat se fait à l'aide de la fonction `as.ppp` (*planar point pattern*). Pour transformer le réseau viaire en objet `linnet`, deux étapes sont nécessaires : transformer le shapefile en objet `psp` (*planar segment pattern*) puis en objet `linnet` (*linear network*). La fonction `summary` permet de connaître les principales propriétés des objets créés.
+La transformation des semis de points en objets spatstat se fait à l'aide de la fonction `as.ppp` (_planar point pattern_). Pour transformer le réseau viaire en objet `linnet`, deux étapes sont nécessaires : transformer le shapefile en objet `psp` (_planar segment pattern_) puis en objet `linnet` (_linear network_). La fonction `summary` permet de connaître les principales propriétés des objets créés.
 
 ```{r}
-ppG <- as.ppp(st_geometry(dataG))
-ppJ <- as.ppp(st_geometry(dataJ))
+epiciers_ppp <- as.ppp(st_geometry(epiciers))
+bijoutiers_ppp <- as.ppp(st_geometry(bijoutiers))
 
-Paris <- as.psp(st_geometry(paris))
-Paris <- as.linnet(Paris)
+paris <- as.psp(st_geometry(paris))
+paris <- as.linnet(paris)
 
-summary(Paris)
+summary(paris)
 ```
 
 Concernant les informations sur le réseau viaire, la fonction `summary` renvoie :
@@ -208,7 +202,7 @@ Concernant les informations sur le réseau viaire, la fonction `summary` renvoie
 
 Longueur totale, diamètre et rayon se basent sur la distance géographique sur le réseau planaire et non sur la distance topologique. Le diamètre donne donc ici la longueur en mètres, et non en nombre de liens, du plus long des plus courts chemins. De manière générale, toutes les méthodes implémentées dans `linnet` se basents sur les distances géographiques sur le réseau planaire étudié.
 
-## Propriétés des objets linnet et lpp
+## Propriétés des objets `linnet` et `lpp`
 
 Si on souhaite utiliser une mesure précise, il est possible d'obtenir ces informations avec des fonctions spécifiques :
 
@@ -218,19 +212,19 @@ Si on souhaite utiliser une mesure précise, il est possible d'obtenir ces infor
 * diamètre du réseau planaire (`diameter`)
 * rayon du réseau (distance entre le ou les sommets centraux et les sommets les plus périphériques) (`boundingradius`)
 
-D'autres mesures sont également disponibles et notamment le degré de chaque sommet (`vertexdegree`)
+D'autres mesures sont également disponibles et notamment le degré de chaque sommet (`vertexdegree`).
 
-Le script suivant montre quelques uns des résultats obtenus à l'aide de ces fonctions.
+Le code suivant montre quelques uns des résultats obtenus à l'aide de ces fonctions.
 
 ```{r}
 # nombre de sommets
-nvertices(Paris)
+nvertices(paris)
 
 # longueur totale du réseau viaire (en mètres)
-volume(Paris)
+volume(paris)
 
 # degré
-mean(vertexdegree(Paris))
+mean(vertexdegree(paris))
 
 ```
 
@@ -245,41 +239,41 @@ Sur un objet de type `lpp` (*linear point pattern*), les principales mesures pro
 
 La fonction `summary` permet là encore d'obtenir certaines de ces informations (nombre de points, nombre de points par unité), elle rappelle les caractéristiques principales du réseau (nombre de sommets, de liens et volume total) et enfin, elle fournit quartiles, médiane et moyenne des éventuels attributs numériques des points.
 
-Le script qui suit permet de calculer ces différents éléments sur le semis des épiceries et des bijouteries à Paris.
+Le code suivant permet de calculer ces différents éléments sur le semis des épiciers et des bijoutiers à Paris.
 
 ```{r}
-# semis des épiceries
+# semis des épiciers
 # nombre de points et nombre de points par mètre
-npoints(ppG)
-intensity(ppG)
+npoints(epiciers_ppp)
+intensity(epiciers_ppp)
 
 # plus court chemin (géographique et non topologique) entre paires de points
-pairdist(ppG)[1:5,1:5]
+pairdist(epiciers_ppp)[1:5, 1:5]
 
 # distance géographique au plus court voisin
-nndist(ppG)[1:5] 
+nndist(epiciers_ppp)[1:5] 
 
 # identifiant du plus proche voisin
-nnwhich(ppG)[1:5] 
+nnwhich(epiciers_ppp)[1:5] 
 
 # semis des bijouteries
-npoints(ppJ)
-intensity(ppG)
+npoints(bijoutiers_ppp)
+intensity(bijoutiers_ppp)
 ```
 
 La dernière étape consiste à intégrer dans le même objet le réseau linéaire et le semis de points à l'aide de la fonction `lpp`.
 
 ```{r}
-LG <- lpp(ppG, Paris)
-summary(LG)
+epiciers_lpp <- lpp(X = epiciers_ppp, L = paris)
+summary(epiciers_lpp)
 
-LJ <- lpp(ppJ, Paris)
-summary(LJ)
+bijoutiers_lpp <- lpp(X = bijoutiers_ppp, L = paris)
+summary(bijoutiers_lpp)
 ```
 
 *Faire les mesures pour les deux semis et proposer un court commentaire thématique ?*
 
-Si l'on exécute la fonction `plot` sur un objet `lpp`, par défaut `linnet` propose un nombre de visualisations égal au nombre d'attributs des points, ces attributs étant appelés  `marks`. Si je souhaite visualiser la répartion d'un attribut *Z* donné , j'utilise la syntaxe `plot(X, which.marks='Z')` - le jeu de données utilisés ne comportant pas d'attributs pour les semis de points, cette option n'est pas mise en oeuvre dans ce tutoriel.
+Si l'on exécute la fonction `plot` sur un objet `lpp`, par défaut `linnet` propose un nombre de visualisations égal au nombre d'attributs des points, ces attributs étant appelés `marks`. Si je souhaite visualiser la répartion d'un attribut *Z* donné , j'utilise la syntaxe `plot(X, which.marks='Z')` -- le jeu de données utilisés ne comportant pas d'attributs pour les semis de points, cette option n'est pas mise en oeuvre dans ce tutoriel.
 
 La visualisation de certaines mesures est intégrée par défaut dans le *package* et c'est notamment le cas pour la densité (nombre de points par unité de mesure du réseau).
 
@@ -290,16 +284,16 @@ par(mfrow=c(1,2))
 
 # calcul de la densité de points par unité de réseau
 # l'option finespacing n'est pas nécessaire pour un réseau de petite taille
-DEN_LJ <- density(LJ, finespacing=FALSE)
-DEN_LG <- density(LJ, finespacing=FALSE)
+densite_bij <- density(x = bijoutiers_lpp, finespacing = FALSE)
+densite_epic <- density(epiciers_lpp, finespacing = FALSE)
 
 # option couleur (par défaut)
-plot(DEN_LG)
+plot(densite_epic)
 
 # option épaisseur des liens du réseau
-plot(DEN_LG, 
-     style="width", 
-     adjust=0.5)  # contrôler épaisseur max
+plot(densite_bij, 
+     style = "width", 
+     adjust = 0.5)  # contrôler épaisseur max
 ```
 
 
@@ -329,9 +323,9 @@ linearKEuclid (distance euclidienne), linearKEuclidInhom (distance euclidienne e
 ```{r}
 # étudier un semis par rapport à un autre
 
-crossdist(ppG,ppJ)[1:5,1:5] #shortest-path distances between pairs of ‘things’ taken from two different datasets.
+crossdist(epiciers_ppp, bijoutiers_ppp)[1:5, 1:5] # shortest-path distances between pairs of ‘things’ taken from two different datasets.
 
-nncross(ppG, ppJ)[1:5,]  #sGiven two point patterns X and Y, finds the nearest neighbour in Y of each point of X.
+nncross(epiciers_ppp, bijoutiers_ppp)[1:5,]  # given two point patterns X and Y, finds the nearest neighbour in Y of each point of X.
 ```
 
 Fonctions: linearKcross, linearKdot
