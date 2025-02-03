@@ -100,7 +100,7 @@ Trois grands types de question sont généralement posées à ces données :
 
 ## Le package linnet
 
-`linnet` est un sous-*package* du *package* `spatstat` consacré à la statistique spatiale et notamment à l'analyse de semis de points. 
+`linnet` est un _package_ de la famille de _packages_ `spatstat` consacré à la statistique spatiale et notamment à l'analyse de semis de points.
 
 ## Préparer ses données
 
@@ -116,8 +116,8 @@ library(sf)
 library(spatstat)
 
 # import des fichiers
-miniN <- read.table("data_mini/mini_node.txt", header=TRUE, row.names = 1,sep=",")
-miniE <- read.table("data_mini/mini_edge.txt", header = FALSE, sep = ",")
+miniN <- read.table("data/data_mini/mini_node.txt", header=TRUE, row.names = 1,sep=",")
+miniE <- read.table("data/data_mini/mini_edge.txt", header = FALSE, sep = ",")
 
 # transformation en objet
 NN <- ppp(miniN$x, miniN$y, c(0,10), c(0,10))
@@ -138,7 +138,7 @@ Deux semis de points sont ensuite importés. Le premier (mini_points.txt) concer
 Le deuxième semis de points (mini-points2.txt) concerne la présence d'équipements. Il est en effet probable que la présence de certains équipements facilitent ou contraignent l'affichage militant. Il comprend les coordonnées (colonnes x et y) et une typologie (bus, arrêt de bus ; sub, station de métro ; ps : commissariat).
 
 ```{r}
-semis1 <- read.table("data_mini/mini_points.txt", header=TRUE,sep=",")
+semis1 <- read.table("data/data_mini/mini_points.txt", header=TRUE,sep=",")
 
 #contrôle du typage des variables
 str(semis1)
@@ -146,7 +146,7 @@ str(semis1)
 # typage de la variable sti
 semis1$sti <- as.logical(semis1$sti)
 
-semis2 <- read.table("data_mini/mini_points2.txt", header=TRUE,sep=",")
+semis2 <- read.table("data/data_mini/mini_points2.txt", header=TRUE,sep=",")
 
 # transformation en semis de points sur réseau linéaire
 semPOL <- lpp(semis1, mini)
