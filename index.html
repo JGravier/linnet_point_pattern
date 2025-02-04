@@ -239,7 +239,7 @@ color: #f0aa0c;
 </section>
 <section id="le-package-linnet" class="level1">
 <h1>Le package linnet</h1>
-<p><code>linnet</code> est un <em>package</em> de la famille de <em>packages</em> <code>spatstat</code> consacré à la statistique spatiale et notamment à l’analyse de semis de points.</p>
+<p><code>spatstat.linnet</code> est un <em>package</em> de la famille de <em>packages</em> <code>spatstat</code> consacré à la statistique spatiale et notamment à l’analyse de semis de points.</p>
 <section id="préparer-ses-données" class="level2">
 <h2 class="anchored" data-anchor-id="préparer-ses-données">Préparer ses données</h2>
 <p>La première étape consiste à créer un objet <code>linnet</code> (<em>linear network</em>) à l’aide de deux fichiers : un fichier correspondant aux sommets (intersections et extrémités des liens), un fichier correspondant aux liens entre ces sommets. Le fichier des sommets comprend trois colonnes correspondant au nom et aux coordonnées de chaque sommet ; le fichier des liens comprend deux colonnes correspondant aux deux extrémités de chaque lien. L’orientation des liens n’est pas prise en compte : un lien <em>a-b</em> implique nécessairement un lien <em>b-a</em>, il n’est donc pas utile d’avoir deux lignes différentes.</p>
@@ -530,9 +530,10 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(densite_epic)</span>
 <span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a><span class="co"># option épaisseur des liens du réseau</span></span>
-<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(densite_bij, </span>
-<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>     <span class="at">style =</span> <span class="st">"width"</span>, </span>
-<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>     <span class="at">adjust =</span> <span class="fl">0.5</span>)  <span class="co"># contrôler épaisseur max</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> densite_bij, </span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Densité de bijoutiers"</span>,</span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>     <span class="at">style =</span> <span class="st">"width"</span>, </span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>     <span class="at">adjust =</span> <span class="fl">0.5</span>)  <span class="co"># contrôler épaisseur max</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -606,6 +607,7 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <section id="pour-aller-plus-loin" class="level1">
 <h1>Pour aller plus loin</h1>
 <p>Le manuel le plus complet et le plus clair concernant l’analyse de semis de points sur un réseau est celui d’Okabe et Sugihara <span class="citation" data-cites="okabe2012">(<a href="#ref-okabe2012" role="doc-biblioref">2012</a>)</span> ; toutes les méthodes abordées par les auteurs ne peuvent être mises en oeuvre avec <code>linnet</code> (autocorrélation spatiale, modèle de Huff, etc.). L’article de Baddeley et Turner consacré à la première version du <em>package</em> <span class="citation" data-cites="baddeley2005">(<a href="#ref-baddeley2005" role="doc-biblioref">2005</a>)</span> gagne à être complété par le chapitre 17 de l’ouvrage de Baddeley <em>et al.</em> <span class="citation" data-cites="baddeley2012">(<a href="#ref-baddeley2012" role="doc-biblioref">2012</a>)</span>. À compléter par une mise à jour bibliographique récente co-signé du même Baddeley <span class="citation" data-cites="baddeley2021">(<a href="#ref-baddeley2021" role="doc-biblioref">2021</a>)</span>.</p>
+<p>Note : à voir, densité de Kernel sur réseau dans <span class="citation" data-cites="okabe2009">(<a href="#ref-okabe2009" role="doc-biblioref"><strong>okabe2009?</strong></a>)</span></p>
 </section>
 <section id="bibliography" class="level1 unnumbered">
 
@@ -626,7 +628,7 @@ Baddeley, A. et Turner, R. (2005). Spatstat: an R package for analyzing spatial 
 <div id="ref-okabe2012" class="csl-entry" role="listitem">
 Okabe, A. et Sugihara, K. (2012). <em>Spatial Analysis along Networks: Statistical and Computational Methods</em>. John Wiley &amp; Sons.
 </div>
-</div></section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Glossaire</h2>
+</div></section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Glossaire et notes</h2>
 
 <ol>
 <li id="fn1"><p>Il s’agit plus précisément de l’extraction de la liste alphabétique de l’<em>Annuaire Général du Commerce</em> édité par Charles Lamy en 1839. Les informations plus précises sont inclues dans les métadonnées du dossier <em>data</em> (fichier <em>readme.md</em>).<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>

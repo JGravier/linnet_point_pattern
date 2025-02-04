@@ -57,7 +57,7 @@ Trois grands types de question sont généralement posées à ces données :
 
 # Le package linnet
 
-`linnet` est un _package_ de la famille de _packages_ `spatstat` consacré à la statistique spatiale et notamment à l'analyse de semis de points.
+`spatstat.linnet` est un _package_ de la famille de _packages_ `spatstat` consacré à la statistique spatiale et notamment à l'analyse de semis de points.
 
 ## Préparer ses données
 
@@ -241,7 +241,6 @@ Si l'on exécute la fonction `plot` sur un objet `lpp`, par défaut `linnet` pro
 La visualisation de certaines mesures est intégrée par défaut dans le *package* et c'est notamment le cas pour la densité (nombre de points par unité de mesure du réseau).
 
 
-
 ```{r}
 par(mfrow=c(1,2))
 
@@ -254,7 +253,8 @@ densite_epic <- density(epiciers_lpp, finespacing = FALSE)
 plot(densite_epic)
 
 # option épaisseur des liens du réseau
-plot(densite_bij, 
+plot(x = densite_bij, 
+     main = "Densité de bijoutiers",
      style = "width", 
      adjust = 0.5)  # contrôler épaisseur max
 ```
@@ -310,3 +310,5 @@ Fonctions: density
 # Pour aller plus loin
 
 Le manuel le plus complet et le plus clair concernant l'analyse de semis de points sur un réseau est celui d'Okabe et Sugihara [-@okabe2012] ; toutes les méthodes abordées par les auteurs ne peuvent être mises en oeuvre avec `linnet` (autocorrélation spatiale, modèle de Huff, etc.). L'article de Baddeley et Turner consacré à la première version du *package* [-@baddeley2005] gagne à être complété par le chapitre 17 de l'ouvrage de Baddeley *et al.* [-@baddeley2012]. À compléter par une mise à jour bibliographique récente co-signé du même Baddeley [-@baddeley2021].
+
+Note : à voir, densité de Kernel sur réseau dans [-@okabe2009]

@@ -46,7 +46,7 @@ contributes:
       lang: fr
       language: 
         fr:
-          section-title-footnotes: "Glossaire"
+          section-title-footnotes: "Glossaire et notes"
       include-in-header: 
         text: |
           <style>
