@@ -236,7 +236,7 @@ summary(bijoutiers_lpp)
 
 *Faire les mesures pour les deux semis et proposer un court commentaire thématique ?*
 
-Si l'on exécute la fonction `plot` sur un objet `lpp`, par défaut `linnet` propose un nombre de visualisations égal au nombre d'attributs des points, ces attributs étant appelés `marks`. Si je souhaite visualiser la répartion d'un attribut *Z* donné , j'utilise la syntaxe `plot(X, which.marks='Z')` -- le jeu de données utilisés ne comportant pas d'attributs pour les semis de points, cette option n'est pas mise en oeuvre dans ce tutoriel.
+Si l'on exécute la fonction `plot` sur un objet `lpp`, par défaut `linnet` propose un nombre de visualisations égal au nombre d'attributs des points, ces attributs étant appelés `marks`. Si je souhaite visualiser la répartion d'un attribut *Z* donné , j'utilise la syntaxe `plot(X, which.marks='Z')` -- le jeu de données utilisés ne comportant pas d'attributs pour les semis de points, cette option n'est pas mise en oeuvre ici.
 
 La visualisation de certaines mesures est intégrée par défaut dans le *package* et c'est notamment le cas pour la densité (nombre de points par unité de mesure du réseau).
 
@@ -266,12 +266,6 @@ Différences d'approche entre fonction K et méthode du plus proche voisin
 
 Questions selon qu'on étudie un ou deux semis de points
 
-Quelques points de comparaison :
-
-* processus poissonien : `rpoislpp`
-* processus aléatoire uniforme : `runiflpp`
-* processus aléatoire : `rlpp`
-
 
 ## Analyser un semis de points
 
@@ -293,17 +287,24 @@ nncross(epiciers_ppp, bijoutiers_ppp)[1:5,]  # given two point patterns X and Y,
 
 Fonctions: linearKcross, linearKdot
 
-# Rechercher les clusters
-
-Plusieurs méthodes sont disponibles pour contrôler si le semis de points étudié s'écarte d'une répartition aléatoire pour présenter soit une répartition régulière soit une répartition concentrée sur le réseau. 
-
-Fonctions: density
-
 # Modéliser la géographie du semis de points
 
-## Analyser un semis de points
+Plusieurs méthodes sont disponibles pour contrôler si le semis de points étudié s'écarte d'une répartition aléatoire pour présenter soit une répartition régulière soit une répartition concentrée sur le réseau.
 
-## Analyser la relation entre deux semis de points
+
+## Répartitions aléatoires sur un réseau spatial
+
+Quelques points de comparaison :
+
+* processus poissonien : `rpoislpp`
+* processus aléatoire uniforme : `runiflpp`
+* processus aléatoire : `rlpp`
+
+## Écarts aux distributions aléatoires
+
+
+## Rechercher et analyser les clusters
+
 
 # Intérêts et limites du package
 
