@@ -260,6 +260,8 @@ plot(x = densite_bij,
 ```
 
 
+Il est possible d'étudier un semis de points sur réseau spatial selon les mêmes logiques qu'un semis dans un espace isotrope car diverses mesures ont été adaptées afin de considérer la structure du réseau [voir en particulier @okabe2012].
+
 # Étudier les voisinages
 
 Différences d'approche entre fonction K et méthode du plus proche voisin
@@ -289,18 +291,18 @@ Fonctions: linearKcross, linearKdot
 
 # Modéliser la géographie du semis de points
 
-Plusieurs méthodes sont disponibles pour contrôler si le semis de points étudié s'écarte d'une répartition aléatoire pour présenter soit une répartition régulière soit une répartition concentrée sur le réseau.
+Plusieurs méthodes sont disponibles pour contrôler si le semis de points étudié s'écarte d'une répartition aléatoire, présentant alors une répartition régulière ou une répartition concentrée sur le réseau. 
 
 
-## Répartitions aléatoires sur un réseau spatial
+## Répartitions aléatoires des points sur un réseau spatial et mesures de l'écart aux distributions aléatoires
 
-Quelques points de comparaison :
+Il est possible de comparer la répartition du semis de points étudié par rapport à une situation aléatoire sur un réseau. Plusieurs processus aléatoires peuvent être simulés dans `spatstat.linnet` :
 
-* processus poissonien : `rpoislpp`
-* processus aléatoire uniforme : `runiflpp`
-* processus aléatoire : `rlpp`
+* Un processus poissonien avec la fonction `rpoislpp()`. Elle génère une réalisation du processus de Poisson avec une intensité spécifiée (paramètre `lambda`) sur le réseau $L$.
+* Un processus aléatoire uniforme avec `runiflpp()`. La fonction génère $n$ points aléatoires, indépendamment et uniformément distribués, sur le réseau $L$. La probabilité de tirer un tronçon $Ls$ du réseau dépend de sa longueur dans $L$. Le point est généré selon une probabilité uniforme le long de $Ls$.
+* Un processus aléatoire grâce à `rlpp()`, qui génère $n$ points aléatoires sur le réseau $L$ avec une densité de probabilité spécifié (paramètre `f`). Cette dernière n'e doit'est pas nécessairement être normalisée.
 
-## Écarts aux distributions aléatoires
+Dans les cas de `rpoislpp()` et de `runiflpp()`, le paramètre `ex` permet d'intégrer un objet `lpp` afin de déterminer $L$, ainsi que $lambda$ et $n$. La valeur par défaut de $lambda$ est alors la densité moyenne des points du `lpp`, ou $n$ le nombre de points de l'objet `lpp`. Quelle que soit la fonction utilisée, il est possible de spécifier le nombre de simulations souhaitées grâce au paramètre `nsim`.
 
 
 ## Rechercher et analyser les clusters

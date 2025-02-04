@@ -112,6 +112,49 @@ color: #f0aa0c;
 }
 </style>
 
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css">
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="_extensions/rzine-reviews/rzine/styles.css">
 </head>
@@ -204,11 +247,10 @@ color: #f0aa0c;
   <li><a href="#analyser-un-semis-de-points" id="toc-analyser-un-semis-de-points" class="nav-link" data-scroll-target="#analyser-un-semis-de-points">Analyser un semis de points</a></li>
   <li><a href="#analyser-la-relation-entre-deux-semis-de-points" id="toc-analyser-la-relation-entre-deux-semis-de-points" class="nav-link" data-scroll-target="#analyser-la-relation-entre-deux-semis-de-points">Analyser la relation entre deux semis de points</a></li>
   </ul></li>
-  <li><a href="#rechercher-les-clusters" id="toc-rechercher-les-clusters" class="nav-link" data-scroll-target="#rechercher-les-clusters">Rechercher les clusters</a></li>
   <li><a href="#modéliser-la-géographie-du-semis-de-points" id="toc-modéliser-la-géographie-du-semis-de-points" class="nav-link" data-scroll-target="#modéliser-la-géographie-du-semis-de-points">Modéliser la géographie du semis de points</a>
   <ul class="collapse">
-  <li><a href="#analyser-un-semis-de-points-1" id="toc-analyser-un-semis-de-points-1" class="nav-link" data-scroll-target="#analyser-un-semis-de-points-1">Analyser un semis de points</a></li>
-  <li><a href="#analyser-la-relation-entre-deux-semis-de-points-1" id="toc-analyser-la-relation-entre-deux-semis-de-points-1" class="nav-link" data-scroll-target="#analyser-la-relation-entre-deux-semis-de-points-1">Analyser la relation entre deux semis de points</a></li>
+  <li><a href="#répartitions-aléatoires-des-points-sur-un-réseau-spatial-et-mesures-de-lécart-aux-distributions-aléatoires" id="toc-répartitions-aléatoires-des-points-sur-un-réseau-spatial-et-mesures-de-lécart-aux-distributions-aléatoires" class="nav-link" data-scroll-target="#répartitions-aléatoires-des-points-sur-un-réseau-spatial-et-mesures-de-lécart-aux-distributions-aléatoires">Répartitions aléatoires des points sur un réseau spatial et mesures de l’écart aux distributions aléatoires</a></li>
+  <li><a href="#rechercher-et-analyser-les-clusters" id="toc-rechercher-et-analyser-les-clusters" class="nav-link" data-scroll-target="#rechercher-et-analyser-les-clusters">Rechercher et analyser les clusters</a></li>
   </ul></li>
   <li><a href="#intérêts-et-limites-du-package" id="toc-intérêts-et-limites-du-package" class="nav-link" data-scroll-target="#intérêts-et-limites-du-package">Intérêts et limites du package</a></li>
   <li><a href="#pour-aller-plus-loin" id="toc-pour-aller-plus-loin" class="nav-link" data-scroll-target="#pour-aller-plus-loin">Pour aller plus loin</a></li>
@@ -516,7 +558,7 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 </div>
 </div>
 <p><em>Faire les mesures pour les deux semis et proposer un court commentaire thématique ?</em></p>
-<p>Si l’on exécute la fonction <code>plot</code> sur un objet <code>lpp</code>, par défaut <code>linnet</code> propose un nombre de visualisations égal au nombre d’attributs des points, ces attributs étant appelés <code>marks</code>. Si je souhaite visualiser la répartion d’un attribut <em>Z</em> donné , j’utilise la syntaxe <code>plot(X, which.marks='Z')</code> – le jeu de données utilisés ne comportant pas d’attributs pour les semis de points, cette option n’est pas mise en oeuvre dans ce tutoriel.</p>
+<p>Si l’on exécute la fonction <code>plot</code> sur un objet <code>lpp</code>, par défaut <code>linnet</code> propose un nombre de visualisations égal au nombre d’attributs des points, ces attributs étant appelés <code>marks</code>. Si je souhaite visualiser la répartion d’un attribut <em>Z</em> donné , j’utilise la syntaxe <code>plot(X, which.marks='Z')</code> – le jeu de données utilisés ne comportant pas d’attributs pour les semis de points, cette option n’est pas mise en oeuvre ici.</p>
 <p>La visualisation de certaines mesures est intégrée par défaut dans le <em>package</em> et c’est notamment le cas pour la densité (nombre de points par unité de mesure du réseau).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
@@ -542,18 +584,13 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 </div>
 </div>
 </div>
+<p>Il est possible d’étudier un semis de points sur réseau spatial selon les mêmes logiques qu’un semis dans un espace isotrope car diverses mesures ont été adaptées afin de considérer la structure du réseau <span class="citation" data-cites="okabe2012">(voir en particulier <a href="#ref-okabe2012" role="doc-biblioref">Okabe et Sugihara, 2012</a>)</span>.</p>
 </section>
 </section>
 <section id="étudier-les-voisinages" class="level1">
 <h1>Étudier les voisinages</h1>
 <p>Différences d’approche entre fonction K et méthode du plus proche voisin</p>
 <p>Questions selon qu’on étudie un ou deux semis de points</p>
-<p>Quelques points de comparaison :</p>
-<ul>
-<li>processus poissonien : <code>rpoislpp</code></li>
-<li>processus aléatoire uniforme : <code>runiflpp</code></li>
-<li>processus aléatoire : <code>rlpp</code></li>
-</ul>
 <section id="analyser-un-semis-de-points" class="level2">
 <h2 class="anchored" data-anchor-id="analyser-un-semis-de-points">Analyser un semis de points</h2>
 <p>Fonctions:</p>
@@ -587,18 +624,21 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <p>Fonctions: linearKcross, linearKdot</p>
 </section>
 </section>
-<section id="rechercher-les-clusters" class="level1">
-<h1>Rechercher les clusters</h1>
-<p>Plusieurs méthodes sont disponibles pour contrôler si le semis de points étudié s’écarte d’une répartition aléatoire pour présenter soit une répartition régulière soit une répartition concentrée sur le réseau.</p>
-<p>Fonctions: density</p>
-</section>
 <section id="modéliser-la-géographie-du-semis-de-points" class="level1">
 <h1>Modéliser la géographie du semis de points</h1>
-<section id="analyser-un-semis-de-points-1" class="level2">
-<h2 class="anchored" data-anchor-id="analyser-un-semis-de-points-1">Analyser un semis de points</h2>
+<p>Plusieurs méthodes sont disponibles pour contrôler si le semis de points étudié s’écarte d’une répartition aléatoire, présentant alors une répartition régulière ou une répartition concentrée sur le réseau.</p>
+<section id="répartitions-aléatoires-des-points-sur-un-réseau-spatial-et-mesures-de-lécart-aux-distributions-aléatoires" class="level2">
+<h2 class="anchored" data-anchor-id="répartitions-aléatoires-des-points-sur-un-réseau-spatial-et-mesures-de-lécart-aux-distributions-aléatoires">Répartitions aléatoires des points sur un réseau spatial et mesures de l’écart aux distributions aléatoires</h2>
+<p>Il est possible de comparer la répartition du semis de points étudié par rapport à une situation aléatoire sur un réseau. Plusieurs processus aléatoires peuvent être simulés dans <code>spatstat.linnet</code> :</p>
+<ul>
+<li>Un processus poissonien avec la fonction <code>rpoislpp()</code>. Elle génère une réalisation du processus de Poisson avec une intensité spécifiée (paramètre <code>lambda</code>) sur le réseau <span class="math inline">L</span>.</li>
+<li>Un processus aléatoire uniforme avec <code>runiflpp()</code>. La fonction génère <span class="math inline">n</span> points aléatoires, indépendamment et uniformément distribués, sur le réseau <span class="math inline">L</span>. La probabilité de tirer un tronçon <span class="math inline">Ls</span> du réseau dépend de sa longueur dans <span class="math inline">L</span>. Le point est généré selon une probabilité uniforme le long de <span class="math inline">Ls</span>.</li>
+<li>Un processus aléatoire grâce à <code>rlpp()</code>, qui génère <span class="math inline">n</span> points aléatoires sur le réseau <span class="math inline">L</span> avec une densité de probabilité spécifié (paramètre <code>f</code>). Cette dernière n’e doit’est pas nécessairement être normalisée.</li>
+</ul>
+<p>Dans les cas de <code>rpoislpp()</code> et de <code>runiflpp()</code>, le paramètre <code>ex</code> permet d’intégrer un objet <code>lpp</code> afin de déterminer <span class="math inline">L</span>, ainsi que <span class="math inline">lambda</span> et <span class="math inline">n</span>. La valeur par défaut de <span class="math inline">lambda</span> est alors la densité moyenne des points du <code>lpp</code>, ou <span class="math inline">n</span> le nombre de points de l’objet <code>lpp</code>. Quelle que soit la fonction utilisée, il est possible de spécifier le nombre de simulations souhaitées grâce au paramètre <code>nsim</code>.</p>
 </section>
-<section id="analyser-la-relation-entre-deux-semis-de-points-1" class="level2">
-<h2 class="anchored" data-anchor-id="analyser-la-relation-entre-deux-semis-de-points-1">Analyser la relation entre deux semis de points</h2>
+<section id="rechercher-et-analyser-les-clusters" class="level2">
+<h2 class="anchored" data-anchor-id="rechercher-et-analyser-les-clusters">Rechercher et analyser les clusters</h2>
 </section>
 </section>
 <section id="intérêts-et-limites-du-package" class="level1">
@@ -607,7 +647,7 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <section id="pour-aller-plus-loin" class="level1">
 <h1>Pour aller plus loin</h1>
 <p>Le manuel le plus complet et le plus clair concernant l’analyse de semis de points sur un réseau est celui d’Okabe et Sugihara <span class="citation" data-cites="okabe2012">(<a href="#ref-okabe2012" role="doc-biblioref">2012</a>)</span> ; toutes les méthodes abordées par les auteurs ne peuvent être mises en oeuvre avec <code>linnet</code> (autocorrélation spatiale, modèle de Huff, etc.). L’article de Baddeley et Turner consacré à la première version du <em>package</em> <span class="citation" data-cites="baddeley2005">(<a href="#ref-baddeley2005" role="doc-biblioref">2005</a>)</span> gagne à être complété par le chapitre 17 de l’ouvrage de Baddeley <em>et al.</em> <span class="citation" data-cites="baddeley2012">(<a href="#ref-baddeley2012" role="doc-biblioref">2012</a>)</span>. À compléter par une mise à jour bibliographique récente co-signé du même Baddeley <span class="citation" data-cites="baddeley2021">(<a href="#ref-baddeley2021" role="doc-biblioref">2021</a>)</span>.</p>
-<p>Note : à voir, densité de Kernel sur réseau dans <span class="citation" data-cites="okabe2009">(<a href="#ref-okabe2009" role="doc-biblioref"><strong>okabe2009?</strong></a>)</span></p>
+<p>Note : à voir, densité de Kernel sur réseau dans <span class="citation" data-cites="okabe2009">(<a href="#ref-okabe2009" role="doc-biblioref">2009</a>)</span></p>
 </section>
 <section id="bibliography" class="level1 unnumbered">
 
@@ -624,6 +664,9 @@ Baddeley, A., Rubak, E. et Turner, R. (2012). <em>Spatial Point Pattern. Methodo
 </div>
 <div id="ref-baddeley2005" class="csl-entry" role="listitem">
 Baddeley, A. et Turner, R. (2005). Spatstat: an R package for analyzing spatial point patterns. <em>Journal of statistical software</em>, <em>12</em>, 1‑42. <a href="https://doi.org/10.18637/jss.v012.i06">https://doi.org/10.18637/jss.v012.i06</a>
+</div>
+<div id="ref-okabe2009" class="csl-entry" role="listitem">
+Okabe, A., Satoh, T. et Sugihara, K. (2009). A kernel density estimation method for networks, its computational method and a <span>GIS</span>‐based tool. <em>International Journal of Geographical Information Science</em>, <em>23</em>(1), 7‑32. <a href="https://doi.org/10.1080/13658810802475491">https://doi.org/10.1080/13658810802475491</a>
 </div>
 <div id="ref-okabe2012" class="csl-entry" role="listitem">
 Okabe, A. et Sugihara, K. (2012). <em>Spatial Analysis along Networks: Statistical and Computational Methods</em>. John Wiley &amp; Sons.
