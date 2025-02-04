@@ -43,7 +43,7 @@ keywords: [semis de points, réseau spatial, analyse spatiale]
 
 # Définitions et questions de recherche
 
-L'analyse d'un semis de points sur un réseau désigne un ensemble de méthodes statistiques permettant de caractériser des événements ponctuels dans le temps et dans l'espace, appelés points dans la suite du texte, prenant place sur un réseau spatial planaire, appelé réseau dans la suite du texte.
+L'analyse d'un semis de points sur un réseau désigne un ensemble de méthodes statistiques permettant de caractériser des événements ponctuels dans le temps et dans l'espace, appelés points dans la suite du texte, prenant place sur un réseau spatial planaire, appelé réseau ou $L$ dans la suite du texte.
 
 Un réseau planaire est constitué par un ensemble de sommets et un ensemble de liens entre ces sommets. Tout sommet est soit une intersection soit une extrémité. Chaque sommet est composé par un couple de coordonnées, chaque lien est caractérisable par une distance. Un lien peut par ailleurs être porteur d'attributs supplémentaires.
 
@@ -61,9 +61,9 @@ Trois grands types de question sont généralement posées à ces données :
 
 ## Préparer ses données
 
-La première étape consiste à créer un objet `linnet` (*linear network*) à l'aide de deux fichiers : un fichier correspondant aux sommets (intersections et extrémités des liens), un fichier correspondant aux liens entre ces sommets. Le fichier des sommets comprend trois colonnes correspondant au nom et aux coordonnées de chaque sommet ; le fichier des liens comprend deux colonnes correspondant aux deux extrémités de chaque lien. L'orientation des liens n'est pas prise en compte : un lien *a-b* implique nécessairement un lien *b-a*, il n'est donc pas utile d'avoir deux lignes différentes.
+La première étape consiste à créer un objet `linnet` (*linear network* ou $L$) à l'aide de deux fichiers : un fichier correspondant aux sommets (intersections et extrémités des liens), un fichier correspondant aux liens entre ces sommets. Le fichier des sommets comprend trois colonnes correspondant au nom et aux coordonnées de chaque sommet ; le fichier des liens comprend deux colonnes correspondant aux deux extrémités de chaque lien. L'orientation des liens n'est pas prise en compte : un lien *a-b* implique nécessairement un lien *b-a*, il n'est donc pas utile d'avoir deux lignes différentes.
 
-Créer un objet `lpp` (*linear point pattern*) suppose d'ajouter à ce réseau planaire un semis de points. Le fichier correspondant comprend au moins les coordonnées de chacun des points ; il peut comprendre autant de colonnes supplémentaires que d'attributs, les attributs pouvant être de type différents (entiers, flottants, chaîne de caractère, booléen).
+Créer un objet `lpp` (*linear point pattern*) suppose d'ajouter à ce réseau $L$ un semis de points. Le fichier correspondant comprend au moins les coordonnées (x,y) de chacun des points, nécessairement situés sur $L$, c'est-à-dire accrochés d'un point de vue topologique ; il peut comprendre autant de colonnes supplémentaires que d'attributs, les attributs pouvant être de type différents (entiers, flottants, chaîne de caractère, booléen).
 
 ### Création des objets `linnet` et `lpp` de A à Z et visualisation pour comprendre la structure des objets
 
@@ -73,6 +73,9 @@ Dans un premier temps, nous montrons comment créer les objets `linnet` à parti
 #chargement des packages
 library(sf)
 library(spatstat)
+library(tibble)
+library(dplyr)
+library(stringr)
 
 # import des fichiers
 mini_node <- read.table(file = "data/data_mini/mini_node.txt", header = TRUE, row.names = 1, sep = ",")
@@ -291,10 +294,7 @@ Fonctions: linearKcross, linearKdot
 
 # Modéliser la géographie du semis de points
 
-Plusieurs méthodes sont disponibles pour contrôler si le semis de points étudié s'écarte d'une répartition aléatoire, présentant alors une répartition régulière ou une répartition concentrée sur le réseau. 
-
-
-## Répartitions aléatoires des points sur un réseau spatial et mesures de l'écart aux distributions aléatoires
+## Répartitions aléatoires des points sur un réseau spatial
 
 Il est possible de comparer la répartition du semis de points étudié par rapport à une situation aléatoire sur un réseau. Plusieurs processus aléatoires peuvent être simulés dans `spatstat.linnet` :
 
@@ -302,7 +302,7 @@ Il est possible de comparer la répartition du semis de points étudié par rapp
 * Un processus aléatoire uniforme avec `runiflpp()`. La fonction génère $n$ points aléatoires, indépendamment et uniformément distribués, sur le réseau $L$. La probabilité de tirer un tronçon $Ls$ du réseau dépend de sa longueur dans $L$. Le point est généré selon une probabilité uniforme le long de $Ls$.
 * Un processus aléatoire grâce à `rlpp()`, qui génère $n$ points aléatoires sur le réseau $L$ avec une densité de probabilité spécifié (paramètre `f`). Cette dernière n'e doit'est pas nécessairement être normalisée.
 
-Dans les cas de `rpoislpp()` et de `runiflpp()`, le paramètre `ex` permet d'intégrer un objet `lpp` afin de déterminer $L$, ainsi que $lambda$ et $n$. La valeur par défaut de $lambda$ est alors la densité moyenne des points du `lpp`, ou $n$ le nombre de points de l'objet `lpp`. Quelle que soit la fonction utilisée, il est possible de spécifier le nombre de simulations souhaitées grâce au paramètre `nsim`.
+Dans les cas de `rpoislpp()` et de `runiflpp()`, le paramètre `ex` permet d'intégrer un objet `lpp` afin de déterminer $L$, ainsi que $\lambda$ et $n$. La valeur par défaut de $\lambda$ est alors la densité moyenne des points du `lpp`, ou $n$ le nombre de points de l'objet `lpp`. Quelle que soit la fonction utilisée, il est possible de spécifier le nombre de simulations souhaitées grâce au paramètre `nsim`.
 
 ```{r}
 # génération d'une simulation selon un processus aléatoire uniforme et visualisation
@@ -310,19 +310,59 @@ plot(runiflpp(n = bijoutiers_ppp$n, # nombre de bijoutiers
          L = paris),
      pch = 15, main = NULL)
 
-# génération de 8 simulations
-process_al_8sim <- runiflpp(n = bijoutiers_ppp$n, # nombre de bijoutiers
-         L = paris, nsim = 8)
+# génération de 2 simulations
+process_al_2sim <- runiflpp(n = bijoutiers_ppp$n, # nombre de bijoutiers
+         L = paris, nsim = 2)
 
-process_al_8sim[1]
+process_al_2sim[1]
 
 # visualisation
-par(mfrow=c(2,4))
-for (i in 1:length(process_al_8sim)) {
-  plot(x = process_al_8sim[[i]], pch = 15, cex = 0.5, main = paste("Simulation ", i))
+par(mfrow = c(1,2))
+for (i in 1:length(process_al_2sim)) {
+  plot(process_al_2sim[[i]], pch = 15, cex = 0.5, main = paste("Simulation ", i))
 }
 ```
 
+## Mesures de l'écart aux distributions aléatoires
+
+Cas des bijoutiers, distances points aléatoires VS distances observées
+```{r, warning=FALSE}
+# génération de 20 simulations
+bijoutiers_20sim <- runiflpp(ex = bijoutiers_lpp, nsim = 20)
+
+# calcul des distances entre les points simulés aléatoirement sur le réseau
+list_simulated_dist <- list()
+
+for (i in 1:length(bijoutiers_20sim)) { # proposition d'une boucle à visée pédagogique et non d'une fonction + parallélisation
+    # calculs des plus courts chemins sur réseau
+    dist_pi_p <- spatstat.geom::pairdist(X = bijoutiers_20sim[[i]])
+    dist_pi_p[upper.tri(x = dist_pi_p, diag = TRUE)] <- NA
+    
+    dist_pi_p <- dist_pi_p %>%
+      tibble::as_tibble() %>%
+      tibble::rowid_to_column(var = "Pi") %>%
+      tidyr::pivot_longer(cols = -Pi, names_to = "P", values_to = "dist_pi_p") %>%
+      dplyr::filter(!is.na(dist_pi_p)) %>%
+      dplyr::mutate(P = stringr::str_replace_all(string = P, pattern = "V", replacement = "")) %>%
+      dplyr::mutate(type = "simulation", n_sim = i)
+      
+   list_simulated_dist[[i]] <- dist_pi_p   
+}
+
+# création d'un unique tableau et non d'une liste de tableaux
+table_simulated_dist <- do.call(what = "rbind", args = list_simulated_dist)
+table_simulated_dist
+
+# calcul
+
+```
+
+
+Idem, cas des épiciers
+```{r}
+# génération de 100 simulations
+epiciers_100sim <- runiflpp(ex = epiciers_lpp, nsim = 100)
+```
 
 
 ## Rechercher et analyser les clusters

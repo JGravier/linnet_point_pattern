@@ -249,7 +249,8 @@ window.Quarto = {
   </ul></li>
   <li><a href="#modéliser-la-géographie-du-semis-de-points" id="toc-modéliser-la-géographie-du-semis-de-points" class="nav-link" data-scroll-target="#modéliser-la-géographie-du-semis-de-points">Modéliser la géographie du semis de points</a>
   <ul class="collapse">
-  <li><a href="#répartitions-aléatoires-des-points-sur-un-réseau-spatial-et-mesures-de-lécart-aux-distributions-aléatoires" id="toc-répartitions-aléatoires-des-points-sur-un-réseau-spatial-et-mesures-de-lécart-aux-distributions-aléatoires" class="nav-link" data-scroll-target="#répartitions-aléatoires-des-points-sur-un-réseau-spatial-et-mesures-de-lécart-aux-distributions-aléatoires">Répartitions aléatoires des points sur un réseau spatial et mesures de l’écart aux distributions aléatoires</a></li>
+  <li><a href="#répartitions-aléatoires-des-points-sur-un-réseau-spatial" id="toc-répartitions-aléatoires-des-points-sur-un-réseau-spatial" class="nav-link" data-scroll-target="#répartitions-aléatoires-des-points-sur-un-réseau-spatial">Répartitions aléatoires des points sur un réseau spatial</a></li>
+  <li><a href="#mesures-de-lécart-aux-distributions-aléatoires" id="toc-mesures-de-lécart-aux-distributions-aléatoires" class="nav-link" data-scroll-target="#mesures-de-lécart-aux-distributions-aléatoires">Mesures de l’écart aux distributions aléatoires</a></li>
   <li><a href="#rechercher-et-analyser-les-clusters" id="toc-rechercher-et-analyser-les-clusters" class="nav-link" data-scroll-target="#rechercher-et-analyser-les-clusters">Rechercher et analyser les clusters</a></li>
   </ul></li>
   <li><a href="#intérêts-et-limites-du-package" id="toc-intérêts-et-limites-du-package" class="nav-link" data-scroll-target="#intérêts-et-limites-du-package">Intérêts et limites du package</a></li>
@@ -269,7 +270,7 @@ window.Quarto = {
 <p><em>LB: mini jeu de données</em></p>
 <section id="définitions-et-questions-de-recherche" class="level1">
 <h1>Définitions et questions de recherche</h1>
-<p>L’analyse d’un semis de points sur un réseau désigne un ensemble de méthodes statistiques permettant de caractériser des événements ponctuels dans le temps et dans l’espace, appelés points dans la suite du texte, prenant place sur un réseau spatial planaire, appelé réseau dans la suite du texte.</p>
+<p>L’analyse d’un semis de points sur un réseau désigne un ensemble de méthodes statistiques permettant de caractériser des événements ponctuels dans le temps et dans l’espace, appelés points dans la suite du texte, prenant place sur un réseau spatial planaire, appelé réseau ou <span class="math inline">L</span> dans la suite du texte.</p>
 <p>Un réseau planaire est constitué par un ensemble de sommets et un ensemble de liens entre ces sommets. Tout sommet est soit une intersection soit une extrémité. Chaque sommet est composé par un couple de coordonnées, chaque lien est caractérisable par une distance. Un lien peut par ailleurs être porteur d’attributs supplémentaires.</p>
 <p>Deux des sujets les plus traités dans la bibliographie sont les accidents de la circulation et les actes criminels commis dans l’espace public. Dans les deux cas, des événements dramatiques pouvant être caractérisés par des attributs de types différents se produisent dans un espace pouvant être modélisé sous forme de réseau planaire (réseau routier, réseau viaire). Il est possible d’imaginer d’autres thématiques plus ou moins ponctuelles dans le temps, qu’il s’agisse de l’offre commerciale dans un espace donné, du collage militant ou publicitaire, de la présence d’équipements dans l’espace public (bancs, toilettes), etc.</p>
 <p>Trois grands types de question sont généralement posées à ces données :</p>
@@ -284,8 +285,8 @@ window.Quarto = {
 <p><code>spatstat.linnet</code> est un <em>package</em> de la famille de <em>packages</em> <code>spatstat</code> consacré à la statistique spatiale et notamment à l’analyse de semis de points.</p>
 <section id="préparer-ses-données" class="level2">
 <h2 class="anchored" data-anchor-id="préparer-ses-données">Préparer ses données</h2>
-<p>La première étape consiste à créer un objet <code>linnet</code> (<em>linear network</em>) à l’aide de deux fichiers : un fichier correspondant aux sommets (intersections et extrémités des liens), un fichier correspondant aux liens entre ces sommets. Le fichier des sommets comprend trois colonnes correspondant au nom et aux coordonnées de chaque sommet ; le fichier des liens comprend deux colonnes correspondant aux deux extrémités de chaque lien. L’orientation des liens n’est pas prise en compte : un lien <em>a-b</em> implique nécessairement un lien <em>b-a</em>, il n’est donc pas utile d’avoir deux lignes différentes.</p>
-<p>Créer un objet <code>lpp</code> (<em>linear point pattern</em>) suppose d’ajouter à ce réseau planaire un semis de points. Le fichier correspondant comprend au moins les coordonnées de chacun des points ; il peut comprendre autant de colonnes supplémentaires que d’attributs, les attributs pouvant être de type différents (entiers, flottants, chaîne de caractère, booléen).</p>
+<p>La première étape consiste à créer un objet <code>linnet</code> (<em>linear network</em> ou <span class="math inline">L</span>) à l’aide de deux fichiers : un fichier correspondant aux sommets (intersections et extrémités des liens), un fichier correspondant aux liens entre ces sommets. Le fichier des sommets comprend trois colonnes correspondant au nom et aux coordonnées de chaque sommet ; le fichier des liens comprend deux colonnes correspondant aux deux extrémités de chaque lien. L’orientation des liens n’est pas prise en compte : un lien <em>a-b</em> implique nécessairement un lien <em>b-a</em>, il n’est donc pas utile d’avoir deux lignes différentes.</p>
+<p>Créer un objet <code>lpp</code> (<em>linear point pattern</em>) suppose d’ajouter à ce réseau <span class="math inline">L</span> un semis de points. Le fichier correspondant comprend au moins les coordonnées (x,y) de chacun des points, nécessairement situés sur <span class="math inline">L</span>, c’est-à-dire accrochés d’un point de vue topologique ; il peut comprendre autant de colonnes supplémentaires que d’attributs, les attributs pouvant être de type différents (entiers, flottants, chaîne de caractère, booléen).</p>
 <section id="création-des-objets-linnet-et-lpp-de-a-à-z-et-visualisation-pour-comprendre-la-structure-des-objets" class="level3">
 <h3 class="anchored" data-anchor-id="création-des-objets-linnet-et-lpp-de-a-à-z-et-visualisation-pour-comprendre-la-structure-des-objets">Création des objets <code>linnet</code> et <code>lpp</code> de A à Z et visualisation pour comprendre la structure des objets</h3>
 <p>Dans un premier temps, nous montrons comment créer les objets <code>linnet</code> à partir de ses propres données. Le mini jeu de données concerne des affichages politiques dans l’espace public. Deux fichiers sont utilisés pour créer le réseau planaire : un fichier de points et leurs coordonnées ; un fichier de liens entre ces points (liens non orientés).</p>
@@ -293,17 +294,20 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#chargement des packages</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spatstat)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># import des fichiers</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>mini_node <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="at">file =</span> <span class="st">"data/data_mini/mini_node.txt"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">row.names =</span> <span class="dv">1</span>, <span class="at">sep =</span> <span class="st">","</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>mini_edge <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"data/data_mini/mini_edge.txt"</span>, <span class="at">header =</span> <span class="cn">FALSE</span>, <span class="at">sep =</span> <span class="st">","</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># transformation en objet ppp et matrice</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>mini_node_ppp <span class="ot">&lt;-</span> <span class="fu">ppp</span>(<span class="at">x =</span> mini_node<span class="sc">$</span>x, <span class="at">y =</span> mini_node<span class="sc">$</span>y, <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">10</span>), <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">10</span>))</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>mini_edge_matrix <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(mini_edge, <span class="at">ncol =</span> <span class="dv">2</span>)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>mini <span class="ot">&lt;-</span> <span class="fu">linnet</span>(<span class="at">vertices =</span> mini_node_ppp, <span class="at">edges =</span> mini_edge_matrix)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(mini)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># import des fichiers</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>mini_node <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="at">file =</span> <span class="st">"data/data_mini/mini_node.txt"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">row.names =</span> <span class="dv">1</span>, <span class="at">sep =</span> <span class="st">","</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>mini_edge <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"data/data_mini/mini_edge.txt"</span>, <span class="at">header =</span> <span class="cn">FALSE</span>, <span class="at">sep =</span> <span class="st">","</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># transformation en objet ppp et matrice</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>mini_node_ppp <span class="ot">&lt;-</span> <span class="fu">ppp</span>(<span class="at">x =</span> mini_node<span class="sc">$</span>x, <span class="at">y =</span> mini_node<span class="sc">$</span>y, <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">10</span>), <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">10</span>))</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>mini_edge_matrix <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(mini_edge, <span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>mini <span class="ot">&lt;-</span> <span class="fu">linnet</span>(<span class="at">vertices =</span> mini_node_ppp, <span class="at">edges =</span> mini_edge_matrix)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(mini)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "linnet" "list"  </code></pre>
 </div>
@@ -626,16 +630,15 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 </section>
 <section id="modéliser-la-géographie-du-semis-de-points" class="level1">
 <h1>Modéliser la géographie du semis de points</h1>
-<p>Plusieurs méthodes sont disponibles pour contrôler si le semis de points étudié s’écarte d’une répartition aléatoire, présentant alors une répartition régulière ou une répartition concentrée sur le réseau.</p>
-<section id="répartitions-aléatoires-des-points-sur-un-réseau-spatial-et-mesures-de-lécart-aux-distributions-aléatoires" class="level2">
-<h2 class="anchored" data-anchor-id="répartitions-aléatoires-des-points-sur-un-réseau-spatial-et-mesures-de-lécart-aux-distributions-aléatoires">Répartitions aléatoires des points sur un réseau spatial et mesures de l’écart aux distributions aléatoires</h2>
+<section id="répartitions-aléatoires-des-points-sur-un-réseau-spatial" class="level2">
+<h2 class="anchored" data-anchor-id="répartitions-aléatoires-des-points-sur-un-réseau-spatial">Répartitions aléatoires des points sur un réseau spatial</h2>
 <p>Il est possible de comparer la répartition du semis de points étudié par rapport à une situation aléatoire sur un réseau. Plusieurs processus aléatoires peuvent être simulés dans <code>spatstat.linnet</code> :</p>
 <ul>
 <li>Un processus poissonien avec la fonction <code>rpoislpp()</code>. Elle génère une réalisation du processus de Poisson avec une intensité spécifiée (paramètre <code>lambda</code>) sur le réseau <span class="math inline">L</span>.</li>
 <li>Un processus aléatoire uniforme avec <code>runiflpp()</code>. La fonction génère <span class="math inline">n</span> points aléatoires, indépendamment et uniformément distribués, sur le réseau <span class="math inline">L</span>. La probabilité de tirer un tronçon <span class="math inline">Ls</span> du réseau dépend de sa longueur dans <span class="math inline">L</span>. Le point est généré selon une probabilité uniforme le long de <span class="math inline">Ls</span>.</li>
 <li>Un processus aléatoire grâce à <code>rlpp()</code>, qui génère <span class="math inline">n</span> points aléatoires sur le réseau <span class="math inline">L</span> avec une densité de probabilité spécifié (paramètre <code>f</code>). Cette dernière n’e doit’est pas nécessairement être normalisée.</li>
 </ul>
-<p>Dans les cas de <code>rpoislpp()</code> et de <code>runiflpp()</code>, le paramètre <code>ex</code> permet d’intégrer un objet <code>lpp</code> afin de déterminer <span class="math inline">L</span>, ainsi que <span class="math inline">lambda</span> et <span class="math inline">n</span>. La valeur par défaut de <span class="math inline">lambda</span> est alors la densité moyenne des points du <code>lpp</code>, ou <span class="math inline">n</span> le nombre de points de l’objet <code>lpp</code>. Quelle que soit la fonction utilisée, il est possible de spécifier le nombre de simulations souhaitées grâce au paramètre <code>nsim</code>.</p>
+<p>Dans les cas de <code>rpoislpp()</code> et de <code>runiflpp()</code>, le paramètre <code>ex</code> permet d’intégrer un objet <code>lpp</code> afin de déterminer <span class="math inline">L</span>, ainsi que <span class="math inline">\lambda</span> et <span class="math inline">n</span>. La valeur par défaut de <span class="math inline">\lambda</span> est alors la densité moyenne des points du <code>lpp</code>, ou <span class="math inline">n</span> le nombre de points de l’objet <code>lpp</code>. Quelle que soit la fonction utilisée, il est possible de spécifier le nombre de simulations souhaitées grâce au paramètre <code>nsim</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># génération d'une simulation selon un processus aléatoire uniforme et visualisation</span></span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">runiflpp</span>(<span class="at">n =</span> bijoutiers_ppp<span class="sc">$</span>n, <span class="co"># nombre de bijoutiers</span></span>
@@ -648,11 +651,11 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># génération de 8 simulations et visualisation</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>process_al_8sim <span class="ot">&lt;-</span> <span class="fu">runiflpp</span>(<span class="at">n =</span> bijoutiers_ppp<span class="sc">$</span>n, <span class="co"># nombre de bijoutiers</span></span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">L =</span> paris, <span class="at">nsim =</span> <span class="dv">8</span>)</span>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># génération de 2 simulations</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>process_al_2sim <span class="ot">&lt;-</span> <span class="fu">runiflpp</span>(<span class="at">n =</span> bijoutiers_ppp<span class="sc">$</span>n, <span class="co"># nombre de bijoutiers</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">L =</span> paris, <span class="at">nsim =</span> <span class="dv">2</span>)</span>
 <span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>process_al_8sim[<span class="dv">1</span>]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>process_al_2sim[<span class="dv">1</span>]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>List of spatial objects
 
@@ -662,10 +665,11 @@ Point pattern on linear network
 Linear network with 7237 vertices and 8730 lines
 Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))</span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(process_al_8sim)) {</span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">x =</span> process_al_8sim[[i]], <span class="at">pch =</span> <span class="dv">15</span>, <span class="at">cex =</span> <span class="fl">0.5</span>, <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Simulation "</span>, i))</span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># visualisation</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(process_al_2sim)) {</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(process_al_2sim[[i]], <span class="at">pch =</span> <span class="dv">15</span>, <span class="at">cex =</span> <span class="fl">0.5</span>, <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Simulation "</span>, i))</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -673,6 +677,59 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 </figure>
 </div>
 </div>
+</div>
+</section>
+<section id="mesures-de-lécart-aux-distributions-aléatoires" class="level2">
+<h2 class="anchored" data-anchor-id="mesures-de-lécart-aux-distributions-aléatoires">Mesures de l’écart aux distributions aléatoires</h2>
+<p>Cas des bijoutiers, distances points aléatoires VS distances observées</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># génération de 20 simulations</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>bijoutiers_20sim <span class="ot">&lt;-</span> <span class="fu">runiflpp</span>(<span class="at">ex =</span> bijoutiers_lpp, <span class="at">nsim =</span> <span class="dv">20</span>)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="co"># calcul des distances entre les points simulés aléatoirement sur le réseau</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>list_simulated_dist <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(bijoutiers_20sim)) { <span class="co"># proposition d'une boucle à visée pédagogique et non d'une fonction + parallélisation</span></span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># calculs des plus courts chemins sur réseau</span></span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>    dist_pi_p <span class="ot">&lt;-</span> spatstat.geom<span class="sc">::</span><span class="fu">pairdist</span>(<span class="at">X =</span> bijoutiers_20sim[[i]])</span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>    dist_pi_p[<span class="fu">upper.tri</span>(<span class="at">x =</span> dist_pi_p, <span class="at">diag =</span> <span class="cn">TRUE</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>    dist_pi_p <span class="ot">&lt;-</span> dist_pi_p <span class="sc">%&gt;%</span></span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a>      tibble<span class="sc">::</span><span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a>      tibble<span class="sc">::</span><span class="fu">rowid_to_column</span>(<span class="at">var =</span> <span class="st">"Pi"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb51-15"><a href="#cb51-15" aria-hidden="true" tabindex="-1"></a>      tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>Pi, <span class="at">names_to =</span> <span class="st">"P"</span>, <span class="at">values_to =</span> <span class="st">"dist_pi_p"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb51-16"><a href="#cb51-16" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(dist_pi_p)) <span class="sc">%&gt;%</span></span>
+<span id="cb51-17"><a href="#cb51-17" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">P =</span> stringr<span class="sc">::</span><span class="fu">str_replace_all</span>(<span class="at">string =</span> P, <span class="at">pattern =</span> <span class="st">"V"</span>, <span class="at">replacement =</span> <span class="st">""</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb51-18"><a href="#cb51-18" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">type =</span> <span class="st">"simulation"</span>, <span class="at">n_sim =</span> i)</span>
+<span id="cb51-19"><a href="#cb51-19" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb51-20"><a href="#cb51-20" aria-hidden="true" tabindex="-1"></a>   list_simulated_dist[[i]] <span class="ot">&lt;-</span> dist_pi_p   </span>
+<span id="cb51-21"><a href="#cb51-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb51-22"><a href="#cb51-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-23"><a href="#cb51-23" aria-hidden="true" tabindex="-1"></a><span class="co"># création d'un unique tableau et non d'une liste de tableaux</span></span>
+<span id="cb51-24"><a href="#cb51-24" aria-hidden="true" tabindex="-1"></a>table_simulated_dist <span class="ot">&lt;-</span> <span class="fu">do.call</span>(<span class="at">what =</span> <span class="st">"rbind"</span>, <span class="at">args =</span> list_simulated_dist)</span>
+<span id="cb51-25"><a href="#cb51-25" aria-hidden="true" tabindex="-1"></a>table_simulated_dist</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,159,400 × 5
+      Pi P     dist_pi_p type       n_sim
+   &lt;int&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;      &lt;int&gt;
+ 1     2 1         4007. simulation     1
+ 2     3 1         2800. simulation     1
+ 3     3 2         2961. simulation     1
+ 4     4 1          646. simulation     1
+ 5     4 2         3530. simulation     1
+ 6     4 3         2530. simulation     1
+ 7     5 1         5603. simulation     1
+ 8     5 2         3258. simulation     1
+ 9     5 3         5927. simulation     1
+10     5 4         5013. simulation     1
+# ℹ 1,159,390 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calcul</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Idem, cas des épiciers</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># génération de 100 simulations</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>epiciers_100sim <span class="ot">&lt;-</span> <span class="fu">runiflpp</span>(<span class="at">ex =</span> epiciers_lpp, <span class="at">nsim =</span> <span class="dv">100</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="rechercher-et-analyser-les-clusters" class="level2">
