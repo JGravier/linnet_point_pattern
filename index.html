@@ -373,7 +373,7 @@ window.Quarto = {
 <p>Le code suivant permet d’importer les données et de les transformer en objet <code>linnet</code>, puis en objet <code>lpp</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import du réseau viaire parisien en 1836</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>paris <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">'data/1836_jacoubet.shp'</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>paris <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"data/1836_jacoubet.shp"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `1836_jacoubet' from data source 
   `D:\jgravier\Sync\publications\linnet_point_pattern\data\1836_jacoubet.shp' 
@@ -409,8 +409,8 @@ Projected CRS: +proj=lcc +lat_0=46.5 +lon_0=3 +lat_1=49 +lat_2=44 +x_0=700000 +y
 </div>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># contrôle visuel des objets importés</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(paris<span class="sc">$</span>geometry)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(epiciers<span class="sc">$</span>geom, <span class="at">pch =</span> <span class="dv">15</span>, <span class="at">col =</span> <span class="st">'blue'</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(bijoutiers<span class="sc">$</span>geom, <span class="at">pch =</span> <span class="dv">15</span>, <span class="at">col =</span> <span class="st">'red'</span>, <span class="at">bg =</span> <span class="st">'red'</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(epiciers<span class="sc">$</span>geom, <span class="at">pch =</span> <span class="dv">15</span>, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(bijoutiers<span class="sc">$</span>geom, <span class="at">pch =</span> <span class="dv">15</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">bg =</span> <span class="st">"red"</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -636,6 +636,44 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <li>Un processus aléatoire grâce à <code>rlpp()</code>, qui génère <span class="math inline">n</span> points aléatoires sur le réseau <span class="math inline">L</span> avec une densité de probabilité spécifié (paramètre <code>f</code>). Cette dernière n’e doit’est pas nécessairement être normalisée.</li>
 </ul>
 <p>Dans les cas de <code>rpoislpp()</code> et de <code>runiflpp()</code>, le paramètre <code>ex</code> permet d’intégrer un objet <code>lpp</code> afin de déterminer <span class="math inline">L</span>, ainsi que <span class="math inline">lambda</span> et <span class="math inline">n</span>. La valeur par défaut de <span class="math inline">lambda</span> est alors la densité moyenne des points du <code>lpp</code>, ou <span class="math inline">n</span> le nombre de points de l’objet <code>lpp</code>. Quelle que soit la fonction utilisée, il est possible de spécifier le nombre de simulations souhaitées grâce au paramètre <code>nsim</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># génération d'une simulation selon un processus aléatoire uniforme et visualisation</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">runiflpp</span>(<span class="at">n =</span> bijoutiers_ppp<span class="sc">$</span>n, <span class="co"># nombre de bijoutiers</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">L =</span> paris),</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">15</span>, <span class="at">main =</span> <span class="cn">NULL</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-11-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># génération de 8 simulations et visualisation</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>process_al_8sim <span class="ot">&lt;-</span> <span class="fu">runiflpp</span>(<span class="at">n =</span> bijoutiers_ppp<span class="sc">$</span>n, <span class="co"># nombre de bijoutiers</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">L =</span> paris, <span class="at">nsim =</span> <span class="dv">8</span>)</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>process_al_8sim[<span class="dv">1</span>]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of spatial objects
+
+Simulation 1:
+Point pattern on linear network
+341 points
+Linear network with 7237 vertices and 8730 lines
+Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(process_al_8sim)) {</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">x =</span> process_al_8sim[[i]], <span class="at">pch =</span> <span class="dv">15</span>, <span class="at">cex =</span> <span class="fl">0.5</span>, <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Simulation "</span>, i))</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-11-2.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="rechercher-et-analyser-les-clusters" class="level2">
 <h2 class="anchored" data-anchor-id="rechercher-et-analyser-les-clusters">Rechercher et analyser les clusters</h2>

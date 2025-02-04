@@ -130,7 +130,7 @@ Le code suivant permet d'importer les données et de les transformer en objet `l
 
 ```{r, warning=FALSE, message=FALSE}
 # import du réseau viaire parisien en 1836
-paris <- st_read('data/1836_jacoubet.shp')
+paris <- st_read("data/1836_jacoubet.shp")
 
 # import des semis de points
 epiciers <- st_read(dsn = "data/grocers_1839.gpkg")
@@ -138,8 +138,8 @@ bijoutiers <- st_read(dsn = "data/jewellers_1839.gpkg")
 
 # contrôle visuel des objets importés
 plot(paris$geometry)
-plot(epiciers$geom, pch = 15, col = 'blue', add = TRUE)
-plot(bijoutiers$geom, pch = 15, col = 'red', bg = 'red', add = TRUE)
+plot(epiciers$geom, pch = 15, col = "blue", add = TRUE)
+plot(bijoutiers$geom, pch = 15, col = "red", bg = "red", add = TRUE)
 ```
 
 La transformation des semis de points en objets spatstat se fait à l'aide de la fonction `as.ppp` (_planar point pattern_). Pour transformer le réseau viaire en objet `linnet`, deux étapes sont nécessaires : transformer le shapefile en objet `psp` (_planar segment pattern_) puis en objet `linnet` (_linear network_). La fonction `summary` permet de connaître les principales propriétés des objets créés.
@@ -303,6 +303,26 @@ Il est possible de comparer la répartition du semis de points étudié par rapp
 * Un processus aléatoire grâce à `rlpp()`, qui génère $n$ points aléatoires sur le réseau $L$ avec une densité de probabilité spécifié (paramètre `f`). Cette dernière n'e doit'est pas nécessairement être normalisée.
 
 Dans les cas de `rpoislpp()` et de `runiflpp()`, le paramètre `ex` permet d'intégrer un objet `lpp` afin de déterminer $L$, ainsi que $lambda$ et $n$. La valeur par défaut de $lambda$ est alors la densité moyenne des points du `lpp`, ou $n$ le nombre de points de l'objet `lpp`. Quelle que soit la fonction utilisée, il est possible de spécifier le nombre de simulations souhaitées grâce au paramètre `nsim`.
+
+```{r}
+# génération d'une simulation selon un processus aléatoire uniforme et visualisation
+plot(runiflpp(n = bijoutiers_ppp$n, # nombre de bijoutiers
+         L = paris),
+     pch = 15, main = NULL)
+
+# génération de 8 simulations
+process_al_8sim <- runiflpp(n = bijoutiers_ppp$n, # nombre de bijoutiers
+         L = paris, nsim = 8)
+
+process_al_8sim[1]
+
+# visualisation
+par(mfrow=c(2,4))
+for (i in 1:length(process_al_8sim)) {
+  plot(x = process_al_8sim[[i]], pch = 15, cex = 0.5, main = paste("Simulation ", i))
+}
+```
+
 
 
 ## Rechercher et analyser les clusters
