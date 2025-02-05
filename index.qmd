@@ -39,6 +39,8 @@ keywords: [semis de points, réseau spatial, analyse spatiale]
 
 *JG: commentaires thématiques, clusters*
 
+<!-- https://github.com/JGravier/linnet_point_pattern/blob/main/data/readme.md
+une rue est composée de 1-N tronçons : N désigne quoi ? -->
 
 # Définitions et questions de recherche
 
@@ -242,25 +244,7 @@ summary(bijoutiers_lpp)
 
 <!-- inutile car vu sur le mini jeu de données  - Si l'on exécute la fonction `plot` sur un objet `lpp`, par défaut `linnet` propose un nombre de visualisations égal au nombre d'attributs des points, ces attributs étant appelés `marks`. Si je souhaite visualiser la répartion d'un attribut *Z* donné , j'utilise la syntaxe `plot(X, which.marks='Z')` -- le jeu de données utilisés ne comportant pas d'attributs pour les semis de points, cette option n'est pas mise en oeuvre ici. -->
 
-La visualisation de certaines mesures est intégrée par défaut dans le *package* et c'est notamment le cas pour la densité (nombre de points par unité de mesure du réseau).
-
-```{r}
-par(mfrow=c(1,2))
-
-# calcul de la densité de points par unité de réseau
-# l'option finespacing n'est pas nécessaire pour un réseau de petite taille
-densite_bij <- density(x = bijoutiers_lpp, finespacing = FALSE)
-densite_epic <- density(epiciers_lpp, finespacing = FALSE)
-
-# option couleur (par défaut)
-plot(densite_epic)
-
-# option épaisseur des liens du réseau
-plot(x = densite_bij, 
-     main = "Densité de bijoutiers",
-     style = "width", 
-     adjust = 0.5)  # contrôler épaisseur max
-```
+<!-- j'ai déplacé le chunk de la densité pour le mettre dans la section sur les clusters -->
 
 
 Il est possible d'étudier un semis de points sur réseau spatial selon les mêmes logiques qu'un semis dans un espace isotrope car diverses mesures ont été adaptées afin de considérer la structure du réseau [voir en particulier @okabe2012]. <!-- je ne comprends pas, trop allusif je crois -->
@@ -270,7 +254,6 @@ Il est possible d'étudier un semis de points sur réseau spatial selon les mêm
 Différences d'approche entre fonction K et méthode du plus proche voisin
 
 Questions selon qu'on étudie un ou deux semis de points
-
 
 ## Analyser un semis de points
 
@@ -296,13 +279,13 @@ Fonctions: linearKcross, linearKdot
 
 ## Répartitions aléatoires des points sur un réseau spatial
 
-Il est possible de comparer la répartition du semis de points étudié par rapport à une situation aléatoire sur un réseau. Plusieurs processus aléatoires peuvent être simulés dans `spatstat.linnet` :
+Il est possible de comparer la répartition du semis de points étudié par rapport à une situation aléatoire sur un réseau. Plusieurs processus aléatoires peuvent être simulés dans `spatstat.linnet`. Dans le premier cas (fonction `runiflpp()`), le semis de points est généré de façon aléatoire et la position des points est fonction de la seule longueur des voies du réseau : plus un tronçon est long, plus il est probable qu'il accueille un ou plusieurs points. Cette hypothèse n'est pas toujours la plus pertinente : si on prend l'exemple des accidents de voiture, on peut supposer qu'ils sont plus fréquents à mesure que le trafic augmente (et non la seule longueur des routes). Les deux options suivantes (`rpoislpp()` et `rlpp()`) permettent de générer un semis de points aléatoire lié à une intensité variable sur le réseau. <!-- j'espère que j'écris pas de bêtises, la différence entre rpois et rl n'est pas encore très nette pour moi -->
 
-<!-- ok mais expliquer la différence entre les 3-->
+Pour résumér, on peut simuler les trois semis suivants :
 
-* Un processus poissonien avec la fonction `rpoislpp()`. Elle génère une réalisation du processus de Poisson avec une intensité spécifiée (paramètre `lambda`) sur le réseau $L$.
 * Un processus aléatoire uniforme avec `runiflpp()`. La fonction génère $n$ points aléatoires, indépendamment et uniformément distribués, sur le réseau $L$. La probabilité de tirer un tronçon $Ls$ du réseau dépend de sa longueur dans $L$. Le point est généré selon une probabilité uniforme le long de $Ls$.
-* Un processus aléatoire grâce à `rlpp()`, qui génère $n$ points aléatoires sur le réseau $L$ avec une densité de probabilité spécifié (paramètre `f`). Cette dernière ne doit pas nécessairement être normalisée.
+* Un processus poissonien avec la fonction `rpoislpp()`. Elle génère une réalisation du processus de Poisson avec une intensité spécifiée (paramètre `lambda`) sur le réseau $L$.
+* Un processus aléatoire grâce à `rlpp()`, qui génère $n$ points aléatoires sur le réseau $L$ avec une densité de probabilité spécifiée (paramètre `f`). Cette dernière ne doit pas nécessairement être normalisée.
 
 Dans les cas de `rpoislpp()` et de `runiflpp()`, le paramètre `ex` permet d'intégrer un objet `lpp` afin de déterminer $L$, ainsi que $\lambda$ et $n$. La valeur par défaut de $\lambda$ est alors la densité moyenne des points du `lpp`, ou $n$ le nombre de points de l'objet `lpp`. Quelle que soit la fonction utilisée, il est possible de spécifier le nombre de simulations souhaitées grâce au paramètre `nsim`.
 
@@ -359,15 +342,81 @@ table_simulated_dist
 
 ```
 
-
 Idem, cas des épiciers
 ```{r}
 # génération de 100 simulations
 epiciers_100sim <- runiflpp(ex = epiciers_lpp, nsim = 100)
 ```
 
-
 ## Rechercher et analyser les clusters
+
+La recherche de clusters ou de hot spots, soit des zones du réseau où la densité de points est plus forte qu'attendue, suppose de comparer la répartion observée à une répartition homogène où la probabilité de chaque tronçon d'accueillir un sommet serait fonction de sa seule longueur. La fonction `intensity` renvoie ce résultat (nombre moyen de points par unité de longueur).
+
+La fonction `density` permet de repérer les zones du réseau où les concentrations de points s'écartent de cette intesité moyenne [-@mcswiggan2017]. <!-- je dois lire un peu avant de reprendre ça -->
+
+La visualisation de certaines mesures est intégrée par défaut dans le *package* et c'est notamment le cas pour la densité (nombre de points par unité de mesure du réseau).
+
+```{r}
+# calcul de la densité de points par unité de réseau
+# l'option finespacing n'est pas nécessaire pour un réseau de petite taille
+densite_bij <- density(bijoutiers_lpp, 
+                       finespacing = FALSE)
+densite_epic <- density(epiciers_lpp, 
+                        finespacing = FALSE)
+
+# option couleur (par défaut)
+plot(densite_epic)
+
+# option épaisseur des liens du réseau
+plot(x = densite_bij, 
+     main = "Densité de bijoutiers",
+     style = "width", 
+     adjust = 0.5)  # contrôler épaisseur max
+```
+
+Comme dans de nombreuses visualisations proposées ces dernières années et contrairement aux règles classiques de la sémiologie graphique, plus la teinte est claire et plus la densité est élevée. 
+
+Il est possible de tester la densité des points en fontion d'une variable spatiale. L'opposition socio-spatiale  ouest-est étant une donnée ancienne de Paris, on pourrait par exemple tester la densité des bijoutiers en fonction des x. On peut également se demander si les commerces tendent à être plus proches des intersections ou non. Différents tests statistiques permettent ensuite de vérifier si le lien entre la densité du semis et la variable considérée est statistiquement significatif.
+
+```{r}
+# bijoutiers plus présents à l'ouest ?
+# test de Berman
+btB <- berman.test(bijoutiers_lpp, "x")
+btB
+plot(btB)
+
+# test de Kolmogorov-Smirnov
+cdfB <- cdf.test(bijoutiers_lpp, "x")
+cdfB
+plot(cdfB)
+```
+
+Comparer la courbe en pointillé (distribution attendue si le semis homogène était fonction de la variation de x) et la courbe noire (distribtion observée) montre une plus faible présence aux extremités de la zone observée ; inversement, les bijoutiers sont davantage présents au centre de l'espace considéré (cf la pente de la courbe pleine). 
+
+<!-- à commenter quand j'aurai compris... -->
+
+```{r}
+# épiciers davantage présents à proximité des intersections ?
+# il faudrait commenter ça mais je ne sais 
+alongE <- linfun(function(x,y,seg,tp) { tp }, domain(epiciers_lpp))
+rhoalongE <- rhohat(epiciers_lpp, alongE)
+plot(rhoalongE)
+```
+
+L'axe des abcisses concerne les rues : 0 et 1 sont les deux extrémités de chaque rue et 0.5 le milieu. La ligne pointillée représente la distribution uniforme, la ligne noire la distribution observée, la zone en grisé étant l'intervalle de confiance. Les épiciers sont moins présents qu'attendu aux extrémités des rues. 
+
+<!-- McSwiggan, G., Baddeley, A. and Nair, G. (2016) Kernel density estimation on a linear network. Scandinavian Journal of Statistics 44, 324–345. -->
+
+Si l'on observe une relation claire - ce qui n'ests pas le cas ici - entre la densité du semis de points et une variable spatiale, il est possible de modéliser la relation entre les deux et d'étudier la qualité du modèle retenu. Le script suivant est donné uniquement à des fins pédagogiques, les résultats précédents ne montrant pas de relation significative entre semis et variable considérée.
+
+```{r, eval = FALSE}
+# modéliser la relation entre présence de bijoutiers et axe ouest-est
+fit <- lppm(bijoutiers_lpp ~ x)
+summary(fit)
+lam <- predict(fit, dimyx=512)
+plot(lam)
+```
+
 
 
 # Intérêts et limites du package
