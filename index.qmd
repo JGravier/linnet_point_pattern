@@ -76,6 +76,7 @@ Dans un premier temps, nous montrons comment créer les objets `linnet` à parti
 library(sf)
 library(spatstat)
 library(tibble)
+library(tidyr)
 library(dplyr)
 library(stringr)
 
@@ -279,27 +280,32 @@ Fonctions: linearKcross, linearKdot
 
 ## Répartitions aléatoires des points sur un réseau spatial
 
-Il est possible de comparer la répartition du semis de points étudié par rapport à une situation aléatoire sur un réseau. Plusieurs processus aléatoires peuvent être simulés dans `spatstat.linnet`. Dans le premier cas (fonction `runiflpp()`), le semis de points est généré de façon aléatoire et la position des points est fonction de la seule longueur des voies du réseau : plus un tronçon est long, plus il est probable qu'il accueille un ou plusieurs points. Cette hypothèse n'est pas toujours la plus pertinente : si on prend l'exemple des accidents de voiture, on peut supposer qu'ils sont plus fréquents à mesure que le trafic augmente (et non la seule longueur des routes). Les deux options suivantes (`rpoislpp()` et `rlpp()`) permettent de générer un semis de points aléatoire lié à une intensité variable sur le réseau. <!-- j'espère que j'écris pas de bêtises, la différence entre rpois et rl n'est pas encore très nette pour moi -->
+Il est possible de comparer la répartition du semis de points étudié par rapport à une situation aléatoire sur un réseau. Plusieurs processus aléatoires déterminant à la fois le nombre et la distribution spatiale des points peuvent être simulés dans `spatstat.linnet`. Dans le premier cas (fonction `runiflpp()`), le semis de points est généré de façon aléatoire et la position des points est fonction de la seule longueur des voies du réseau : plus un tronçon est long, plus il est probable qu'il accueille un ou plusieurs points. Cette hypothèse n'est pas toujours la plus pertinente : si on prend l'exemple des accidents de voiture, on peut supposer qu'ils sont plus fréquents à mesure que le trafic augmente (et non la seule longueur des routes). Les deux options suivantes (`rpoislpp()` et `rlpp()`) permettent de générer un semis de points aléatoire lié à une intensité variable sur le réseau. <!-- j'espère que j'écris pas de bêtises, la différence entre rpois et rl n'est pas encore très nette pour moi -->
 
-Pour résumér, on peut simuler les trois semis suivants :
+Pour résumer, on peut simuler les trois semis suivants :
 
 * Un processus aléatoire uniforme avec `runiflpp()`. La fonction génère $n$ points aléatoires, indépendamment et uniformément distribués, sur le réseau $L$. La probabilité de tirer un tronçon $Ls$ du réseau dépend de sa longueur dans $L$. Le point est généré selon une probabilité uniforme le long de $Ls$.
 * Un processus poissonien avec la fonction `rpoislpp()`. Elle génère une réalisation du processus de Poisson avec une intensité spécifiée (paramètre `lambda`) sur le réseau $L$.
 * Un processus aléatoire grâce à `rlpp()`, qui génère $n$ points aléatoires sur le réseau $L$ avec une densité de probabilité spécifiée (paramètre `f`). Cette dernière ne doit pas nécessairement être normalisée.
 
-Dans les cas de `rpoislpp()` et de `runiflpp()`, le paramètre `ex` permet d'intégrer un objet `lpp` afin de déterminer $L$, ainsi que $\lambda$ et $n$. La valeur par défaut de $\lambda$ est alors la densité moyenne des points du `lpp`, ou $n$ le nombre de points de l'objet `lpp`. Quelle que soit la fonction utilisée, il est possible de spécifier le nombre de simulations souhaitées grâce au paramètre `nsim`.
+Quelle que soit la fonction utilisée, il est possible de spécifier le nombre de simulations souhaitées grâce au paramètre `nsim`.
 
 ```{r}
-# génération d'une simulation selon un processus aléatoire uniforme et visualisation
-plot(runiflpp(n = bijoutiers_ppp$n, # nombre de bijoutiers
-         L = paris),
+# la densité moyenne est une information inclue dans le résumé d'un l'objet "lpp"
+bijoutiers_infos <- summary(object = bijoutiers_lpp)
+bijoutiers_infos$intensity
+
+# génération d'une simulation selon un processus de Poisson avec une intensité uniforme égale à la densité moyenne
+rpoislpp(lambda = bijoutiers_infos$intensity, L = paris, nsim = 1) # le nombre de points est variable
+
+# visualisation d'une simulation
+plot(x = rpoislpp(lambda = bijoutiers_infos$intensity, L = paris, nsim = 1),
      pch = 15, main = NULL)
 
 # génération de 2 simulations
-process_al_2sim <- runiflpp(n = bijoutiers_ppp$n, # nombre de bijoutiers
-         L = paris, nsim = 2)
+process_al_2sim <- rpoislpp(lambda = bijoutiers_infos$intensity, L = paris, nsim = 2)
 
-process_al_2sim[1]
+process_al_2sim # création d'une liste de simulation
 
 # visualisation
 par(mfrow = c(1,2))
@@ -308,19 +314,24 @@ for (i in 1:length(process_al_2sim)) {
 }
 ```
 
+Dans les cas de `rpoislpp()` et de `runiflpp()`, le paramètre `ex` permet d'intégrer un objet `lpp` afin de déterminer $L$, ainsi que $\lambda$ et $n$. La valeur par défaut de $\lambda$ est alors la densité moyenne des points du `lpp`, ou $n$ le nombre de points de l'objet `lpp`. 
+
 ## Mesurer l'écart aux distributions aléatoires
 
-Cas des bijoutiers, distances points aléatoires VS distances observées
+Note à écrire : 
+Cas des bijoutiers, distances points aléatoires VS distances observées.
+Ici : proposition d'une boucle et de l'utilisation des packages de la famille du `tydiverse` à visée pédagogique, mais mieux de faire une fonction pour paralléliser le calcul matriciel si l'on a un nombre de simulations élevés (e.g. 100) et un semis initial et un réseau plus important, et d'utiliser plutôt des packages comme `dtplyr` ou directement `data.table`.
+
 ```{r, warning=FALSE}
-# génération de 20 simulations
-bijoutiers_20sim <- runiflpp(ex = bijoutiers_lpp, nsim = 20)
+# génération de 10 simulations
+bijoutiers_10sim <- runiflpp(ex = bijoutiers_lpp, nsim = 10)
 
 # calcul des distances entre les points simulés aléatoirement sur le réseau
 list_simulated_dist <- list()
 
-for (i in 1:length(bijoutiers_20sim)) { # proposition d'une boucle à visée pédagogique et non d'une fonction + parallélisation
+for (i in 1:length(bijoutiers_10sim)) {
     # calculs des plus courts chemins sur réseau
-    dist_pi_p <- spatstat.geom::pairdist(X = bijoutiers_20sim[[i]])
+    dist_pi_p <- spatstat.geom::pairdist(X = bijoutiers_10sim[[i]])
     dist_pi_p[upper.tri(x = dist_pi_p, diag = TRUE)] <- NA
     
     dist_pi_p <- dist_pi_p %>%
@@ -337,15 +348,45 @@ for (i in 1:length(bijoutiers_20sim)) { # proposition d'une boucle à visée pé
 # création d'un unique tableau et non d'une liste de tableaux
 table_simulated_dist <- do.call(what = "rbind", args = list_simulated_dist)
 table_simulated_dist
+```
 
-# calcul
+```{r}
+# calcul des distances entre les points observés des bijoutiers en 1839
+dist_bijoutiers <- spatstat.geom::pairdist(X = bijoutiers_lpp)
+dist_bijoutiers[upper.tri(x = dist_bijoutiers, diag = TRUE)] <- NA
+    
+dist_bijoutiers <- dist_bijoutiers %>%
+  as_tibble() %>%
+  rowid_to_column(var = "Pi") %>%
+  pivot_longer(cols = -Pi, names_to = "P", values_to = "dist_pi_p") %>%
+  filter(!is.na(dist_pi_p)) %>%
+  mutate(P = stringr::str_replace_all(string = P, pattern = "V", replacement = "")) %>%
+  mutate(type = "observation", n_sim = NA)
+```
+
+
+Comparaison visuelle
+```{r}
+bijoutiers_ecart <- table_simulated_dist %>%
+  dplyr::bind_rows(dist_bijoutiers)
+
+library(ggplot2)
+bijoutiers_ecart %>%
+  ggplot(aes(x = dist_pi_p, group = n_sim)) +
+  geom_density() +
+  theme_bw()
+
+bijoutiers_ecart %>%
+  ggplot(aes(x = dist_pi_p, color = type)) +
+  geom_density(linewidth = 1) +
+  theme_bw()
 
 ```
 
 Idem, cas des épiciers
 ```{r}
-# génération de 100 simulations
-epiciers_100sim <- runiflpp(ex = epiciers_lpp, nsim = 100)
+# génération de 10 simulations
+epiciers_10sim <- runiflpp(ex = epiciers_lpp, nsim = 10)
 ```
 
 ## Rechercher et analyser les clusters
@@ -359,10 +400,8 @@ La visualisation de certaines mesures est intégrée par défaut dans le *packag
 ```{r}
 # calcul de la densité de points par unité de réseau
 # l'option finespacing n'est pas nécessaire pour un réseau de petite taille
-densite_bij <- density(bijoutiers_lpp, 
-                       finespacing = FALSE)
-densite_epic <- density(epiciers_lpp, 
-                        finespacing = FALSE)
+densite_bij <- density.lpp(x = bijoutiers_lpp, finespacing = FALSE, distance = "path")
+densite_epic <- density.lpp(epiciers_lpp, finespacing = FALSE, distance = "path")
 
 # option couleur (par défaut)
 plot(densite_epic)
