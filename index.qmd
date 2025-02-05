@@ -352,7 +352,7 @@ epiciers_100sim <- runiflpp(ex = epiciers_lpp, nsim = 100)
 
 La recherche de clusters ou de hot spots, soit des zones du réseau où la densité de points est plus forte qu'attendue, suppose de comparer la répartion observée à une répartition homogène où la probabilité de chaque tronçon d'accueillir un sommet serait fonction de sa seule longueur. La fonction `intensity` renvoie ce résultat (nombre moyen de points par unité de longueur).
 
-La fonction `density` permet de repérer les zones du réseau où les concentrations de points s'écartent de cette intesité moyenne [-@mcswiggan2017]. <!-- je dois lire un peu avant de reprendre ça -->
+La fonction `density` permet de repérer les zones du réseau où les concentrations de points s'écartent de cette intesité moyenne. <!-- je dois lire un peu avant de reprendre ça -->
 
 La visualisation de certaines mesures est intégrée par défaut dans le *package* et c'est notamment le cas pour la densité (nombre de points par unité de mesure du réseau).
 
@@ -418,11 +418,16 @@ plot(lam)
 ```
 
 
-
 # Intérêts et limites du package
+
+Les méthodes d'analyse de semis de points sur réseaux planaires ne sont pas des méthodes statistiques stabilisées (voir par exemple une définition possible de la densité dans [@okabe2009] discutée dans [@mcswiggan2017]) et les choix des développeurs de `spatstat.linnet` sont des choix possibles parmi d'autres ; ce ne sont pas nécessairement les plus pertinents pour une question de recherche donnée. Ceci pourrait expliquer le faible nombre de références présentes dans les descriptifs des fonctions. De manière générale, l'aide du seul package paraît insuffisante pour le prendre en main et il est nécessaire de la compléter avec les diverses publications des auteurs, notamment le chapitre 17 de [@baddeley2012]^[Ouvrage vendu à un tarif délirant, visiter les archives d'Anna est recommandé.].
+
+Une des limites concerne la non possibilité d'avoir des liens orientés sur le réseau : étudier certains phénomènes ponctuels en milieu urbain sans prendre en compte les sens de circulation automobile autorisés peut limiter l'intérêt des résultats. Il n'est pas non plus aisé de tester des hypothèses pourtant simples à formuler (lien entre semis de points et degré des sommets du réseau par exemple) tant il est nécessaire de jongler entre des objets de types différents. Créer ses propres fonctions est vite nécessaire pour tirer pleinement profit du package.
+
+`spatstat.linnet` n'est évidemment pas le seul package permettant ce type d'analyse (voir [`intensitynet`](https://cran.rstudio.com/web/packages/intensitynet/index.html) ou [`spatgraphs`](https://cran.rstudio.com/web/packages/spatgraphs/index.html)) mais il reste l'un des plus efficaces, surtout si on analyse des semis sur des réseaux de grande taille. À défaut d'être le plus simple à prendre en main, il semble l'un des plus rapides pour calculer les différents indicateurs et modèles disponibles.
 
 # Pour aller plus loin
 
-Le manuel le plus complet et le plus clair concernant l'analyse de semis de points sur un réseau est celui d'Okabe et Sugihara [-@okabe2012] ; toutes les méthodes abordées par les auteurs ne peuvent être mises en oeuvre avec `linnet` (autocorrélation spatiale, modèle de Huff, etc.). L'article de Baddeley et Turner consacré à la première version du *package* [-@baddeley2005] gagne à être complété par le chapitre 17 de l'ouvrage de Baddeley *et al.* [-@baddeley2012]. À compléter par une mise à jour bibliographique récente co-signé du même Baddeley [-@baddeley2021].
+Le manuel le plus complet et le plus clair concernant l'analyse de semis de points sur un réseau est celui d'Okabe et Sugihara [-@okabe2012] ; toutes les méthodes abordées par les auteurs ne peuvent être mises en oeuvre avec `linnet` (autocorrélation spatiale, modèle de Huff, etc.). L'article de Baddeley et Turner consacré à la première version du *package* [-@baddeley2005] gagne à être complété par le chapitre 17 de l'ouvrage de Baddeley *et al.* [-@baddeley2012]. Une mise à jour bibliographique récente est co-signé du même Baddeley [-@baddeley2021].
 
 Note : à voir, densité de Kernel sur réseau dans [-@okabe2009]

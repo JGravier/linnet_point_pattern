@@ -692,16 +692,16 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <pre><code># A tibble: 1,159,400 × 5
       Pi P     dist_pi_p type       n_sim
    &lt;int&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;      &lt;int&gt;
- 1     2 1         4253. simulation     1
- 2     3 1         1788. simulation     1
- 3     3 2         3305. simulation     1
- 4     4 1         7775. simulation     1
- 5     4 2         6460. simulation     1
- 6     4 3         5986. simulation     1
- 7     5 1         1708. simulation     1
- 8     5 2         2992. simulation     1
- 9     5 3         1114. simulation     1
-10     5 4         6576. simulation     1
+ 1     2 1         1482. simulation     1
+ 2     3 1         7030. simulation     1
+ 3     3 2         5579. simulation     1
+ 4     4 1         1931. simulation     1
+ 5     4 2          857. simulation     1
+ 6     4 3         5247. simulation     1
+ 7     5 1         5559. simulation     1
+ 8     5 2         4108. simulation     1
+ 9     5 3         4259. simulation     1
+10     5 4         4143. simulation     1
 # ℹ 1,159,390 more rows</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calcul</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -715,7 +715,7 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <section id="rechercher-et-analyser-les-clusters" class="level2">
 <h2 class="anchored" data-anchor-id="rechercher-et-analyser-les-clusters">Rechercher et analyser les clusters</h2>
 <p>La recherche de clusters ou de hot spots, soit des zones du réseau où la densité de points est plus forte qu’attendue, suppose de comparer la répartion observée à une répartition homogène où la probabilité de chaque tronçon d’accueillir un sommet serait fonction de sa seule longueur. La fonction <code>intensity</code> renvoie ce résultat (nombre moyen de points par unité de longueur).</p>
-<p>La fonction <code>density</code> permet de repérer les zones du réseau où les concentrations de points s’écartent de cette intesité moyenne <span class="citation" data-cites="mcswiggan2017">(<a href="#ref-mcswiggan2017" role="doc-biblioref">2017</a>)</span>.</p>
+<p>La fonction <code>density</code> permet de repérer les zones du réseau où les concentrations de points s’écartent de cette intesité moyenne. <!-- je dois lire un peu avant de reprendre ça --></p>
 <p>La visualisation de certaines mesures est intégrée par défaut dans le <em>package</em> et c’est notamment le cas pour la densité (nombre de points par unité de mesure du réseau).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calcul de la densité de points par unité de réseau</span></span>
@@ -779,7 +779,7 @@ alternative hypothesis: two-sided</code></pre>
 
 data:  covariate 'x' evaluated at points of 'bijoutiers_lpp' 
      and transformed to uniform distribution under CSR
-D = 0.27353, p-value &lt; 2.2e-16
+D = 0.2728, p-value &lt; 2.2e-16
 alternative hypothesis: two-sided</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(cdfB)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -821,6 +821,9 @@ alternative hypothesis: two-sided</code></pre>
 </section>
 <section id="intérêts-et-limites-du-package" class="level1">
 <h1>Intérêts et limites du package</h1>
+<p>Les méthodes d’analyse de semis de points sur réseaux planaires ne sont pas des méthodes statistiques stabilisées (voir par exemple une définition possible de la densité dans <span class="citation" data-cites="okabe2009">(<a href="#ref-okabe2009" role="doc-biblioref">Okabe et al., 2009</a>)</span> discutée dans <span class="citation" data-cites="mcswiggan2017">(<a href="#ref-mcswiggan2017" role="doc-biblioref">McSwiggan et al., 2017</a>)</span>) et les choix des développeurs de <code>spatstat.linnet</code> sont des choix possibles parmi d’autres ; ce ne sont pas nécessairement les plus pertinents pour une question de recherche donnée. Ceci pourrait expliquer le faible nombre de références présentes dans les descriptifs des fonctions. De manière générale, l’aide du seul package paraît insuffisante pour le prendre en main et il est nécessaire de la compléter avec les diverses publications des auteurs, notamment le chapitre 17 de <span class="citation" data-cites="baddeley2012">(<a href="#ref-baddeley2012" role="doc-biblioref">Baddeley et al., 2012</a>)</span><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p>
+<p>Une des limites concerne la non possibilité d’avoir des liens orientés sur le réseau : étudier certains phénomènes ponctuels en milieu urbain sans prendre en compte les sens de circulation automobile autorisés peut limiter l’intérêt des résultats. Il n’est pas non plus aisé de tester des hypothèses pourtant simples à formuler (lien entre semis de points et degré des sommets du réseau par exemple) tant il est nécessaire de jongler entre des objets de types différents. Créer ses propres fonctions est vite nécessaire pour tirer pleinement profit du package.</p>
+<p><code>spatstat.linnet</code> n’est évidemment pas le seul package permettant ce type d’analyse (voir <a href="https://cran.rstudio.com/web/packages/intensitynet/index.html"><code>intensitynet</code></a> ou <a href="https://cran.rstudio.com/web/packages/spatgraphs/index.html"><code>spatgraphs</code></a>) mais il reste l’un des plus efficaces, surtout si on analyse des semis sur des réseaux de grande taille. À défaut d’être le plus simple à prendre en main, il semble l’un des plus rapides pour calculer les différents indicateurs et modèles disponibles.</p>
 </section>
 <section id="pour-aller-plus-loin" class="level1">
 <h1>Pour aller plus loin</h1>
@@ -856,6 +859,7 @@ Okabe, A. et Sugihara, K. (2012). <em>Spatial Analysis along Networks: Statistic
 
 <ol>
 <li id="fn1"><p>Il s’agit plus précisément de l’extraction de la liste alphabétique de l’<em>Annuaire Général du Commerce</em> édité par Charles Lamy en 1839. Les informations plus précises sont inclues dans les métadonnées du dossier <em>data</em> (fichier <em>readme.md</em>).<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Ouvrage vendu à un tarif délirant, visiter les archives d’Anna est recommandé.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section><section class="quarto-appendix-contents" id="quarto-reuse"><h2 class="anchored quarto-appendix-heading">Réutilisation</h2><div class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.fr_fr">CC BY-SA 4.0</a></div></div></section><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@article{beauguitte2024,
   author = {Beauguitte, Laurent and Gravier, Julie},
