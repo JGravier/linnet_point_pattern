@@ -108,6 +108,7 @@ summary(bijoutiers_lpp)
 
 # Écart à une simulation aléatoire (carte)
 # visualisation d'une simulation
+bijoutiers_infos <- summary(object = bijoutiers_lpp)
 plot(x = rpoislpp(lambda = bijoutiers_infos$intensity, L = paris, nsim = 1),
      pch = 15, main = NULL)
 
@@ -166,7 +167,8 @@ bijoutiers_ecart %>%
 
 # Écart à une répartition homogène : distribution de la longueur des plus courts chemins
 # simuler 20 semis où distribution fonction longueur des voies
-env <- envelope(LJ, linearK, correction="none", nsim=20)
+# CSR = complete spatial randomness
+env <- envelope(bijoutiers_lpp, linearK, correction="none", nsim=20)
 plot(env)
 
 # Écart à une répartition homogène
@@ -198,7 +200,7 @@ plot(densite_bij)
 
 # option épaisseur des liens du réseau
 plot(x = densite_epic, 
-     main = "Densité de bijoutiers",
+     main = "Densité d'épiciers",
      style = "width", 
      adjust = 0.5)  # contrôler épaisseur max
 
