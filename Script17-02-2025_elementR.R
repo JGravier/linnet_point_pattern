@@ -9,6 +9,7 @@ library(tibble)
 library(tidyr)
 library(dplyr)
 library(stringr)
+library(ggplot2)
 
 # créer son propre jeu de données
 # import des fichiers
@@ -49,7 +50,7 @@ plot(collage_lpp)
 plot(equip_lpp, which.marks = "pol")
 
 #######################################
-# importer les données du projet SuDuCo
+# importer les données du projet SoDuCo
 # import du réseau viaire parisien en 1836
 paris <- st_read("data/1836_jacoubet.shp")
 
@@ -119,7 +120,7 @@ bijoutiers_10sim <- runiflpp(ex = bijoutiers_lpp, nsim = 10)
 # calcul des distances entre les points simulés aléatoirement sur le réseau
 list_simulated_dist <- list()
 
-for (i in 1:length(bijoutiers_10sim)) {
+for (i in 1:length(bijoutiers_10sim)) { # boucle pour pédagogie
   # calculs des plus courts chemins sur réseau
   dist_pi_p <- spatstat.geom::pairdist(X = bijoutiers_10sim[[i]])
   dist_pi_p[upper.tri(x = dist_pi_p, diag = TRUE)] <- NA
@@ -154,14 +155,14 @@ dist_bijoutiers <- dist_bijoutiers %>%
 bijoutiers_ecart <- table_simulated_dist %>%
   dplyr::bind_rows(dist_bijoutiers)
 
-library(ggplot2)
+# Visualisation des écarts
 bijoutiers_ecart %>%
-  ggplot(aes(x = dist_pi_p, group = n_sim)) +
+  ggplot(aes(x = dist_pi_p, group = n_sim)) + # toutes les simulations individusalisées
   geom_density() +
   theme_bw()
 
 bijoutiers_ecart %>%
-  ggplot(aes(x = dist_pi_p, color = type)) +
+  ggplot(aes(x = dist_pi_p, color = type)) +  # toutes les simulations groupées
   geom_density(linewidth = 1) +
   theme_bw()
 
@@ -181,7 +182,66 @@ plot(btB)
 cdfB <- cdf.test(bijoutiers_lpp, "x")
 plot(cdfB)
 
-# distance au centre (test JG)
+# Écart à une répartition aléatoire tenant compte de la distance au centre
+# import des données
+center <- st_read(dsn = "data/notre-dame.gpkg") # parvis de Notre-Dame considéré comme centre
+center_ppp <- as.ppp(st_geometry(center))
+center_lpp <- lpp(X = center_ppp, L = paris)
+
+# import fonction (adaptation de spatstat.linnet::distfun.lpp())
+source(file = "local-functions.R")
+f_dist2_center <- distfun.inverse.lpp(X = center_lpp) # construction fonction
+
+# répartition aléatoire, fonction de l'inverse de la distance au centre 
+# (i.e. plus on s'éloigne, plus la probabilité qu'un point soit simulé sur un tronçon diminue)
+dist2_center_bijoutiers <- rlpp(n = nrow(bijoutiers), f = f_dist2_center, nsim = 1)
+plot(dist2_center_bijoutiers, pch = 15)
+
+# Analyse des écarts
+# génération de 10 simulations
+bijoutiers_10sim <- rlpp(n = nrow(bijoutiers), f = f_dist2_center, nsim = 10)
+
+# calcul des distances entre les points simulés entre les points simulés et le centre
+list_simulated_dist <- list()
+
+for (i in 1:length(bijoutiers_10sim)) {
+  # calculs des plus courts chemins sur réseau
+  dist_pi_p <- spatstat.geom::crossdist(X = bijoutiers_10sim[[i]], Y = center_lpp)
+  dist_pi_p[upper.tri(x = dist_pi_p, diag = TRUE)] <- NA
+  
+  dist_pi_p <- dist_pi_p %>%
+    tibble::as_tibble() %>%
+    tibble::rowid_to_column(var = "Pi") %>%
+    tidyr::pivot_longer(cols = -Pi, names_to = "P", values_to = "dist_pi_p") %>%
+    dplyr::filter(!is.na(dist_pi_p)) %>%
+    dplyr::mutate(P = stringr::str_replace_all(string = P, pattern = "V", replacement = "")) %>%
+    dplyr::mutate(type = "simulation", n_sim = i)
+  
+  list_simulated_dist[[i]] <- dist_pi_p   
+}
+
+table_simulated_dist <- do.call(what = "rbind", args = list_simulated_dist)
+
+# calcul des distances entre les points observés des bijoutiers et le centre
+dist_bijoutiers <- spatstat.geom::crossdist(X = bijoutiers_lpp, Y = center_lpp)
+dist_bijoutiers[upper.tri(x = dist_bijoutiers, diag = TRUE)] <- NA
+
+dist_bijoutiers <- dist_bijoutiers %>%
+  as_tibble() %>%
+  rowid_to_column(var = "Pi") %>%
+  pivot_longer(cols = -Pi, names_to = "P", values_to = "dist_pi_p") %>%
+  filter(!is.na(dist_pi_p)) %>%
+  mutate(P = stringr::str_replace_all(string = P, pattern = "V", replacement = "")) %>%
+  mutate(type = "observation", n_sim = NA)
+
+# Visualisation
+bijoutiers_ecart <- table_simulated_dist %>%
+  dplyr::bind_rows(dist_bijoutiers)
+
+bijoutiers_ecart %>%
+  ggplot(aes(x = dist_pi_p, color = type)) +
+  geom_density(linewidth = 1) +
+  theme_bw()
 
 # Écart à une répartition homogène au niveau du tronçon
 # épiciers davantage présents à proximité des intersections ?
@@ -223,7 +283,7 @@ b <- bw.lppl(epiciers_lpp,
 plot(b, main="Choix du seuil de lissage")
 
 densite_epi3 <- density.lpp(x = epiciers_lpp, 
-                            sigma = max(b),       # fonction de lissage en mètres
+                            sigma = max(b), # fonction de lissage en mètres
                             finespacing = FALSE, 
                             distance = "path") # distance plus court chemin
 plot(densite_epi3)
