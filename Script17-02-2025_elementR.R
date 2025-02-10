@@ -184,7 +184,7 @@ plot(cdfB)
 
 # Écart à une répartition aléatoire tenant compte de la distance au centre
 # import des données
-center <- st_read(dsn = "data/notre-dame.gpkg") # parvis de Notre-Dame considéré comme centre
+center <- st_read(dsn = "data/halles.gpkg") # Les Halles considéré comme centre économique
 center_ppp <- as.ppp(st_geometry(center))
 center_lpp <- lpp(X = center_ppp, L = paris)
 
