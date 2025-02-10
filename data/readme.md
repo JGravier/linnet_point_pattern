@@ -9,7 +9,7 @@ Les données spatiales "1836_jacoubet.shp" (format .shp et associés) sont issue
 Tronçons des rues de Paris d'après l'atlas de Jacoubet de 1836.
 
 Chaque tronçon correspond à une polyligne composée de deux ou plus de points. 
-Chaque intersection de rue implique la création d'un tronçon, ainsi une rue est composée de 1-N tronçons.
+Chaque intersection de rue implique la création d'un tronçon, ainsi une rue est composée de 1 à N tronçons.
 
 ### Métadonnées
 
