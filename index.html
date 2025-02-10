@@ -384,7 +384,7 @@ une rue est composée de 1-N tronçons : N désigne quoi ? -->
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>paris <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"data/1836_jacoubet.shp"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `1836_jacoubet' from data source 
-  `D:\jgravier\Sync\publications\linnet_point_pattern\data\1836_jacoubet.shp' 
+  `C:\Users\Laurent\Documents\linnet_point_pattern\data\1836_jacoubet.shp' 
   using driver `ESRI Shapefile'
 Simple feature collection with 4266 features and 2 fields
 Geometry type: LINESTRING
@@ -396,7 +396,7 @@ Projected CRS: RGF93 Lambert 93</code></pre>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>epiciers <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/grocers_1839.gpkg"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `grocers_1839' from data source 
-  `D:\jgravier\Sync\publications\linnet_point_pattern\data\grocers_1839.gpkg' 
+  `C:\Users\Laurent\Documents\linnet_point_pattern\data\grocers_1839.gpkg' 
   using driver `GPKG'
 Simple feature collection with 1028 features and 3 fields
 Geometry type: POINT
@@ -407,7 +407,7 @@ Projected CRS: +proj=lcc +lat_0=46.5 +lon_0=3 +lat_1=49 +lat_2=44 +x_0=700000 +y
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>bijoutiers <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/jewellers_1839.gpkg"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `jewellers_1839' from data source 
-  `D:\jgravier\Sync\publications\linnet_point_pattern\data\jewellers_1839.gpkg' 
+  `C:\Users\Laurent\Documents\linnet_point_pattern\data\jewellers_1839.gpkg' 
   using driver `GPKG'
 Simple feature collection with 341 features and 3 fields
 Geometry type: POINT
@@ -631,7 +631,7 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rpoislpp</span>(<span class="at">lambda =</span> bijoutiers_infos<span class="sc">$</span>intensity, <span class="at">L =</span> paris, <span class="at">nsim =</span> <span class="dv">1</span>) <span class="co"># le nombre de points est variable</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Point pattern on linear network
-328 points
+322 points
 Linear network with 7237 vertices and 8730 lines
 Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</code></pre>
 </div>
@@ -654,13 +654,13 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 
 Simulation 1:
 Point pattern on linear network
-345 points
+360 points
 Linear network with 7237 vertices and 8730 lines
 Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units
 
 Simulation 2:
 Point pattern on linear network
-306 points
+351 points
 Linear network with 7237 vertices and 8730 lines
 Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</code></pre>
 </div>
@@ -712,16 +712,16 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <pre><code># A tibble: 579,700 × 5
       Pi P     dist_pi_p type       n_sim
    &lt;int&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;      &lt;int&gt;
- 1     2 1         6124. simulation     1
- 2     3 1         5093. simulation     1
- 3     3 2         1198. simulation     1
- 4     4 1         3051. simulation     1
- 5     4 2         6779. simulation     1
- 6     4 3         5618. simulation     1
- 7     5 1         2694. simulation     1
- 8     5 2         4246. simulation     1
- 9     5 3         3085. simulation     1
-10     5 4         2631. simulation     1
+ 1     2 1         3265. simulation     1
+ 2     3 1         3465. simulation     1
+ 3     3 2         2866. simulation     1
+ 4     4 1         7080. simulation     1
+ 5     4 2         4364. simulation     1
+ 6     4 3         7169. simulation     1
+ 7     5 1         3371. simulation     1
+ 8     5 2         1532. simulation     1
+ 9     5 3         4240. simulation     1
+10     5 4         4725. simulation     1
 # ℹ 579,690 more rows</code></pre>
 </div>
 </div>
@@ -838,7 +838,7 @@ alternative hypothesis: two-sided</code></pre>
 
 data:  covariate 'x' evaluated at points of 'bijoutiers_lpp' 
      and transformed to uniform distribution under CSR
-D = 0.27386, p-value &lt; 2.2e-16
+D = 0.27278, p-value &lt; 2.2e-16
 alternative hypothesis: two-sided</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(cdfB)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>

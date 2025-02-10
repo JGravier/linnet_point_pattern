@@ -9,7 +9,7 @@ nocite: '@*'
 format:
   rzine-html: default
 lang: fr-FR
-date: "2024-10-10"
+date: "2025-02"
 authors:
   - name: Laurent Beauguitte
     affiliations:
@@ -46,7 +46,7 @@ une rue est composée de 1-N tronçons : N désigne quoi ? -->
 
 L'analyse d'un semis de points sur un réseau désigne un ensemble de méthodes statistiques permettant de caractériser des événements ponctuels dans le temps et dans l'espace, appelés points dans la suite du texte, prenant place sur un réseau spatial planaire, appelé réseau ou $L$ dans la suite du texte.
 
-Un réseau planaire est constitué par un ensemble de sommets et un ensemble de liens entre ces sommets. Tout sommet est soit une intersection soit une extrémité. Chaque sommet est composé par un couple de coordonnées, chaque lien est caractérisable par une distance. Un lien peut par ailleurs être porteur d'attributs supplémentaires. <!-- les sommets non ? -->
+Un réseau planaire est constitué par un ensemble de sommets et un ensemble de liens entre ces sommets. Tout sommet est soit une intersection soit une extrémité. Chaque sommet est composé par un couple de coordonnées, chaque lien est caractérisé par une distance. Un lien peut par ailleurs être porteur d'attributs supplémentaires (largeur, intensité, etc.). <!-- les sommets non ? -->
 
 Deux des sujets les plus traités dans la bibliographie sont les accidents de la circulation et les actes criminels commis dans l'espace public. Dans les deux cas, des événements dramatiques pouvant être caractérisés par des attributs de types différents se produisent dans un espace pouvant être modélisé sous forme de réseau planaire (réseau routier, réseau viaire). Il est possible d'imaginer d'autres thématiques plus ou moins ponctuelles dans le temps, qu'il s'agisse de l'offre commerciale dans un espace donné, du collage militant ou publicitaire, de la présence d'équipements dans l'espace public (bancs, toilettes), de la répratition de biotopes le long d'un cours d'eau, etc.
 
@@ -62,9 +62,9 @@ Trois grands types de question sont généralement posées à ces données :
 
 ## Préparer ses données
 
-La première étape consiste à créer un objet `linnet` (*linear network* ou $L$) à l'aide de deux fichiers : un fichier correspondant aux sommets (intersections et extrémités des liens), un fichier correspondant aux liens entre ces sommets. Le fichier des sommets comprend trois colonnes correspondant au nom et aux coordonnées de chaque sommet ; le fichier des liens comprend deux colonnes correspondant aux deux extrémités de chaque lien. L'orientation des liens n'est pas prise en compte : un lien *a-b* implique nécessairement un lien *b-a*, il n'est donc pas utile d'avoir deux lignes différentes.
+La première étape consiste à créer un objet `linnet` (*linear network* ou $L$) à l'aide de deux fichiers : un fichier correspondant aux sommets (intersections et extrémités des liens), un fichier correspondant aux liens entre ces sommets. Le fichier des sommets comprend trois colonnes correspondant au nom et aux coordonnées de chaque sommet ; le fichier des liens comprend *a minima* deux colonnes correspondant aux deux extrémités de chaque lien. L'orientation des liens n'est pas prise en compte : un lien *a-b* implique nécessairement un lien *b-a*, il n'est donc pas utile d'avoir deux lignes différentes.
 
-Créer un objet `lpp` (*linear point pattern*) suppose d'ajouter à ce réseau $L$ un semis de points. Le fichier correspondant comprend au moins les coordonnées (x,y) de chacun des points, nécessairement situés sur $L$, c'est-à-dire accrochés d'un point de vue topologique ; il peut comprendre autant de colonnes supplémentaires que d'attributs, les attributs pouvant être de type différents (entiers, flottants, chaîne de caractère, booléen).
+Créer un objet `lpp` (*linear point pattern*) suppose d'ajouter à ce réseau $L$ un semis de points. Le fichier correspondant comprend au moins les coordonnées (x,y) de chacun des points, nécessairement situés sur $L$, c'est-à-dire accrochés d'un point de vue topologique ; il peut comprendre autant de colonnes supplémentaires que d'attributs, les attributs pouvant être de types différents (entiers, flottants, chaîne de caractère, booléen).
 
 ### Créer des objets `linnet` et `lpp` de A à Z et visualiser pour comprendre la structure des objets
 
@@ -103,7 +103,8 @@ Deux semis de points sont ensuite importés. Le premier concerne l'affichage pol
 Le second semis de points concerne la présence d'équipements publics. Il est en effet probable que la présence de certains équipements facilite ou contraigne l'affichage militant. Il comprend les coordonnées (colonnes x et y) et une typologie (bus : arrêt de bus ; sub : station de métro ; ps : commissariat).
 
 ```{r}
-semis_collage <- read.table("data/data_mini/mini_points1.txt", header = TRUE, sep = ",") # premier semis sur l'affichage politique
+# premier semis sur l'affichage politique
+semis_collage <- read.table("data/data_mini/mini_points1.txt", header = TRUE, sep = ",") 
 
 # contrôle du typage des variables
 str(semis_collage)
@@ -111,7 +112,8 @@ str(semis_collage)
 # typage de la variable sti
 semis_collage$sti <- as.logical(semis_collage$sti)
 
-semis_equipement <- read.table("data/data_mini/mini_points2.txt", header = TRUE, sep = ",") # second semis sur les équipements publics
+# second semis sur les équipements publics
+semis_equipement <- read.table("data/data_mini/mini_points2.txt", header = TRUE, sep = ",") 
 
 # transformation en semis de points sur réseau linéaire
 collage_lpp <- lpp(X = semis_collage, L = mini)
@@ -125,8 +127,7 @@ plot(collage_lpp)
 plot(equip_lpp, which.marks = "pol")
 ```
 
-L'objectif des lignes précédentes était de montrer comment créer un objet `linnet` de A à Z. Les objets créés sont trop pauvres pour montrer l'intérêt du _package_ et, dans la suite, le jeu de données est issu du projet [SoDUCo](https://soduco.geohistoricaldata.org/). 
-
+L'objectif des lignes précédentes était de montrer comment créer un objet `linnet` de A à Z. Les objets créés sont trop pauvres pour montrer l'intérêt du _package_ et, dans la suite du texte, le jeu de données est issu du projet [SoDUCo](https://soduco.geohistoricaldata.org/). 
 
 ### Créaer et visualiser des objets depuis des données spatiales (usuelles) 
 <!-- à partir de données spatiales ? -->
@@ -170,7 +171,7 @@ Concernant les informations sur le réseau viaire, la fonction `summary` renvoie
 * le diamètre (*diameter 10017.93*)
 * le rayon (*bouding radius: 5058.732*)
 
-Longueur totale, diamètre et rayon se basent sur la distance géographique sur le réseau planaire et non sur la distance topologique. Le diamètre donne donc ici la longueur en mètres, et non en nombre de liens, du plus long des plus courts chemins. De manière générale, toutes les méthodes implémentées dans `linnet` se basents sur les distances géographiques sur le réseau planaire étudié.
+Longueur totale, diamètre et rayon se basent sur la distance géographique (exprimée en mètres) sur le réseau planaire et non sur la distance topologique (nombre de liens). Le diamètre donne donc ici la longueur en mètres du plus long des plus courts chemins. De manière générale, toutes les méthodes implémentées dans `linnet` se basents sur les distances géographiques sur le réseau planaire étudié.
 
 ## Propriétés des objets `linnet` et `lpp`
 
@@ -193,7 +194,7 @@ nvertices(paris)
 # longueur totale du réseau viaire (en mètres)
 volume(paris)
 
-# degré
+# degré moyen
 mean(vertexdegree(paris))
 
 ```
@@ -220,7 +221,7 @@ intensity(epiciers_ppp)
 # plus court chemin (géographique et non topologique) entre paires de points
 pairdist(epiciers_ppp)[1:5, 1:5]
 
-# distance géographique au plus court voisin
+# distance géographique au plus proche voisin
 nndist(epiciers_ppp)[1:5] 
 
 # identifiant du plus proche voisin
@@ -248,11 +249,12 @@ summary(bijoutiers_lpp)
 <!-- j'ai déplacé le chunk de la densité pour le mettre dans la section sur les clusters -->
 
 
-Il est possible d'étudier un semis de points sur réseau spatial selon les mêmes logiques qu'un semis dans un espace isotrope car diverses mesures ont été adaptées afin de considérer la structure du réseau [voir en particulier @okabe2012]. <!-- je ne comprends pas, trop allusif je crois -->
+Il est possible d'étudier un semis de points sur un réseau spatial selon les mêmes logiques qu'un semis dans un espace isotrope car diverses mesures ont été adaptées afin de considérer la structure du réseau [voir en particulier @okabe2012].
 
 # Étudier les voisinages
 
 Différences d'approche entre fonction K et méthode du plus proche voisin
+
 
 Questions selon qu'on étudie un ou deux semis de points
 
@@ -461,7 +463,7 @@ plot(lam)
 
 Les méthodes d'analyse de semis de points sur réseaux planaires ne sont pas des méthodes statistiques stabilisées (voir par exemple une définition possible de la densité dans [@okabe2009] discutée dans [@mcswiggan2017]) et les choix des développeurs de `spatstat.linnet` sont des choix possibles parmi d'autres ; ce ne sont pas nécessairement les plus pertinents pour une question de recherche donnée. Ceci pourrait expliquer le faible nombre de références présentes dans les descriptifs des fonctions. De manière générale, l'aide du seul package paraît insuffisante pour le prendre en main et il est nécessaire de la compléter avec les diverses publications des auteurs, notamment le chapitre 17 de [@baddeley2012]^[Ouvrage vendu à un tarif délirant, visiter les archives d'Anna est recommandé.].
 
-Une des limites concerne la non possibilité d'avoir des liens orientés sur le réseau : étudier certains phénomènes ponctuels en milieu urbain sans prendre en compte les sens de circulation automobile autorisés peut limiter l'intérêt des résultats. Il n'est pas non plus aisé de tester des hypothèses pourtant simples à formuler (lien entre semis de points et degré des sommets du réseau par exemple) tant il est nécessaire de jongler entre des objets de types différents. Créer ses propres fonctions est vite nécessaire pour tirer pleinement profit du package.
+Une des limites concerne la non possibilité d'avoir des liens orientés sur le réseau : étudier certains phénomènes ponctuels en milieu urbain sans prendre en compte les sens de circulation automobile peut limiter l'intérêt des résultats. Il n'est pas non plus aisé de tester des hypothèses pourtant simples à formuler (lien entre semis de points et degré des sommets du réseau par exemple) tant il est nécessaire de jongler entre des objets de types différents. Créer ses propres fonctions est vite nécessaire pour tirer pleinement profit du package.
 
 `spatstat.linnet` n'est évidemment pas le seul package permettant ce type d'analyse (voir [`intensitynet`](https://cran.rstudio.com/web/packages/intensitynet/index.html) ou [`spatgraphs`](https://cran.rstudio.com/web/packages/spatgraphs/index.html)) mais il reste l'un des plus efficaces, surtout si on analyse des semis sur des réseaux de grande taille. À défaut d'être le plus simple à prendre en main, il semble l'un des plus rapides pour calculer les différents indicateurs et modèles disponibles.
 
