@@ -192,17 +192,41 @@ plot(rhoalongE)
 # hotspots
 # calcul de la densité de points par unité de réseau
 # l'option finespacing n'est pas nécessaire pour un réseau de petite taille
-densite_bij <- density.lpp(x = bijoutiers_lpp, finespacing = FALSE, distance = "path")
-densite_epic <- density.lpp(epiciers_lpp, finespacing = FALSE, distance = "path")
+densite_bij <- density.lpp(x = bijoutiers_lpp, 
+                           finespacing = FALSE, 
+                           distance = "path")  # autre option : euclidian
+densite_epic <- density.lpp(epiciers_lpp, 
+                            finespacing = FALSE, 
+                            distance = "path")
 
 # option couleur (par défaut)
-plot(densite_bij)
+plot(densite_epic)
 
 # option épaisseur des liens du réseau
-plot(x = densite_epic, 
-     main = "Densité d'épiciers",
+plot(x = densite_bij, 
+     main = "Densité de bijoutiers",
      style = "width", 
      adjust = 0.5)  # contrôler épaisseur max
+
+# choix du lissage
+densite_epi2 <- density.lpp(x = epiciers_lpp, 
+                            sigma = 200,       # fonction de lissage en mètres
+                            finespacing = FALSE, 
+                            distance = "path") # distance plus court chemin
+plot(densite_epi2)
+
+# argument statistique pour le choix du lissage
+# oblige à prendre en compte distance euclidienne
+
+b <- bw.lppl(epiciers_lpp,
+             distance = "e")
+plot(b, main="Choix du seuil de lissage")
+
+densite_epi3 <- density.lpp(x = epiciers_lpp, 
+                            sigma = max(b),       # fonction de lissage en mètres
+                            finespacing = FALSE, 
+                            distance = "path") # distance plus court chemin
+plot(densite_epi3)
 
 
 
