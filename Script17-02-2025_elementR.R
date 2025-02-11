@@ -333,10 +333,11 @@ bijoutiers_ecart %>%
 ##### Intégrer des hypothèses complémentaires: échelle des tronçons #####
 # Écart à une répartition homogène au niveau du tronçon
 # épiciers davantage présents à proximité des intersections ?
-alongE <- linfun(function(x,y,seg,tp) { tp }, domain(epiciers_lpp))
-rhoalongE <- rhohat(epiciers_lpp, alongE)
-plot(rhoalongE)
+along_edges <- linfun(function(x,y,seg,tp) { tp }, domain(epiciers_lpp))
+rhoalong_edges <- rhohat(object = epiciers_lpp, covariate = along_edges)
+plot(rhoalong_edges)
 
+#### Concentrations spatiales ####
 # hotspots
 # calcul de la densité de points par unité de réseau
 # l'option finespacing n'est pas nécessaire pour un réseau de petite taille
