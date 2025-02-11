@@ -235,7 +235,7 @@ bijoutiers_ecart %>%
 # où la distribution des points est fonction de la longueur des tronçons
 # i.e.: la probabilité de titer un tronçon Ls sur L est fonction de sa longueur dans L
 # le point est généré selon une probabilité uniforme le long de Ls
-# c'est ce qu'on appelle une CSR = complete spatial randomness
+# c'est ce qu'on appelle une CSR = complete spatial randomness (sur un réseau!)
 env <- envelope.lpp(Y = bijoutiers_lpp, # objet lpp observé
                     fun = linearK, # fonction calculée pour chaque semis (simulé et observé)
                     correction = "none", # pas de correction de la géométrie du réseau
@@ -271,21 +271,38 @@ f_dist2_center
 # simulation aléatoire de Poisson
 dist2_center_bijoutiers <- rpoislpp(lambda = f_dist2_center, # fonction d'intensité
                                     L = paris, # réseau
-                                    lmax = 1,
+                                    lmax = 0.05, # pour connaître lmax, voir commentaire plus bas
                                     nsim = 1)
+## NB: important de spécifier lmax si possible pour diminuer le temps de calcul
+## car rpoislpp(), si lambda est une fonction et lmax n'est pas spécifié, 
+## génère environ 10,000 points le long des tronçons pour estimer lmax ;
+## si lmax est spécifié mais qu'il est trop important, le nombre de points générés alétoirement (Poisson)
+## avant d'appliquer la méthode de Lewis-Shedler pour accepter ou rejetter ces points générés 
+## selon la fonction initiale va être très élevé (donc le temps de calcul allongé)
+## voir la fonction datagen.rpoisppOnLines(): https://github.com/spatstat/spatstat.random/blob/main/R/randomonlines.R
+## pour connaître lmax:
+# lmax_known <- as.linim(f_dist2_center)
+# tab_lmax <- attr(x = lmax_known, which = "df")
+# max(tab_lmax$values)
+## [1] 0.0468861
+
+
 # visualisation
 plot(dist2_center_bijoutiers, pch = 15)
 
+
 # autre simulation aléatoire
-## NB: utilisé ici pour une question de temps de calcul
 dist2_center_bijoutiers <- rlpp(n = nrow(bijoutiers), # nombre de points que l'on veut générer
                                 f = f_dist2_center, # fonction d'intensité (densité de probabilité)
                                 nsim = 1)
 plot(dist2_center_bijoutiers, pch = 15)
 
 # Analyse des écarts (observés vs simulés)
-# génération de 10 simulations
-bijoutiers_10sim <- rlpp(n = nrow(bijoutiers), f = f_dist2_center, nsim = 10)
+# génération de 10 simulations (Poisson)
+bijoutiers_10sim <- rpoislpp(lambda = f_dist2_center, # fonction d'intensité
+                             L = paris, # réseau
+                             lmax = 0.05, # cf. plus bas
+                             nsim = 10)
 
 # calcul des distances entre les points simulés et le centre
 list_simulated_dist <- list()
@@ -333,7 +350,7 @@ bijoutiers_ecart %>%
 ##### Intégrer des hypothèses complémentaires: échelle des tronçons #####
 # Écart à une répartition homogène au niveau du tronçon
 # épiciers davantage présents à proximité des intersections ?
-along_edges <- linfun(function(x,y,seg,tp) { tp }, domain(epiciers_lpp))
+along_edges <- linfun(function(x, y, seg, tp) { tp }, domain(epiciers_lpp))
 rhoalong_edges <- rhohat(object = epiciers_lpp, covariate = along_edges)
 plot(rhoalong_edges)
 
