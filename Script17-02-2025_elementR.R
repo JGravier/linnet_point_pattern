@@ -242,9 +242,9 @@ env <- envelope.lpp(Y = bijoutiers_lpp, # objet lpp observé
                     nsim = 20)
 plot(env)
 
-##### Intégrer des hypothèses complémentaires #####
-# Écart à une répartition homogène (Poisson) à l'échelle urbaine
-# test de Berman selon un axe ouest-est
+##### Intégrer des hypothèses spatiales complémentaires dans les analyses: échelle urbaine #####
+# Écart à une répartition homogène (Poisson) à l'échelle urbaine selon un axe ouest-est
+# test de Berman
 bt_berman <- berman.test(X = bijoutiers_lpp, covariate = "x")
 plot(bt_berman)
 
@@ -252,32 +252,46 @@ plot(bt_berman)
 ks <- cdf.test(bijoutiers_lpp, "x")
 plot(ks)
 
-# Écart à une répartition aléatoire en tenant compte de la distance au centre
+# Écart à une répartition aléatoire inhomogène qui tienne compte de la distance au centre
 # import des données
-center <- st_read(dsn = "data/halles.gpkg") # Les Halles considéré comme centre économique
-center_ppp <- as.ppp(st_geometry(center))
-center_lpp <- lpp(X = center_ppp, L = paris)
+center <- st_read(dsn = "data/halles.gpkg") # Les Halles considérées comme centre économique
+center_ppp <- as.ppp(st_geometry(center)) # semis de points
+center_lpp <- lpp(X = center_ppp, L = paris) # semis de points sur le réseau
 
-# import fonction (adaptation de spatstat.linnet::distfun.lpp())
-source(file = "local-functions.R")
-f_dist2_center <- distfun.inverse.lpp(X = center_lpp) # construction de la fonction d'intensité
+# calcul et visualisation de la distance au centre
+plot(distfun.lpp(X = center_lpp))
 
-# répartition aléatoire, en fonction de l'inverse de la distance au centre 
+# import fonction
+source(file = "local-functions.R") # adaptation de spatstat.linnet::distfun.lpp()
+f_dist2_center <- distfun.inverse.lpp(X = center_lpp) # création de la fonction d'intensité
+f_dist2_center
+
+# répartition aléatoire inhomogène selon l'inverse de la distance au centre 
 # i.e. plus on s'éloigne, plus la probabilité qu'un point soit simulé sur un tronçon diminue
-dist2_center_bijoutiers <- rlpp(n = nrow(bijoutiers), f = f_dist2_center, nsim = 1)
-# dist2_center_bijoutiers <- rpoislpp(lambda = f_dist2_center, L = paris, nsim = 1)
+# simulation aléatoire de Poisson
+dist2_center_bijoutiers <- rpoislpp(lambda = f_dist2_center, # fonction d'intensité
+                                    L = paris, # réseau
+                                    lmax = 1,
+                                    nsim = 1)
+# visualisation
 plot(dist2_center_bijoutiers, pch = 15)
 
-# Analyse des écarts
+# autre simulation aléatoire
+## NB: utilisé ici pour une question de temps de calcul
+dist2_center_bijoutiers <- rlpp(n = nrow(bijoutiers), # nombre de points que l'on veut générer
+                                f = f_dist2_center, # fonction d'intensité (densité de probabilité)
+                                nsim = 1)
+plot(dist2_center_bijoutiers, pch = 15)
+
+# Analyse des écarts (observés vs simulés)
 # génération de 10 simulations
 bijoutiers_10sim <- rlpp(n = nrow(bijoutiers), f = f_dist2_center, nsim = 10)
 
-# calcul des distances entre les points simulés entre les points simulés et le centre
+# calcul des distances entre les points simulés et le centre
 list_simulated_dist <- list()
 
 for (i in 1:length(bijoutiers_10sim)) {
-  # calculs des plus courts chemins sur réseau
-  dist_pi_p <- spatstat.geom::crossdist(X = bijoutiers_10sim[[i]], Y = center_lpp)
+  dist_pi_p <- crossdist.lpp(X = bijoutiers_10sim[[i]], Y = center_lpp) # distances au plus court chemin entre deux lpp
   dist_pi_p[upper.tri(x = dist_pi_p, diag = TRUE)] <- NA
   
   dist_pi_p <- dist_pi_p %>%
@@ -294,7 +308,7 @@ for (i in 1:length(bijoutiers_10sim)) {
 table_simulated_dist <- do.call(what = "rbind", args = list_simulated_dist)
 
 # calcul des distances entre les points observés des bijoutiers et le centre
-dist_bijoutiers <- spatstat.geom::crossdist(X = bijoutiers_lpp, Y = center_lpp)
+dist_bijoutiers <- crossdist.lpp(X = bijoutiers_lpp, Y = center_lpp)
 dist_bijoutiers[upper.tri(x = dist_bijoutiers, diag = TRUE)] <- NA
 
 dist_bijoutiers <- dist_bijoutiers %>%
@@ -312,8 +326,11 @@ bijoutiers_ecart <- table_simulated_dist %>%
 bijoutiers_ecart %>%
   ggplot(aes(x = dist_pi_p, color = type)) +
   geom_density(linewidth = 1) +
+  xlab("distance en mètres") +
+  ylab("KDE") +
   theme_bw()
 
+##### Intégrer des hypothèses complémentaires: échelle des tronçons #####
 # Écart à une répartition homogène au niveau du tronçon
 # épiciers davantage présents à proximité des intersections ?
 alongE <- linfun(function(x,y,seg,tp) { tp }, domain(epiciers_lpp))
