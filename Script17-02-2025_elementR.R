@@ -144,8 +144,8 @@ nndist.lpp(epiciers_lpp, k = 2)[1:5] # vecteur numérique
 bijoutiers_lpp <- lpp(X = bijoutiers_ppp, L = paris) # création lpp
 
 
-#### Écart à une simulation aléatoire ####
-##### Visualisation cartographique d'une simulation aléatoire #####
+#### Écart à une répartition spatiale aléatoire ####
+##### Visualisation cartographique d'une simulation aléatoire homogène #####
 # Simulation homogène de Poisson d'un semis de points sur réseau selon l'intensité moyenne
 bijoutiers_infos <- summary(object = bijoutiers_lpp) # pour récupérer l'intensité moyenne
 plot(x = rpoislpp(lambda = bijoutiers_infos$intensity, # simulation de Poisson
@@ -156,7 +156,7 @@ plot(x = rpoislpp(lambda = bijoutiers_infos$intensity, # simulation de Poisson
      main = NULL) # titre de la carte (ici, aucun)
 
 
-##### Visualisation des écart entre semis observé et semis simulés (courbes) #####
+##### Distribution des distances des plus courts chemins (observés vs simulés): courbes #####
 # génération de 10 simulations
 bijoutiers_10sim <- rpoislpp(ex = bijoutiers_lpp, # paramètre permettant de ne pas spécifier lambda et L
                              # alors, lambda = intensité moyenne du lpp
@@ -227,21 +227,30 @@ bijoutiers_ecart %>%
   ylab("KDE") + # titre de l'axe des y
   theme_bw()
 
-# Écart à une répartition homogène : distribution de la longueur des plus courts chemins
-# simuler 20 semis où distribution fonction longueur des voies
-# CSR = complete spatial randomness
-env <- envelope(bijoutiers_lpp, linearK, correction="none", nsim=20)
+
+##### Distribution des distances: Fonction K #####
+# depuis chacun des points du semis au sein d'enveloppes de distance sur réseau (noté r)
+
+# simuler 20 semis aléatoires inhomogènes
+# où la distribution des points est fonction de la longueur des tronçons
+# i.e.: la probabilité de titer un tronçon Ls sur L est fonction de sa longueur dans L
+# le point est généré selon une probabilité uniforme le long de Ls
+# c'est ce qu'on appelle une CSR = complete spatial randomness
+env <- envelope.lpp(Y = bijoutiers_lpp, # objet lpp observé
+                    fun = linearK, # fonction calculée pour chaque semis (simulé et observé)
+                    correction = "none", # pas de correction de la géométrie du réseau
+                    nsim = 20)
 plot(env)
 
-# Écart à une répartition homogène
-# au niveau de la ville (axe ouest-est)
-# test de Berman
-btB <- berman.test(bijoutiers_lpp, "x")
-plot(btB)
+##### Intégrer des hypothèses complémentaires #####
+# Écart à une répartition homogène (Poisson) à l'échelle urbaine
+# test de Berman selon un axe ouest-est
+bt_berman <- berman.test(X = bijoutiers_lpp, covariate = "x")
+plot(bt_berman)
 
 # test de Kolmogorov-Smirnov
-cdfB <- cdf.test(bijoutiers_lpp, "x")
-plot(cdfB)
+ks <- cdf.test(bijoutiers_lpp, "x")
+plot(ks)
 
 # Écart à une répartition aléatoire en tenant compte de la distance au centre
 # import des données
