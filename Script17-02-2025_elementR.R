@@ -121,7 +121,7 @@ intensity(bijoutiers_ppp)
 pairdist(epiciers_ppp)[1:5, 1:5] # matrice symétrique
 
 # distance géographique (euclidienne) au plus proche voisin
-nndist(epiciers_ppp)[1:5] # vecteur numérique, par défaut k = 1 (plus proche voisin)
+nndist(epiciers_ppp)[1:5] # vecteur numérique ; par défaut k = 1 (plus proche voisin)
 ## on peut spécifier le paramètre k pour obtenir les distances des kème voisins
 
 # identifiant du plus proche voisin
@@ -132,41 +132,63 @@ epiciers_lpp <- lpp(X = epiciers_ppp, # semis
                     L = paris) # réseau
 summary(epiciers_lpp)
 
-# plus court chemin (géographique et non topologique) entre paires de points
+# distance au plus court chemin (géographique et non topologique) entre paires de points
 pairdist.lpp(epiciers_lpp)[1:5, 1:5] # matrice symétrique
-## NB: identique à l'utilisation de la fonction pairdist() sur un objet lpp
+## pairdist.lpp() identique à l'utilisation de pairdist() sur un objet lpp
 
+# distance géographique (au plus court chemin) au plus proche voisin
+nndist.lpp(epiciers_lpp, k = 2)[1:5] # vecteur numérique
+## nndist.lpp() identique à l'utilisation de nndist() sur un objet lpp
+
+# intégrer le semis du point au réseau planaire des bijoutiers
 bijoutiers_lpp <- lpp(X = bijoutiers_ppp, L = paris) # création lpp
-summary(bijoutiers_lpp)
 
 
-# Écart à une simulation aléatoire (carte)
-# visualisation d'une simulation
-bijoutiers_infos <- summary(object = bijoutiers_lpp)
-plot(x = rpoislpp(lambda = bijoutiers_infos$intensity, L = paris, nsim = 1),
-     pch = 15, main = NULL)
+#### Écart à une simulation aléatoire ####
+##### Visualisation cartographique d'une simulation aléatoire #####
+# Simulation homogène de Poisson d'un semis de points sur réseau selon l'intensité moyenne
+bijoutiers_infos <- summary(object = bijoutiers_lpp) # pour récupérer l'intensité moyenne
+plot(x = rpoislpp(lambda = bijoutiers_infos$intensity, # simulation de Poisson
+                  # lambda est une constante car simulation homogène
+                  L = paris, # réseau linéaire
+                  nsim = 1), # nombre de simulation, par défaut nsim = 1
+     pch = 15, # type de points cartographiés (carrés)
+     main = NULL) # titre de la carte (ici, aucun)
 
-# Écart entre observé et simulé (courbes)
+
+##### Visualisation des écart entre semis observé et semis simulés (courbes) #####
 # génération de 10 simulations
-bijoutiers_10sim <- runiflpp(ex = bijoutiers_lpp, nsim = 10)
+bijoutiers_10sim <- rpoislpp(ex = bijoutiers_lpp, # paramètre permettant de ne pas spécifier lambda et L
+                             # alors, lambda = intensité moyenne du lpp
+                             # L est le réseau de lpp
+                             nsim = 10)
+bijoutiers_10sim # une liste de 10 lpp simulés
 
 # calcul des distances entre les points simulés aléatoirement sur le réseau
 list_simulated_dist <- list()
 
 for (i in 1:length(bijoutiers_10sim)) { # boucle pour pédagogie
-  # calculs des plus courts chemins sur réseau
-  dist_pi_p <- spatstat.geom::pairdist(X = bijoutiers_10sim[[i]])
-  dist_pi_p[upper.tri(x = dist_pi_p, diag = TRUE)] <- NA
+  # calculs des distances des plus courts chemins sur réseau
+  dist_pi_p <- pairdist.lpp(X = bijoutiers_10sim[[i]]) # matrice symétrique
+  dist_pi_p[upper.tri(x = dist_pi_p, diag = TRUE)] <- NA # transformation de la partie
+  # triangulaire haute de la matrice et de la diagonale en NA
   
   dist_pi_p <- dist_pi_p %>%
-    tibble::as_tibble() %>%
-    tibble::rowid_to_column(var = "Pi") %>%
-    tidyr::pivot_longer(cols = -Pi, names_to = "P", values_to = "dist_pi_p") %>%
-    dplyr::filter(!is.na(dist_pi_p)) %>%
-    dplyr::mutate(P = stringr::str_replace_all(string = P, pattern = "V", replacement = "")) %>%
-    dplyr::mutate(type = "simulation", n_sim = i)
+    tibble::as_tibble() %>% # matrice en tableau
+    tibble::rowid_to_column(var = "Pi") %>% # ajout d'identifiant dans une colonne Pi
+    tidyr::pivot_longer(cols = -Pi, # transformation du tableau en format long
+                        # toutes les colonnes sauf Pi
+                        names_to = "P", # variable contenant les noms des 1 à N colonnes initiales de la matrice
+                        values_to = "dist_pi_p") %>% # variable contenant les valeurs de distances
+    dplyr::filter(!is.na(dist_pi_p)) %>% # suppression de toutes les lignes contenant des NA
+    dplyr::mutate(P = stringr::str_replace_all(string = P, # suppression de tous les "V" des noms des colonnes initiales de la matrice
+                                               pattern = "V", 
+                                               replacement = "")) %>%
+    dplyr::mutate(type = "simulation", # nouvelle variable type
+                  n_sim = i) # variable contenant le numéro de la simulation
   
-  list_simulated_dist[[i]] <- dist_pi_p   
+  # liste de tableaux longs de distance au plus court chemin
+  list_simulated_dist[[i]] <- dist_pi_p # 1 tableau pour 1 simulation
 }
 
 # création d'un unique tableau et non d'une liste de tableaux
@@ -174,7 +196,7 @@ table_simulated_dist <- do.call(what = "rbind", args = list_simulated_dist)
 table_simulated_dist
 
 # calcul des distances entre les points observés des bijoutiers en 1839
-dist_bijoutiers <- spatstat.geom::pairdist(X = bijoutiers_lpp)
+dist_bijoutiers <- pairdist.lpp(X = bijoutiers_lpp)
 dist_bijoutiers[upper.tri(x = dist_bijoutiers, diag = TRUE)] <- NA
 
 dist_bijoutiers <- dist_bijoutiers %>%
@@ -185,18 +207,24 @@ dist_bijoutiers <- dist_bijoutiers %>%
   mutate(P = stringr::str_replace_all(string = P, pattern = "V", replacement = "")) %>%
   mutate(type = "observation", n_sim = NA)
 
-bijoutiers_ecart <- table_simulated_dist %>%
-  dplyr::bind_rows(dist_bijoutiers)
+# construction d'un tableau regroupant les simulations et observations
+bijoutiers_ecart <- table_simulated_dist %>% # tableau des distances calculées pour les simulations
+  dplyr::bind_rows(dist_bijoutiers) # ajout à la suite des lignes du tableau des observations
+bijoutiers_ecart
 
-# Visualisation des écarts
+# Visualisation graphique des écarts
 bijoutiers_ecart %>%
-  ggplot(aes(x = dist_pi_p, group = n_sim)) + # toutes les simulations individusalisées
-  geom_density() +
-  theme_bw()
+  ggplot(aes(x = dist_pi_p, # x : représentation des distances
+             group = n_sim)) + # toutes les simulations individusalisées
+  geom_density() + # courbe de densité (KDE)
+  theme_bw() # thème visuel fond clair
 
 bijoutiers_ecart %>%
-  ggplot(aes(x = dist_pi_p, color = type)) +  # toutes les simulations groupées
-  geom_density(linewidth = 1) +
+  ggplot(aes(x = dist_pi_p, 
+             color = type)) +  # toutes les simulations sont regroupées en 1 courbe
+  geom_density(linewidth = 1) + # plus forte épaisseur des traits
+  xlab("distance en mètres") + # titre de l'axe des x
+  ylab("KDE") + # titre de l'axe des y
   theme_bw()
 
 # Écart à une répartition homogène : distribution de la longueur des plus courts chemins
