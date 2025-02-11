@@ -218,8 +218,8 @@ Le code suivant permet de calculer ces différents éléments sur le semis des �
 npoints(epiciers_ppp)
 intensity(epiciers_ppp)
 
-# plus court chemin (géographique et non topologique) entre paires de points
-pairdist(epiciers_ppp)[1:5, 1:5]
+# distance géographique (euclidienne) entre paires de points
+pairdist(epiciers_ppp)[1:5, 1:5] # matrice symétrique
 
 # distance géographique au plus proche voisin
 nndist(epiciers_ppp)[1:5] 
@@ -237,6 +237,9 @@ La dernière étape consiste à intégrer dans le même objet le réseau linéai
 ```{r}
 epiciers_lpp <- lpp(X = epiciers_ppp, L = paris)
 summary(epiciers_lpp)
+
+# plus court chemin (géographique et non topologique) entre paires de points
+pairdist.lpp(epiciers_lpp)[1:5, 1:5] # matrice symétrique
 
 bijoutiers_lpp <- lpp(X = bijoutiers_ppp, L = paris)
 summary(bijoutiers_lpp)
