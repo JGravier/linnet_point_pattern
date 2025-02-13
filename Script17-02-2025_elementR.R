@@ -18,14 +18,23 @@ library(ggplot2) # package de visualisation de données
 # Import des fichiers
 # sommets et coordonnées (x,y)
 mini_node <- read.table(file = "data/data_mini/mini_node.txt", 
-                        header = TRUE, row.names = 1, sep = ",")
+                        header = TRUE, 
+						row.names = 1, 
+						sep = ",")
 
 # extrémités des liens
-mini_edge <- read.table("data/data_mini/mini_edge.txt", header = FALSE, sep = ",")
+mini_edge <- read.table("data/data_mini/mini_edge.txt", 
+						header = FALSE, 
+						sep = ",")
 
 # transformation en objet ppp et matrice
-mini_node_ppp <- ppp(x = mini_node$x, y = mini_node$y, c(0,10), c(0,10))
-mini_edge_matrix <- as.matrix(mini_edge, ncol = 2)
+mini_node_ppp <- ppp(x = mini_node$x, 
+                     y = mini_node$y, 
+					 c(0,10),         # étendue des x 
+					 c(0,10))         # étendue des y
+					 
+mini_edge_matrix <- as.matrix(mini_edge, 
+							  ncol = 2)
 
 # création d'un objet linnet : réseau planaire linéaire
 mini <- linnet(vertices = mini_node_ppp, # sommets
@@ -34,12 +43,14 @@ class(mini)
 plot(mini)
 
 # premier semis de points sur l'affichage politique
-semis_collage <- read.table("data/data_mini/mini_points1.txt", header = TRUE, sep = ",") 
+semis_collage <- read.table("data/data_mini/mini_points1.txt",
+							header = TRUE, 
+							sep = ",") 
 semis_collage 
-## coordonnées (x,y)
-## nb : nombre d’affiches,
-## pol : tendance politique (eg : extrême-gauche, fe : féministe, ed : extrême-droite)
-## sti : présence d’autocollant (0 : non, 1 : oui)
+# coordonnées (x,y)
+# nb : nombre d’affiches,
+# pol : tendance politique (eg : extrême-gauche, fe : féministe, ed : extrême-droite)
+# sti : présence d’autocollant (0 : non, 1 : oui)
 
 # contrôle du typage des variables
 str(semis_collage)
@@ -48,27 +59,28 @@ str(semis_collage)
 semis_collage$sti <- as.logical(semis_collage$sti)
 
 # second semis de points sur les équipements publics
-semis_equipement <- read.table("data/data_mini/mini_points2.txt", header = TRUE, sep = ",") 
-## coordonnées (x,y)
-## typologie (bus : arrêt de bus ; sub : station de métro ; ps : commissariat)
-
+semis_equipement <- read.table("data/data_mini/mini_points2.txt", 
+							   header = TRUE, 
+							   sep = ",") 
+# coordonnées (x,y)
+# typologie (bus : arrêt de bus ; sub : station de métro ; ps : commissariat)
 
 # transformation en semis de points sur réseau linéaire (objet lpp)
 collage_lpp <- lpp(X = semis_collage, # semis de points
                    L = mini) # réseau planaire linéaire
 equip_lpp <- lpp(X = semis_equipement, L = mini)
 
-
-##### Visualisation d'un semis de points sur un réseau linéaire #####
+# Visualisation d'un semis de points sur un réseau linéaire #####
 # visualisation par défaut
 plot(collage_lpp) # une visualisation par type de "marks" (attributs des points)
 
 # choix de l'attribut à visualiser
 plot(equip_lpp, which.marks = "pol")
 
+rm(list=ls())
 
-#### Jeux de données spatiales (usuels) ####
-##### Importer les données du projet SoDuCo #####
+####  Jeux de données spatiales            ####
+#### Importer les données du projet SoDuCo ####
 # import du réseau viaire parisien en 1836
 paris <- st_read("data/1836_jacoubet.shp")
 
@@ -92,7 +104,6 @@ summary(paris)
 epiciers_ppp <- as.ppp(st_geometry(epiciers))
 bijoutiers_ppp <- as.ppp(st_geometry(bijoutiers))
 
-
 ##### Propriétés de base des objets linnet et ppp #####
 # nombre de sommets
 nvertices(paris)
@@ -112,7 +123,7 @@ intensity(epiciers_ppp)
 ## appelée "intensité" dans le package
 ## revient à une densité par unité de base
 
-# Semis de points des bijouteries
+# semis de points des bijouteries
 npoints(bijoutiers_ppp)
 intensity(bijoutiers_ppp)
 
@@ -140,21 +151,20 @@ pairdist.lpp(epiciers_lpp)[1:5, 1:5] # matrice symétrique
 nndist.lpp(epiciers_lpp, k = 2)[1:5] # vecteur numérique
 ## nndist.lpp() identique à l'utilisation de nndist() sur un objet lpp
 
-# intégrer le semis du point au réseau planaire des bijoutiers
+# intégrer le semis du point au réseau planaire
 bijoutiers_lpp <- lpp(X = bijoutiers_ppp, L = paris) # création lpp
 
 
 #### Écart à une répartition spatiale aléatoire ####
 ##### Visualisation cartographique d'une simulation aléatoire homogène #####
 # Simulation homogène de Poisson d'un semis de points sur réseau selon l'intensité moyenne
-bijoutiers_infos <- summary(object = bijoutiers_lpp) # pour récupérer l'intensité moyenne
+bijoutiers_infos <- summary(object = bijoutiers_lpp)   # pour récupérer l'intensité moyenne
 plot(x = rpoislpp(lambda = bijoutiers_infos$intensity, # simulation de Poisson
                   # lambda est une constante car simulation homogène
                   L = paris, # réseau linéaire
                   nsim = 1), # nombre de simulation, par défaut nsim = 1
      pch = 15, # type de points cartographiés (carrés)
      main = NULL) # titre de la carte (ici, aucun)
-
 
 ##### Distribution des distances des plus courts chemins (observés vs simulés): courbes #####
 # génération de 10 simulations
@@ -169,14 +179,14 @@ list_simulated_dist <- list()
 
 for (i in 1:length(bijoutiers_10sim)) { # boucle pour pédagogie
   # calculs des distances des plus courts chemins sur réseau
-  dist_pi_p <- pairdist.lpp(X = bijoutiers_10sim[[i]]) # matrice symétrique
+  dist_pi_p <- pairdist.lpp(X = bijoutiers_10sim[[i]])   # matrice symétrique
   dist_pi_p[upper.tri(x = dist_pi_p, diag = TRUE)] <- NA # transformation de la partie
   # triangulaire haute de la matrice et de la diagonale en NA
   
   dist_pi_p <- dist_pi_p %>%
-    tibble::as_tibble() %>% # matrice en tableau
+    tibble::as_tibble() %>%                 # matrice en tableau
     tibble::rowid_to_column(var = "Pi") %>% # ajout d'identifiant dans une colonne Pi
-    tidyr::pivot_longer(cols = -Pi, # transformation du tableau en format long
+    tidyr::pivot_longer(cols = -Pi,         # transformation du tableau en format long
                         # toutes les colonnes sauf Pi
                         names_to = "P", # variable contenant les noms des 1 à N colonnes initiales de la matrice
                         values_to = "dist_pi_p") %>% # variable contenant les valeurs de distances
@@ -185,7 +195,7 @@ for (i in 1:length(bijoutiers_10sim)) { # boucle pour pédagogie
                                                pattern = "V", 
                                                replacement = "")) %>%
     dplyr::mutate(type = "simulation", # nouvelle variable type
-                  n_sim = i) # variable contenant le numéro de la simulation
+                  n_sim = i)           # variable contenant le numéro de la simulation
   
   # liste de tableaux longs de distance au plus court chemin
   list_simulated_dist[[i]] <- dist_pi_p # 1 tableau pour 1 simulation
@@ -207,26 +217,25 @@ dist_bijoutiers <- dist_bijoutiers %>%
   mutate(P = stringr::str_replace_all(string = P, pattern = "V", replacement = "")) %>%
   mutate(type = "observation", n_sim = NA)
 
-# construction d'un tableau regroupant les simulations et observations
+# construction d'un tableau regroupant simulations et observations
 bijoutiers_ecart <- table_simulated_dist %>% # tableau des distances calculées pour les simulations
-  dplyr::bind_rows(dist_bijoutiers) # ajout à la suite des lignes du tableau des observations
+  dplyr::bind_rows(dist_bijoutiers)          # ajout à la suite des lignes du tableau des observations
 bijoutiers_ecart
 
 # Visualisation graphique des écarts
 bijoutiers_ecart %>%
-  ggplot(aes(x = dist_pi_p, # x : représentation des distances
+  ggplot(aes(x = dist_pi_p,    # x : représentation des distances
              group = n_sim)) + # toutes les simulations individusalisées
-  geom_density() + # courbe de densité (KDE)
-  theme_bw() # thème visuel fond clair
+  geom_density() +             # courbe de densité (KDE)
+  theme_bw()                   # thème visuel fond clair
 
 bijoutiers_ecart %>%
   ggplot(aes(x = dist_pi_p, 
-             color = type)) +  # toutes les simulations sont regroupées en 1 courbe
+             color = type)) +   # toutes les simulations sont regroupées en 1 courbe
   geom_density(linewidth = 1) + # plus forte épaisseur des traits
-  xlab("distance en mètres") + # titre de l'axe des x
-  ylab("KDE") + # titre de l'axe des y
+  xlab("distance en mètres") +  # titre de l'axe des x
+  ylab("KDE") +                 # titre de l'axe des y
   theme_bw()
-
 
 ##### Distribution des distances: Fonction K #####
 # depuis chacun des points du semis au sein d'enveloppes de distance sur réseau (noté r)
@@ -254,8 +263,8 @@ plot(ks)
 
 # Écart à une répartition aléatoire inhomogène qui tienne compte de la distance au centre
 # import des données
-center <- st_read(dsn = "data/halles.gpkg") # Les Halles considérées comme centre économique
-center_ppp <- as.ppp(st_geometry(center)) # semis de points
+center <- st_read(dsn = "data/halles.gpkg")  # Les Halles considérées comme centre économique
+center_ppp <- as.ppp(st_geometry(center))    # semis de points
 center_lpp <- lpp(X = center_ppp, L = paris) # semis de points sur le réseau
 
 # calcul et visualisation de la distance au centre
@@ -270,9 +279,10 @@ f_dist2_center
 # i.e. plus on s'éloigne, plus la probabilité qu'un point soit simulé sur un tronçon diminue
 # simulation aléatoire de Poisson
 dist2_center_bijoutiers <- rpoislpp(lambda = f_dist2_center, # fonction d'intensité
-                                    L = paris, # réseau
-                                    lmax = 0.05, # pour connaître lmax, voir commentaire plus bas
+                                    L = paris,               # réseau
+                                    lmax = 0.05,             # pour connaître lmax, voir ci-dessous
                                     nsim = 1)
+
 ## NB: important de spécifier lmax si possible pour diminuer le temps de calcul
 ## car rpoislpp(), si lambda est une fonction et lmax n'est pas spécifié, 
 ## génère environ 10,000 points le long des tronçons pour estimer lmax ;
@@ -286,14 +296,12 @@ dist2_center_bijoutiers <- rpoislpp(lambda = f_dist2_center, # fonction d'intens
 # max(tab_lmax$values)
 ## [1] 0.0468861
 
-
 # visualisation
 plot(dist2_center_bijoutiers, pch = 15)
 
-
 # autre simulation aléatoire
 dist2_center_bijoutiers <- rlpp(n = nrow(bijoutiers), # nombre de points que l'on veut générer
-                                f = f_dist2_center, # fonction d'intensité (densité de probabilité)
+                                f = f_dist2_center,   # fonction d'intensité (densité de probabilité)
                                 nsim = 1)
 plot(dist2_center_bijoutiers, pch = 15)
 
@@ -347,7 +355,7 @@ bijoutiers_ecart %>%
   ylab("KDE") +
   theme_bw()
 
-##### Intégrer des hypothèses complémentaires: échelle des tronçons #####
+##### Intégrer des hypothèses complémentaires : échelle des tronçons #####
 # Écart à une répartition homogène au niveau du tronçon
 # épiciers davantage présents à proximité des intersections ?
 along_edges <- linfun(function(x, y, seg, tp) { tp }, domain(epiciers_lpp))
@@ -393,8 +401,3 @@ densite_epi3 <- density.lpp(x = epiciers_lpp,
                             finespacing = FALSE, 
                             distance = "path") # distance plus court chemin
 plot(densite_epi3)
-
-
-
-
-
