@@ -126,7 +126,9 @@ plot(equip_lpp, which.marks = "pol")
 
 L'objectif des lignes précédentes était de montrer comment créer un objet `linnet` de A à Z. Les objets créés sont trop pauvres pour montrer l'intérêt du _package_ et, dans la suite du texte, le jeu de données est issu du projet [SoDUCo](https://soduco.geohistoricaldata.org/). 
 
-### Créaer et visualiser des objets depuis des données spatiales (usuelles) 
+<!-- faire mesures de base ici puis modèles stats sur gros jeu. si point hors fenêtre, warning:  1 point was rejected as lying outside the specified window -->
+
+### Créer et visualiser des objets depuis des données spatiales (usuelles) 
 <!-- à partir de données spatiales ? -->
 
 Les données sont dérivées <!-- issues ? --> de l'extraction des _Annuaires_ commerciaux de la ville de Paris en 1839^[Il s'agit plus précisément de l'extraction de la liste alphabétique de l'_Annuaire Général du Commerce_ édité par Charles Lamy en 1839. Les informations plus précises sont inclues dans les métadonnées du dossier _data_ (fichier _readme.md_).]. Les deux jeux de données listent les épiciers et les bijoutiers présents dans l'espace municipal à cette date.
@@ -171,7 +173,7 @@ Concernant les informations sur le réseau viaire, la fonction `summary` renvoie
 Longueur totale, diamètre et rayon se basent sur la distance géographique (exprimée en mètres) sur le réseau planaire et non sur la distance topologique (nombre de liens). Le diamètre donne donc ici la longueur en mètres du plus long des plus courts chemins. De manière générale, toutes les méthodes implémentées dans `linnet` se basents sur les distances géographiques sur le réseau planaire étudié.
 
 ## Propriétés des objets `linnet` et `lpp`
-
+<!-- pas besoin: vu sur petit jeu -->
 Si on souhaite utiliser une mesure précise, il est possible d'obtenir ces informations avec des fonctions spécifiques :
 
 * nombre de sommets (`nvertices`) 
@@ -248,7 +250,6 @@ summary(bijoutiers_lpp)
 
 <!-- j'ai déplacé le chunk de la densité pour le mettre dans la section sur les clusters -->
 
-
 Il est possible d'étudier un semis de points sur un réseau spatial selon les mêmes logiques qu'un semis dans un espace isotrope car diverses mesures ont été adaptées afin de considérer la structure du réseau [voir en particulier @okabe2012].
 
 # Étudier les voisinages
@@ -304,6 +305,7 @@ rpoislpp(lambda = bijoutiers_infos$intensity, L = paris, nsim = 1) # le nombre d
 plot(x = rpoislpp(lambda = bijoutiers_infos$intensity, L = paris, nsim = 1),
      pch = 15, main = NULL)
 
+# inutile d'avoir les 2 sim
 # génération de 2 simulations
 process_al_2sim <- rpoislpp(lambda = bijoutiers_infos$intensity, L = paris, nsim = 2)
 
@@ -367,7 +369,7 @@ dist_bijoutiers <- dist_bijoutiers %>%
 ```
 
 
-Comparaison visuelle
+Comparaison visuelle <!-- garder une seule visu des écarts -->
 ```{r}
 bijoutiers_ecart <- table_simulated_dist %>%
   dplyr::bind_rows(dist_bijoutiers)
@@ -385,14 +387,14 @@ bijoutiers_ecart %>%
 
 ```
 
-Idem, cas des épiciers
+Idem, cas des épiciers <!-- à virer ? ou mettre uniquement courbe obs-sim pour montrer proximité avec répartition homogène-->
 ```{r}
 # génération de 10 simulations
 epiciers_10sim <- runiflpp(ex = epiciers_lpp, nsim = 10)
 ```
 
 ## Rechercher et analyser les clusters
-
+<!-- différence hot spot - cluster ? à creuser... -->
 La recherche de clusters ou de hot spots, soit des zones du réseau où la densité de points est plus forte qu'attendue, suppose de comparer la répartion observée à une répartition homogène où la probabilité de chaque tronçon d'accueillir un sommet serait fonction de sa seule longueur. La fonction `intensity` renvoie ce résultat (nombre moyen de points par unité de longueur).
 
 La fonction `density` permet de repérer les zones du réseau où les concentrations de points s'écartent de cette intesité moyenne. <!-- je dois lire un peu avant de reprendre ça -->
@@ -417,6 +419,8 @@ plot(x = densite_bij,
 
 Comme dans de nombreuses visualisations proposées ces dernières années et contrairement aux règles classiques de la sémiologie graphique, plus la teinte est claire et plus la densité est élevée. 
 
+
+<!-- découper, pas au bon endroit - garder un test et l'expliquer et signaler les autres tests possibles -->
 Il est possible de tester la densité des points en fontion d'une variable spatiale. L'opposition socio-spatiale  ouest-est étant une donnée ancienne de Paris, on pourrait par exemple tester la densité des bijoutiers en fonction des x. On peut également se demander si les commerces tendent à être plus proches des intersections ou non. Différents tests statistiques permettent ensuite de vérifier si le lien entre la densité du semis et la variable considérée est statistiquement significatif.
 
 ```{r}
@@ -434,7 +438,7 @@ plot(cdfB)
 
 Comparer la courbe en pointillé (distribution attendue si le semis homogène était fonction de la variation de x) et la courbe noire (distribtion observée) montre une plus faible présence aux extremités de la zone observée ; inversement, les bijoutiers sont davantage présents au centre de l'espace considéré (cf la pente de la courbe pleine). 
 
-<!-- à commenter quand j'aurai compris... -->
+<!-- à commenter quand j'aurai compris... à mettre après hot spot car logique répartition uniforme et non aléatoire-->
 
 ```{r}
 # épiciers davantage présents à proximité des intersections ?
@@ -465,7 +469,7 @@ Les méthodes d'analyse de semis de points sur réseaux planaires ne sont pas de
 
 Une des limites concerne la non possibilité d'avoir des liens orientés sur le réseau : étudier certains phénomènes ponctuels en milieu urbain sans prendre en compte les sens de circulation automobile peut limiter l'intérêt des résultats. Il n'est pas non plus aisé de tester des hypothèses pourtant simples à formuler (lien entre semis de points et degré des sommets du réseau par exemple) tant il est nécessaire de jongler entre des objets de types différents. Créer ses propres fonctions est vite nécessaire pour tirer pleinement profit du package.
 
-`spatstat.linnet` n'est évidemment pas le seul package permettant ce type d'analyse (voir [`intensitynet`](https://cran.rstudio.com/web/packages/intensitynet/index.html) ou [`spatgraphs`](https://cran.rstudio.com/web/packages/spatgraphs/index.html)) mais il reste l'un des plus efficaces, surtout si on analyse des semis sur des réseaux de grande taille. À défaut d'être le plus simple à prendre en main, il semble l'un des plus rapides pour calculer les différents indicateurs et modèles disponibles.
+`spatstat.linnet` n'est évidemment pas le seul package permettant ce type d'analyse (voir [`intensitynet`](https://cran.rstudio.com/web/packages/intensitynet/index.html) ou [`spatgraphs`](https://cran.rstudio.com/web/packages/spatgraphs/index.html)) mais il reste l'un des plus efficaces, surtout si on analyse des semis sur des réseaux de grande taille. À défaut d'être le plus simple à prendre en main, il semble l'un des plus rapides pour calculer les différents indicateurs et modèles disponibles. <!-- contrôler la doc de ces packages -->
 
 # Pour aller plus loin
 
