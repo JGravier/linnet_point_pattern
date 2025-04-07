@@ -9,10 +9,12 @@ mini_edge.txt: extremities (origin-destination) of non-directed edges of the pla
 
 The two following files are required to create planar points patterns. The first one regards political posters, the second one regards public equipments.
 mini_points.txt: 
-- x,y: coordinates of the political poster
+- x,y: coordinates of the political poster (the last one is out of the network)
 - nb: integer attribute, number of political posters
 - pol: character attribute, political tendency (fl, far-left; fe, feminist; fr, far-right)
 - sti: boolean attribute, presence of stickers (0, no; 1, yes)
 mini-points2.txt:
 - x,y: coordinates of the equipment
 - type: bus station (bus), subway station (sub) and police station (ps).
+
+

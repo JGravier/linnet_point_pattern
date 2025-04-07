@@ -9,7 +9,7 @@ nocite: '@*'
 format:
   rzine-html: default
 lang: fr-FR
-date: "2025-02"
+date: "2025-04"
 authors:
   - name: Laurent Beauguitte
     affiliations:
@@ -36,11 +36,6 @@ abstract: |
     L’analyse d’un semis de points sur un réseau désigne un ensemble de méthodes statistiques permettant de caractériser des événements ponctuels dans le temps et dans l’espace prenant place sur un réseau spatial planaire. Deux des sujets les plus traités dans la bibliographie sont les accidents de la circulation et les actes criminels commis dans l’espace public. Il est possible d’imaginer étudier d’autres thématiques plus ou moins ponctuelles dans le temps, qu’il s’agisse de l’offre commerciale dans un espace donné, du collage militant ou publicitaire, de la présence d’équipements dans l’espace public (bancs, toilettes), de présence de biotopes le long de cours d'eau, etc. Trois grands types de question sont généralement posés à ces données : (1) les points sont-ils significativement proches (ou éloignés) les uns des autres (étude du voisinage) ? (2) Existe-t-il des lieux où la concentration des points est notable (hot spots) ? (3) Quel modèle statistique est susceptible d’expliquer la géographie de ce semis de points ? Ces trois questions seront abordées durant la séance ÉlementR, fondée sur le package R [spatstat.linnet](https://cran.r-project.org/web/packages/spatstat.linnet/index.html) de la famille [spatstat](https://cran.r-project.org/web/packages/spatstat/index.html).
 keywords: [semis de points, réseau spatial, analyse spatiale]
 ---
-
-*JG: commentaires thématiques, clusters*
-
-<!-- https://github.com/JGravier/linnet_point_pattern/blob/main/data/readme.md
-une rue est composée de 1-N tronçons : N désigne quoi ? -->
 
 # Définitions et questions de recherche
 
@@ -101,6 +96,8 @@ Deux semis de points sont ensuite importés. Le premier concerne l'affichage pol
 * sti : présence d'autocollant (0 : non, 1 : oui)
 
 Le second semis de points concerne la présence d'équipements publics. Il est en effet probable que la présence de certains équipements facilite ou contraigne l'affichage militant. Il comprend les coordonnées (colonnes x et y) et une typologie (bus : arrêt de bus ; sub : station de métro ; ps : commissariat).
+
+Il est fréquent lorsqu'on récolte des donnnées ponctuelles que les coordonnées ne correspondent pas exactement au tracé viaire. Dans ce jeu de données, la dernière ligne concerne un point décalé d'une unité par rapport à la voie la plus proche. Le package linnet, par défaut, attribue ces points au segment le plus proche. Si le point est équidistant de deux segments, le package semble par défaut attribuer le point au segment le plus court. Il est donc prudent de contrôler soigneusement ses données avant toute manipulation.
 
 ```{r}
 # premier semis sur l'affichage politique
@@ -474,4 +471,4 @@ Une des limites concerne la non possibilité d'avoir des liens orientés sur le 
 
 Le manuel le plus complet et le plus clair concernant l'analyse de semis de points sur un réseau est celui d'Okabe et Sugihara [-@okabe2012] ; toutes les méthodes abordées par les auteurs ne peuvent être mises en oeuvre avec `linnet` (autocorrélation spatiale, modèle de Huff, etc.). L'article de Baddeley et Turner consacré à la première version du *package* [-@baddeley2005] gagne à être complété par le chapitre 17 de l'ouvrage de Baddeley *et al.* [-@baddeley2012]. Une mise à jour bibliographique récente est co-signé du même Baddeley [-@baddeley2021].
 
-Note : à voir, densité de Kernel sur réseau dans [-@okabe2009]
+<!---Note : à voir, densité de Kernel sur réseau dans [-@okabe2009]--->
