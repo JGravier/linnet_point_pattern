@@ -7,14 +7,9 @@ The two following files are required to create a linear network.
 mini_node.txt: coordinates of points required to create the planar network
 mini_edge.txt: extremities (origin-destination) of non-directed edges of the planar network
 
-The two following files are required to create planar points patterns. The first one regards political posters, the second one regards public equipments.
+The following file is required to create a planar point pattern. It regards political posters.
 mini_points.txt: 
 - x,y: coordinates of the political poster (the last one is out of the network)
 - nb: integer attribute, number of political posters
 - pol: character attribute, political tendency (fl, far-left; fe, feminist; fr, far-right)
 - sti: boolean attribute, presence of stickers (0, no; 1, yes)
-mini-points2.txt:
-- x,y: coordinates of the equipment
-- type: bus station (bus), subway station (sub) and police station (ps).
-
-
