@@ -86,7 +86,7 @@ mini_edge <- read.table("data/data_mini/mini_edge.txt",
 # transformation en objet ppp et matrice
 mini_node_ppp <- ppp(x = mini_node$x, 
                      y = mini_node$y, 
-                     c(0,10), c(0,10))   # coordonnes de la fenêtre
+                     c(0,10), c(0,10))   # coordonnées de la fenêtre graphique
 mini_edge_matrix <- as.matrix(mini_edge, 
                               ncol = 2)
 
@@ -107,7 +107,7 @@ Il est fréquent lorsqu'on récolte des donnnées ponctuelles que les coordonné
 
 ```{r}
 # semis sur l'affichage politique
-semis_collage <- read.table("data/data_mini/mini_points1.txt", 
+semis_collage <- read.table("data/data_mini/mini_points.txt", 
                             header = TRUE, 
                             sep = ",") 
 
@@ -126,11 +126,11 @@ Les attributs des semis de points sont appelé `marks` dans le _package_ `spatst
 
 ```{r}
 plot(collage_lpp)
-plot(equip_lpp, 
-     which.marks = "pol")
+plot(collage_lpp, 
+     which.marks = "nb")
 ```
 
-La fonction `summary` permet d'obtenir des mesures basiques sur le réseau viaire et sur les semis de points.
+La fonction `summary` permet d'obtenir des mesures basiques sur le réseau viaire et sur le semis de points.
 
 Concernant les informations sur le réseau viaire, la fonction `summary` renvoie :
 
@@ -282,17 +282,14 @@ intensity(bijoutiers_ppp)
 La dernière étape consiste à intégrer dans le même objet le réseau linéaire et le semis de points à l'aide de la fonction `lpp`.
 
 ```{r}
-epiciers_lpp <- lpp(X = epiciers_ppp, L = paris)
+epiciers_lpp <- lpp(X = epiciers_ppp, 
+                    L = paris)
 summary(epiciers_lpp)
 
-# plus court chemin (géographique et non topologique) entre paires de points
-pairdist.lpp(epiciers_lpp)[1:5, 1:5] # matrice symétrique
-
-bijoutiers_lpp <- lpp(X = bijoutiers_ppp, L = paris)
+bijoutiers_lpp <- lpp(X = bijoutiers_ppp, 
+                      L = paris)
 summary(bijoutiers_lpp)
 ```
-
-*Faire les mesures pour les deux semis et proposer un court commentaire thématique ?*
 
 <!-- inutile car vu sur le mini jeu de données  - Si l'on exécute la fonction `plot` sur un objet `lpp`, par défaut `linnet` propose un nombre de visualisations égal au nombre d'attributs des points, ces attributs étant appelés `marks`. Si je souhaite visualiser la répartion d'un attribut *Z* donné , j'utilise la syntaxe `plot(X, which.marks='Z')` -- le jeu de données utilisés ne comportant pas d'attributs pour les semis de points, cette option n'est pas mise en oeuvre ici. -->
 
@@ -304,7 +301,6 @@ Il est possible d'étudier un semis de points sur un réseau spatial selon les m
 
 Différences d'approche entre fonction K et méthode du plus proche voisin
 
-
 Questions selon qu'on étudie un ou deux semis de points
 
 ## Analyser un semis de points
@@ -315,7 +311,7 @@ linearK (plus court chemin) et linearKinhom (pcc et non homogène)
 
 linearKEuclid (distance euclidienne), linearKEuclidInhom (distance euclidienne et non homogène)
 
-## Analyser la relation entre deux semis de points
+<!-- ## Analyser la relation entre deux semis de points - on vire
 
 ```{r}
 # étudier un semis par rapport à un autre
@@ -325,7 +321,7 @@ crossdist(epiciers_ppp, bijoutiers_ppp)[1:5, 1:5] # shortest-path distances betw
 nncross(epiciers_ppp, bijoutiers_ppp)[1:5,]  # given two point patterns X and Y, finds the nearest neighbour in Y of each point of X.
 ```
 
-Fonctions: linearKcross, linearKdot
+Fonctions: linearKcross, linearKdot -->
 
 # Modéliser la géographie du semis de points
 
@@ -342,7 +338,7 @@ Pour résumer, on peut simuler les trois semis suivants :
 Quelle que soit la fonction utilisée, il est possible de spécifier le nombre de simulations souhaitées grâce au paramètre `nsim`.
 
 ```{r}
-# la densité moyenne est une information inclue dans le résumé d'un l'objet "lpp"
+# la densité moyenne est une information inclue dans le résumé d'un objet "lpp"
 bijoutiers_infos <- summary(object = bijoutiers_lpp)
 bijoutiers_infos$intensity
 
@@ -467,9 +463,8 @@ plot(x = densite_bij,
 
 Comme dans de nombreuses visualisations proposées ces dernières années et contrairement aux règles classiques de la sémiologie graphique, plus la teinte est claire et plus la densité est élevée. 
 
-
 <!-- découper, pas au bon endroit - garder un test et l'expliquer et signaler les autres tests possibles -->
-Il est possible de tester la densité des points en fontion d'une variable spatiale. L'opposition socio-spatiale  ouest-est étant une donnée ancienne de Paris, on pourrait par exemple tester la densité des bijoutiers en fonction des x. On peut également se demander si les commerces tendent à être plus proches des intersections ou non. Différents tests statistiques permettent ensuite de vérifier si le lien entre la densité du semis et la variable considérée est statistiquement significatif.
+Il est possible de tester la densité des points en fontion d'une variable spatiale. L'opposition socio-spatiale  ouest-est étant une donnée ancienne de Paris, on pourrait par exemple tester la densité des bijoutiers en fonction des x. Différents tests statistiques permettent ensuite de vérifier si le lien entre la densité du semis et la variable considérée est statistiquement significatif. Le test utilisé ci-dessous se base sur l'article de Mark Berman [-@berman1986]. <!--; il est avec la fonction `cdf.test` d'utiliser les tests de Kolmogorov-Smirnov, Cramer-von Mises ou Anderson-Darling.-->
 
 ```{r}
 # bijoutiers plus présents à l'ouest ?
@@ -477,14 +472,20 @@ Il est possible de tester la densité des points en fontion d'une variable spati
 btB <- berman.test(bijoutiers_lpp, "x")
 btB
 plot(btB)
-
-# test de Kolmogorov-Smirnov
-cdfB <- cdf.test(bijoutiers_lpp, "x")
-cdfB
-plot(cdfB)
 ```
 
-Comparer la courbe en pointillé (distribution attendue si le semis homogène était fonction de la variation de x) et la courbe noire (distribtion observée) montre une plus faible présence aux extremités de la zone observée ; inversement, les bijoutiers sont davantage présents au centre de l'espace considéré (cf la pente de la courbe pleine). 
+Comparer la courbe en pointillé (distribution attendue si le semis homogène était fonction de la variation de x) et la courbe noire (distribution observée) montre une plus faible présence aux extremités de la zone observée ; inversement, les bijoutiers sont davantage présents au centre de l'espace considéré (cf la pente de la courbe pleine). Les traits verticaux indiquent la médiane, en pointillés pour la répartition uniforme, en trait plein pour la répartition observée.
+
+Si l'on observe une relation claire - ce qui n'est pas le cas ici - entre la densité du semis de points et une variable spatiale, il est possible de modéliser la relation entre les deux et d'étudier la qualité du modèle retenu. Le script suivant est donné uniquement à des fins pédagogiques, les résultats précédents ne montrant pas de relation significative entre semis et variable considérée.
+
+```{r, eval = FALSE}
+# modéliser la relation entre présence de bijoutiers et axe ouest-est
+fit <- lppm(bijoutiers_lpp ~ x)
+summary(fit)
+lam <- predict(fit, dimyx=512)
+plot(lam)
+```
+
 
 <!-- à commenter quand j'aurai compris... à mettre après hot spot car logique répartition uniforme et non aléatoire-->
 
@@ -496,20 +497,9 @@ rhoalongE <- rhohat(epiciers_lpp, alongE)
 plot(rhoalongE)
 ```
 
-L'axe des abcisses concerne les rues : 0 et 1 sont les deux extrémités de chaque rue et 0.5 le milieu. La ligne pointillée représente la distribution uniforme, la ligne noire la distribution observée, la zone en grisé étant l'intervalle de confiance. Les épiciers sont moins présents qu'attendu aux extrémités des rues. 
+L'axe des abscisses concerne les rues : 0 et 1 sont les deux extrémités de chaque rue et 0.5 le milieu. La ligne pointillée représente la distribution uniforme, la ligne noire la distribution observée, la zone en grisé étant l'intervalle de confiance. Les épiciers sont moins présents qu'attendu aux extrémités des rues. 
 
 <!-- McSwiggan, G., Baddeley, A. and Nair, G. (2016) Kernel density estimation on a linear network. Scandinavian Journal of Statistics 44, 324–345. -->
-
-Si l'on observe une relation claire - ce qui n'ests pas le cas ici - entre la densité du semis de points et une variable spatiale, il est possible de modéliser la relation entre les deux et d'étudier la qualité du modèle retenu. Le script suivant est donné uniquement à des fins pédagogiques, les résultats précédents ne montrant pas de relation significative entre semis et variable considérée.
-
-```{r, eval = FALSE}
-# modéliser la relation entre présence de bijoutiers et axe ouest-est
-fit <- lppm(bijoutiers_lpp ~ x)
-summary(fit)
-lam <- predict(fit, dimyx=512)
-plot(lam)
-```
-
 
 # Intérêts et limites du package
 
