@@ -732,7 +732,7 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <section id="étudier-les-voisinages" class="level1">
 <h1>Étudier les voisinages</h1>
 <p>Différences d’approche entre fonction K et méthode du plus proche voisin</p>
-<p>Questions selon qu’on étudie un ou deux semis de points</p>
+<!--Questions selon qu'on étudie un ou deux semis de points-->
 <section id="analyser-un-semis-de-points" class="level2">
 <h2 class="anchored" data-anchor-id="analyser-un-semis-de-points">Analyser un semis de points</h2>
 <p>Fonctions:</p>
@@ -811,7 +811,7 @@ Fonctions: linearKcross, linearKdot -->
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rpoislpp</span>(<span class="at">lambda =</span> bijoutiers_infos<span class="sc">$</span>intensity, <span class="at">L =</span> paris, <span class="at">nsim =</span> <span class="dv">1</span>) <span class="co"># le nombre de points est variable</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Point pattern on linear network
-311 points
+336 points
 Linear network with 7237 vertices and 8730 lines
 Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</code></pre>
 </div>
@@ -835,13 +835,13 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 
 Simulation 1:
 Point pattern on linear network
-338 points
+337 points
 Linear network with 7237 vertices and 8730 lines
 Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units
 
 Simulation 2:
 Point pattern on linear network
-340 points
+323 points
 Linear network with 7237 vertices and 8730 lines
 Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</code></pre>
 </div>
@@ -893,16 +893,16 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <pre><code># A tibble: 579,700 × 5
       Pi P     dist_pi_p type       n_sim
    &lt;int&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;      &lt;int&gt;
- 1     2 1          605. simulation     1
- 2     3 1         1862. simulation     1
- 3     3 2         2348. simulation     1
- 4     4 1         4105. simulation     1
- 5     4 2         4591. simulation     1
- 6     4 3         2311. simulation     1
- 7     5 1         5349. simulation     1
- 8     5 2         5765. simulation     1
- 9     5 3         4044. simulation     1
-10     5 4         4358. simulation     1
+ 1     2 1         5095. simulation     1
+ 2     3 1         3784. simulation     1
+ 3     3 2         2993. simulation     1
+ 4     4 1         5163. simulation     1
+ 5     4 2         3357. simulation     1
+ 6     4 3         1396. simulation     1
+ 7     5 1         7449. simulation     1
+ 8     5 2         6720. simulation     1
+ 9     5 3         4378. simulation     1
+10     5 4         3710. simulation     1
 # ℹ 579,690 more rows</code></pre>
 </div>
 </div>
@@ -957,17 +957,19 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <section id="rechercher-et-analyser-les-clusters" class="level2">
 <h2 class="anchored" data-anchor-id="rechercher-et-analyser-les-clusters">Rechercher et analyser les clusters</h2>
 <!-- différence hot spot - cluster ? à creuser... -->
-<p>La recherche de clusters ou de hot spots, soit des zones du réseau où la densité de points est plus forte qu’attendue, suppose de comparer la répartion observée à une répartition homogène où la probabilité de chaque tronçon d’accueillir un sommet serait fonction de sa seule longueur. La fonction <code>intensity</code> renvoie ce résultat (nombre moyen de points par unité de longueur).</p>
-<p>La fonction <code>density</code> permet de repérer les zones du réseau où les concentrations de points s’écartent de cette intesité moyenne. <!-- je dois lire un peu avant de reprendre ça --></p>
-<p>La visualisation de certaines mesures est intégrée par défaut dans le <em>package</em> et c’est notamment le cas pour la densité (nombre de points par unité de mesure du réseau).</p>
+<p>La recherche de clusters ou de hot spots, soit des zones du réseau où la densité de points est plus forte qu’attendue, suppose de comparer la répartion observée à une répartition homogène où la probabilité de chaque tronçon d’accueillir un sommet serait fonction de sa seule longueur. La fonction <code>intensity</code> renvoie ce résultat (nombre moyen de points par unité de longueur). La visualisation de certaines mesures est intégrée par défaut dans le <em>package</em> et c’est notamment le cas pour la densité (nombre de points par unité de mesure du réseau).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calcul de la densité de points par unité de réseau</span></span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="co"># l'option finespacing n'est pas nécessaire pour un réseau de petite taille</span></span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>densite_bij <span class="ot">&lt;-</span> <span class="fu">density.lpp</span>(<span class="at">x =</span> bijoutiers_lpp, <span class="at">finespacing =</span> <span class="cn">FALSE</span>, <span class="at">distance =</span> <span class="st">"path"</span>)</span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>densite_epic <span class="ot">&lt;-</span> <span class="fu">density.lpp</span>(epiciers_lpp, <span class="at">finespacing =</span> <span class="cn">FALSE</span>, <span class="at">distance =</span> <span class="st">"path"</span>)</span>
-<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="co"># option couleur (par défaut)</span></span>
-<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(densite_epic)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>densite_bij <span class="ot">&lt;-</span> <span class="fu">density.lpp</span>(<span class="at">x =</span> bijoutiers_lpp, </span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">finespacing =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">distance =</span> <span class="st">"path"</span>)</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>densite_epic <span class="ot">&lt;-</span> <span class="fu">density.lpp</span>(epiciers_lpp, </span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>                            <span class="at">finespacing =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>                            <span class="at">distance =</span> <span class="st">"path"</span>)</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a><span class="co"># option couleur (par défaut)</span></span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(densite_epic)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -990,7 +992,7 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 </div>
 <p>Comme dans de nombreuses visualisations proposées ces dernières années et contrairement aux règles classiques de la sémiologie graphique, plus la teinte est claire et plus la densité est élevée.</p>
 <!-- découper, pas au bon endroit - garder un test et l'expliquer et signaler les autres tests possibles -->
-<p>Il est possible de tester la densité des points en fontion d’une variable spatiale. L’opposition socio-spatiale ouest-est étant une donnée ancienne de Paris, on pourrait par exemple tester la densité des bijoutiers en fonction des x. Différents tests statistiques permettent ensuite de vérifier si le lien entre la densité du semis et la variable considérée est statistiquement significatif. Le test utilisé ci-dessous se base sur l’article de Mark Berman <span class="citation" data-cites="berman1986">(<a href="#ref-berman1986" role="doc-biblioref">1986</a>)</span>. <!--; il est avec la fonction `cdf.test` d'utiliser les tests de Kolmogorov-Smirnov, Cramer-von Mises ou Anderson-Darling.--></p>
+<p>Il est possible de tester la densité des points en fontion d’une variable spatiale. L’opposition socio-spatiale ouest-est étant une donnée ancienne de Paris, on pourrait par exemple tester la densité des bijoutiers en fonction des x. Différents tests statistiques permettent ensuite de vérifier si le lien entre la densité du semis et la variable considérée est statistiquement significatif. Le test utilisé ci-dessous se base sur l’article de Mark Berman <span class="citation" data-cites="berman1986">(<a href="#ref-berman1986" role="doc-biblioref">1986</a>)</span>. La valeur <span class="math inline">Z_1</span>, appelée aussi test de Lawson-Waller en épidémiologie, mesure l’écart entre le semis observé et un semis suivant une répartition de Poisson. <!--; il est avec la fonction `cdf.test` d'utiliser les tests de Kolmogorov-Smirnov, Cramer-von Mises ou Anderson-Darling.--></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># bijoutiers plus présents à l'ouest ?</span></span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="co"># test de Berman</span></span>
@@ -1001,7 +1003,7 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
     Berman Z1 test of CSR in linear network
 
 data:  covariate 'x' evaluated at points of 'bijoutiers_lpp'
-Z1 = 0.013408, p-value = 0.9893
+Z1 = 0.013409, p-value = 0.9893
 alternative hypothesis: two-sided</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(btB)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1023,12 +1025,15 @@ alternative hypothesis: two-sided</code></pre>
 <span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lam)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <!-- à commenter quand j'aurai compris... à mettre après hot spot car logique répartition uniforme et non aléatoire-->
+<p>Caractériser la répartition du semis de points peut se fait à une échelle plus fine, celle du tronçon. Dans le cas de commerces, on pourrait par exemple supposer qu’il est plus intéressant d’être à proximité des intersections (visibilité et accessibilité plus grandes).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># épiciers davantage présents à proximité des intersections ?</span></span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="co"># il faudrait commenter ça mais je ne sais </span></span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>alongE <span class="ot">&lt;-</span> <span class="fu">linfun</span>(<span class="cf">function</span>(x,y,seg,tp) { tp }, <span class="fu">domain</span>(epiciers_lpp))</span>
-<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>rhoalongE <span class="ot">&lt;-</span> <span class="fu">rhohat</span>(epiciers_lpp, alongE)</span>
-<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(rhoalongE)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="co"># création du objet linfun (fonction d'un réseau linéaire)</span></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>alongE <span class="ot">&lt;-</span> <span class="fu">linfun</span>(<span class="cf">function</span>(x,y,seg,tp) { tp }, </span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">domain</span>(epiciers_lpp))</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a><span class="co"># relation entre semis de point et fonction</span></span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>rhoalongE <span class="ot">&lt;-</span> <span class="fu">rhohat</span>(epiciers_lpp, alongE)</span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(rhoalongE)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
