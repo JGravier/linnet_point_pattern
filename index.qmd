@@ -313,6 +313,8 @@ linearKEuclid (distance euclidienne), linearKEuclidInhom (distance euclidienne e
 
 <!-- ## Analyser la relation entre deux semis de points - on vire
 
+A évoquer dans la conclusion générale
+
 ```{r}
 # étudier un semis par rapport à un autre
 
@@ -338,35 +340,19 @@ Pour résumer, on peut simuler les trois semis suivants :
 Quelle que soit la fonction utilisée, il est possible de spécifier le nombre de simulations souhaitées grâce au paramètre `nsim`.
 
 ```{r}
-# la densité moyenne est une information inclue dans le résumé d'un objet "lpp"
-bijoutiers_infos <- summary(object = bijoutiers_lpp)
-bijoutiers_infos$intensity
-
 # génération d'une simulation selon un processus de Poisson avec une intensité uniforme égale à la densité moyenne
-rpoislpp(lambda = bijoutiers_infos$intensity, L = paris, nsim = 1) # le nombre de points est variable
+rpoislpp(lambda = intensity(bijoutiers_lpp), L = paris, nsim = 1) # le nombre de points est variable
 
 # visualisation d'une simulation
-plot(x = rpoislpp(lambda = bijoutiers_infos$intensity, L = paris, nsim = 1),
+plot(x = rpoislpp(lambda = intensity(bijoutiers_lpp), L = paris, nsim = 1),
      pch = 15, main = NULL)
-
-# inutile d'avoir les 2 sim
-# génération de 2 simulations
-process_al_2sim <- rpoislpp(lambda = bijoutiers_infos$intensity, L = paris, nsim = 2)
-
-process_al_2sim # création d'une liste de simulation
-
-# visualisation
-par(mfrow = c(1,2))
-for (i in 1:length(process_al_2sim)) {
-  plot(process_al_2sim[[i]], pch = 15, cex = 0.5, main = paste("Simulation ", i))
-}
 ```
 
 Dans les cas de `rpoislpp()` et de `runiflpp()`, le paramètre `ex` permet d'intégrer un objet `lpp` afin de déterminer $L$, ainsi que $\lambda$ et $n$. La valeur par défaut de $\lambda$ est alors la densité moyenne des points du `lpp`, ou $n$ le nombre de points de l'objet `lpp`. 
 
 ## Mesurer l'écart aux distributions aléatoires
 
-Note à écrire : 
+<!-- à écrire --> 
 Cas des bijoutiers, distances points aléatoires VS distances observées.
 Ici : proposition d'une boucle et de l'utilisation des packages de la famille du `tydiverse` à visée pédagogique, mais mieux de faire une fonction pour paralléliser le calcul matriciel si l'on a un nombre de simulations élevés (e.g. 100) et un semis initial et un réseau plus important, et d'utiliser plutôt des packages comme `dtplyr` ou directement `data.table`.
 
@@ -413,29 +399,176 @@ dist_bijoutiers <- dist_bijoutiers %>%
 ```
 
 
-Comparaison visuelle <!-- garder une seule visu des écarts -->
+Comparaison visuelle <!-- à commenter -->
+
 ```{r}
 bijoutiers_ecart <- table_simulated_dist %>%
   dplyr::bind_rows(dist_bijoutiers)
 
 library(ggplot2)
-bijoutiers_ecart %>%
-  ggplot(aes(x = dist_pi_p, group = n_sim)) +
-  geom_density() +
-  theme_bw()
 
 bijoutiers_ecart %>%
   ggplot(aes(x = dist_pi_p, color = type)) +
   geom_density(linewidth = 1) +
   theme_bw()
-
 ```
 
-Idem, cas des épiciers <!-- à virer ? ou mettre uniquement courbe obs-sim pour montrer proximité avec répartition homogène-->
+Idem, cas des épiciers <!-- courbe ajoutée uniquement sans visualisation du code. A commenter -->
 ```{r}
+#| echo: false
+#| output: false
+
 # génération de 10 simulations
 epiciers_10sim <- runiflpp(ex = epiciers_lpp, nsim = 10)
+
+# calcul des distances entre les points simulés aléatoirement sur le réseau
+list_simulated_dist <- list()
+
+for (i in 1:length(epiciers_10sim)) {
+    # calculs des plus courts chemins sur réseau
+    dist_pi_p <- spatstat.geom::pairdist(X = bijoutiers_10sim[[i]])
+    dist_pi_p[upper.tri(x = dist_pi_p, diag = TRUE)] <- NA
+    
+    dist_pi_p <- dist_pi_p %>%
+      tibble::as_tibble() %>%
+      tibble::rowid_to_column(var = "Pi") %>%
+      tidyr::pivot_longer(cols = -Pi, names_to = "P", values_to = "dist_pi_p") %>%
+      dplyr::filter(!is.na(dist_pi_p)) %>%
+      dplyr::mutate(P = stringr::str_replace_all(string = P, pattern = "V", replacement = "")) %>%
+      dplyr::mutate(type = "simulation", n_sim = i)
+      
+   list_simulated_dist[[i]] <- dist_pi_p   
+}
+
+# création d'un unique tableau et non d'une liste de tableaux
+table_simulated_dist <- do.call(what = "rbind", args = list_simulated_dist)
+table_simulated_dist
+
+# calcul des distances entre les points observés des épiciers en 1839
+dist_epiciers <- spatstat.geom::pairdist(X = epiciers_lpp)
+dist_epiciers[upper.tri(x = dist_epiciers, diag = TRUE)] <- NA
+    
+dist_epiciers <- dist_epiciers %>%
+  as_tibble() %>%
+  rowid_to_column(var = "Pi") %>%
+  pivot_longer(cols = -Pi, names_to = "P", values_to = "dist_pi_p") %>%
+  filter(!is.na(dist_pi_p)) %>%
+  mutate(P = stringr::str_replace_all(string = P, pattern = "V", replacement = "")) %>%
+  mutate(type = "observation", n_sim = NA)
+
+epiciers_ecart <- table_simulated_dist %>%
+  dplyr::bind_rows(dist_epiciers)
 ```
+
+
+```{r}
+#| echo: false
+
+epiciers_ecart %>%
+  ggplot(aes(x = dist_pi_p, color = type)) +
+  geom_density(linewidth = 1) +
+  theme_bw()
+```
+
+Mesurer l'écart à une répartition aléatoire inhomogène selon l'inverse de la distance au centre. <!-- expliciter choix du centre : signification -->
+
+```{r}
+center <- st_read(dsn = "data/halles.gpkg")  # Les Halles considérées comme centre économique
+center_ppp <- as.ppp(st_geometry(center))    # semis de points
+center_lpp <- lpp(X = center_ppp, L = paris) # semis de points sur le réseau
+```
+
+<!-- expliciter import de la fonction (vérifier encore une fois inexistance inverse de la distance) -->
+
+```{r}
+# import fonction
+source(file = "local-functions.R") # adaptation de spatstat.linnet::distfun.lpp()
+f_dist2_center <- distfun.inverse.lpp(X = center_lpp) # création de la fonction d'intensité
+f_dist2_center
+```
+
+Répartition aléatoire inhomogène selon l'inverse de la distance au centre,
+i.e. plus on s'éloigne, plus la probabilité qu'un point soit simulé sur un tronçon diminue. <!-- à commenter -->
+```{r}
+#| warning: false
+
+# simulation aléatoire de Poisson
+dist2_center_bijoutiers <- rpoislpp(lambda = f_dist2_center, # fonction d'intensité
+                                    L = paris,               # réseau
+                                    lmax = 0.05,
+                                    nsim = 1)
+```
+
+Il est important de spécifier `lmax` si possible afin de diminuer le temps de calcul^[Si lambda est une fonction et `lmax` n'est pas spécifié dans `rpoislpp()`, alors la fonction génère environ 10,000 points le long des tronçons pour estimer `lmax`. Si `lmax` est spécifié avec une valeur trop élevée, le nombre de point générés aléatoirement (Poisson) avant d'appliquer la méthode de Lewis-Shedler pour accepter ou rejetter ces points générés va être très élevé et donc le temps de calcul allongé.].
+
+```{r}
+#| eval: false
+lmax_known <- as.linim(f_dist2_center)
+tab_lmax <- attr(x = lmax_known, which = "df")
+max(tab_lmax$values)
+```
+
+Visualisation
+```{r}
+plot(dist2_center_bijoutiers, pch = 15)
+```
+
+Calcul des distances entre les points simulés et le centre. Deux lpp avec `crossdist.lpp()`
+
+```{r}
+# génération de 10 simulations (Poisson)
+bijoutiers_10sim <- rpoislpp(lambda = f_dist2_center, # fonction d'intensité
+                             L = paris, # réseau
+                             lmax = 0.05, # cf. plus bas
+                             nsim = 10)
+
+list_simulated_dist <- list()
+
+for (i in 1:length(bijoutiers_10sim)) {
+  dist_pi_p <- crossdist.lpp(X = bijoutiers_10sim[[i]], Y = center_lpp) # distances au plus court chemin entre deux lpp
+  dist_pi_p[upper.tri(x = dist_pi_p, diag = TRUE)] <- NA
+  
+  dist_pi_p <- dist_pi_p %>%
+    tibble::as_tibble() %>%
+    tibble::rowid_to_column(var = "Pi") %>%
+    tidyr::pivot_longer(cols = -Pi, names_to = "P", values_to = "dist_pi_p") %>%
+    dplyr::filter(!is.na(dist_pi_p)) %>%
+    dplyr::mutate(P = stringr::str_replace_all(string = P, pattern = "V", replacement = "")) %>%
+    dplyr::mutate(type = "simulation", n_sim = i)
+  
+  list_simulated_dist[[i]] <- dist_pi_p   
+}
+
+table_simulated_dist <- do.call(what = "rbind", args = list_simulated_dist)
+
+# calcul des distances entre les points observés des bijoutiers et le centre
+dist_bijoutiers <- crossdist.lpp(X = bijoutiers_lpp, Y = center_lpp)
+dist_bijoutiers[upper.tri(x = dist_bijoutiers, diag = TRUE)] <- NA
+
+dist_bijoutiers <- dist_bijoutiers %>%
+  as_tibble() %>%
+  rowid_to_column(var = "Pi") %>%
+  pivot_longer(cols = -Pi, names_to = "P", values_to = "dist_pi_p") %>%
+  filter(!is.na(dist_pi_p)) %>%
+  mutate(P = stringr::str_replace_all(string = P, pattern = "V", replacement = "")) %>%
+  mutate(type = "observation", n_sim = NA)
+```
+
+Visualisation
+```{r}
+bijoutiers_ecart <- table_simulated_dist %>%
+  dplyr::bind_rows(dist_bijoutiers)
+
+bijoutiers_ecart %>%
+  ggplot(aes(x = dist_pi_p, color = type)) +
+  geom_density(linewidth = 1) +
+  xlab("distance en mètres") +
+  ylab("KDE") +
+  theme_bw()
+```
+
+
+<!-- ajouter ici ou en conclusion générale (?) : possibilité de considérer plusieurs points concomitamment (i.e. des pôles) -->
 
 ## Rechercher et analyser les clusters
 <!-- différence hot spot - cluster ? à creuser... -->
@@ -507,7 +640,7 @@ L'axe des abscisses concerne les rues : 0 et 1 sont les deux extrémités de cha
 
 # Intérêts et limites du package
 
-Les méthodes d'analyse de semis de points sur réseaux planaires ne sont pas des méthodes statistiques stabilisées (voir par exemple une définition possible de la densité dans [@okabe2009] discutée dans [@mcswiggan2017]) et les choix des développeurs de `spatstat.linnet` sont des choix possibles parmi d'autres ; ce ne sont pas nécessairement les plus pertinents pour une question de recherche donnée. Ceci pourrait expliquer le faible nombre de références présentes dans les descriptifs des fonctions. De manière générale, l'aide du seul package paraît insuffisante pour le prendre en main et il est nécessaire de la compléter avec les diverses publications des auteurs, notamment le chapitre 17 de [@baddeley2012]^[Ouvrage vendu à un tarif délirant, visiter les archives d'Anna est recommandé.].
+Les méthodes d'analyse de semis de points sur réseaux planaires ne sont pas des méthodes statistiques stabilisées (voir par exemple une définition possible de la densité dans [@okabe2009] discutée dans [@mcswiggan2017]) et les choix des développeurs de `spatstat.linnet` sont des choix possibles parmi d'autres ; ce ne sont pas nécessairement les plus pertinents pour une question de recherche donnée. Ceci pourrait expliquer le faible nombre de références présentes dans les descriptifs des fonctions. De manière générale, l'aide du seul package paraît insuffisante pour le prendre en main et il est nécessaire de la compléter avec les diverses publications des auteurs, notamment le chapitre 17 de [@baddeley2012]^[Ouvrage vendu à un tarif très élevé, visiter les archives d'Anna est recommandé.].
 
 Une des limites concerne la non possibilité d'avoir des liens orientés sur le réseau : étudier certains phénomènes ponctuels en milieu urbain sans prendre en compte les sens de circulation automobile peut limiter l'intérêt des résultats. Il n'est pas non plus aisé de tester des hypothèses pourtant simples à formuler (lien entre semis de points et degré des sommets du réseau par exemple) tant il est nécessaire de jongler entre des objets de types différents. Créer ses propres fonctions est vite nécessaire pour tirer pleinement profit du package.
 
