@@ -234,21 +234,17 @@ window.Quarto = {
   <li><a href="#définitions-et-questions-de-recherche" id="toc-définitions-et-questions-de-recherche" class="nav-link active" data-scroll-target="#définitions-et-questions-de-recherche">Définitions et questions de recherche</a></li>
   <li><a href="#le-package-linnet" id="toc-le-package-linnet" class="nav-link" data-scroll-target="#le-package-linnet">Le package linnet</a>
   <ul class="collapse">
-  <li><a href="#préparer-ses-données" id="toc-préparer-ses-données" class="nav-link" data-scroll-target="#préparer-ses-données">Préparer ses données</a>
-  <ul class="collapse">
+  <li><a href="#préparer-ses-données" id="toc-préparer-ses-données" class="nav-link" data-scroll-target="#préparer-ses-données">Préparer ses données</a></li>
   <li><a href="#créer-des-objets-linnet-et-lpp-de-a-à-z-et-visualiser-pour-comprendre-la-structure-des-objets" id="toc-créer-des-objets-linnet-et-lpp-de-a-à-z-et-visualiser-pour-comprendre-la-structure-des-objets" class="nav-link" data-scroll-target="#créer-des-objets-linnet-et-lpp-de-a-à-z-et-visualiser-pour-comprendre-la-structure-des-objets">Créer des objets <code>linnet</code> et <code>lpp</code> de A à Z et visualiser pour comprendre la structure des objets</a></li>
-  <li><a href="#créer-et-visualiser-des-objets-depuis-des-données-spatiales" id="toc-créer-et-visualiser-des-objets-depuis-des-données-spatiales" class="nav-link" data-scroll-target="#créer-et-visualiser-des-objets-depuis-des-données-spatiales">Créer et visualiser des objets depuis des données spatiales</a></li>
-  </ul></li>
-  </ul></li>
-  <li><a href="#étudier-les-voisinages" id="toc-étudier-les-voisinages" class="nav-link" data-scroll-target="#étudier-les-voisinages">Étudier les voisinages</a>
-  <ul class="collapse">
-  <li><a href="#analyser-un-semis-de-points" id="toc-analyser-un-semis-de-points" class="nav-link" data-scroll-target="#analyser-un-semis-de-points">Analyser un semis de points</a></li>
+  <li><a href="#créer-et-visualiser-des-objets-à-partir-de-données-spatiales" id="toc-créer-et-visualiser-des-objets-à-partir-de-données-spatiales" class="nav-link" data-scroll-target="#créer-et-visualiser-des-objets-à-partir-de-données-spatiales">Créer et visualiser des objets à partir de données spatiales</a></li>
   </ul></li>
   <li><a href="#modéliser-la-géographie-du-semis-de-points" id="toc-modéliser-la-géographie-du-semis-de-points" class="nav-link" data-scroll-target="#modéliser-la-géographie-du-semis-de-points">Modéliser la géographie du semis de points</a>
   <ul class="collapse">
   <li><a href="#répartitions-aléatoires-des-points-sur-un-réseau-spatial" id="toc-répartitions-aléatoires-des-points-sur-un-réseau-spatial" class="nav-link" data-scroll-target="#répartitions-aléatoires-des-points-sur-un-réseau-spatial">Répartitions aléatoires des points sur un réseau spatial</a></li>
   <li><a href="#mesurer-lécart-aux-distributions-aléatoires" id="toc-mesurer-lécart-aux-distributions-aléatoires" class="nav-link" data-scroll-target="#mesurer-lécart-aux-distributions-aléatoires">Mesurer l’écart aux distributions aléatoires</a></li>
-  <li><a href="#rechercher-et-analyser-les-clusters" id="toc-rechercher-et-analyser-les-clusters" class="nav-link" data-scroll-target="#rechercher-et-analyser-les-clusters">Rechercher et analyser les clusters</a></li>
+  <li><a href="#répartition-aléatoire-inhomogène" id="toc-répartition-aléatoire-inhomogène" class="nav-link" data-scroll-target="#répartition-aléatoire-inhomogène">Répartition aléatoire inhomogène</a></li>
+  <li><a href="#étudier-les-voisinages" id="toc-étudier-les-voisinages" class="nav-link" data-scroll-target="#étudier-les-voisinages">Étudier les voisinages</a></li>
+  <li><a href="#rechercher-et-analyser-des-concentrations-hot-spots" id="toc-rechercher-et-analyser-des-concentrations-hot-spots" class="nav-link" data-scroll-target="#rechercher-et-analyser-des-concentrations-hot-spots">Rechercher et analyser des concentrations (hot spots)</a></li>
   </ul></li>
   <li><a href="#intérêts-et-limites-du-package" id="toc-intérêts-et-limites-du-package" class="nav-link" data-scroll-target="#intérêts-et-limites-du-package">Intérêts et limites du package</a></li>
   <li><a href="#pour-aller-plus-loin" id="toc-pour-aller-plus-loin" class="nav-link" data-scroll-target="#pour-aller-plus-loin">Pour aller plus loin</a></li>
@@ -262,11 +258,10 @@ window.Quarto = {
 
 
 
-<p>nocite: ‘<span class="citation" data-cites="*"></span>’</p>
 <section id="définitions-et-questions-de-recherche" class="level1">
 <h1>Définitions et questions de recherche</h1>
 <p>L’analyse d’un semis de points sur un réseau désigne un ensemble de méthodes statistiques permettant de caractériser des événements ponctuels dans le temps et dans l’espace, appelés points dans la suite du texte, prenant place sur un réseau spatial planaire, appelé réseau ou <span class="math inline">L</span> dans la suite du texte.</p>
-<p>Un réseau planaire est constitué par un ensemble de sommets et un ensemble de liens entre ces sommets. Tout sommet est soit une intersection entre deux liens, soit l’extrémité d’un lien. Chaque sommet est défini par un couple de coordonnées, chaque lien est caractérisé par une distance. Un lien peut par ailleurs être porteur d’attributs supplémentaires (largeur, intensité, etc.). En géographie, les réseaux de transport terrestres, les réseaux viaires et les réseaux hydrographiques sont généralement modélisés sous forme de graphes planaires. <!-- les sommets non ? --></p>
+<p>Un réseau planaire est constitué par un ensemble de sommets et un ensemble de liens entre ces sommets. Tout sommet est soit une intersection entre deux liens, soit l’extrémité d’un lien. Chaque sommet est défini par un couple de coordonnées, chaque lien est caractérisé par une distance. Un lien peut par ailleurs être porteur d’attributs supplémentaires (largeur, intensité, etc.). En géographie, les réseaux de transport terrestres, les réseaux viaires et les réseaux hydrographiques sont généralement modélisés sous forme de graphes planaires.</p>
 <p>Deux des sujets les plus traités dans la bibliographie sont les accidents de la circulation et les actes criminels commis dans l’espace public. Dans les deux cas, des événements dramatiques pouvant être caractérisés par des attributs de types différents se produisent dans un espace pouvant être modélisé sous forme de réseau planaire (réseau routier, réseau viaire). Il est possible d’imaginer d’autres thématiques plus ou moins ponctuelles dans le temps, qu’il s’agisse de l’offre commerciale dans un espace donné, du collage militant ou publicitaire, de la présence d’équipements dans l’espace public (bancs, toilettes), de la répartition de biotopes le long d’un cours d’eau, etc.</p>
 <p>Trois grands types de question sont généralement posées à ces données :</p>
 <ul>
@@ -277,22 +272,23 @@ window.Quarto = {
 </section>
 <section id="le-package-linnet" class="level1">
 <h1>Le package linnet</h1>
-<p><code>spatstat.linnet</code> est un <em>package</em> de la famille de <em>packages</em> <code>spatstat</code> consacré à la statistique spatiale et notamment à l’analyse de semis de points.</p>
+<p><code>spatstat.linnet</code><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> est un <em>package</em> de la famille de <em>packages</em> <code>spatstat</code> consacré à la statistique spatiale et notamment à l’analyse de semis de points.</p>
 <section id="préparer-ses-données" class="level2">
 <h2 class="anchored" data-anchor-id="préparer-ses-données">Préparer ses données</h2>
 <p>La première étape consiste à créer un objet <code>linnet</code> (<em>linear network</em> ou <span class="math inline">L</span>) à l’aide de deux fichiers : un fichier correspondant aux sommets (intersections et extrémités des liens), un fichier correspondant aux liens entre ces sommets. Le fichier des sommets comprend trois colonnes correspondant à l’identifiant et aux coordonnées de chaque sommet ; le fichier des liens comprend <em>a minima</em> deux colonnes correspondant aux deux extrémités de chaque lien. L’orientation des liens n’est pas prise en compte : un lien <em>a-b</em> implique nécessairement un lien <em>b-a</em>, il n’est donc pas utile d’avoir deux lignes différentes.</p>
-<p>Créer un objet <code>lpp</code> (<em>linear point pattern</em>) suppose d’ajouter à ce réseau <span class="math inline">L</span> un semis de points. Le fichier correspondant comprend au moins les coordonnées (x,y) de chacun des points, nécessairement situés sur <span class="math inline">L</span>, c’est-à-dire accrochés d’un point de vue topologique ; il peut comprendre autant de colonnes supplémentaires que d’attributs, les attributs pouvant être de types différents (entiers, flottants, chaîne de caractère, booléen). Si les coordonnées d’un sommet de ce semis de points sont situées en dehors du réseau planaire <span class="math inline">L</span>, le package accroche par défaut le sommet en question au lien le plus proche. Aucun avertissement n’est affiché par le package.</p>
-<section id="créer-des-objets-linnet-et-lpp-de-a-à-z-et-visualiser-pour-comprendre-la-structure-des-objets" class="level3">
-<h3 class="anchored" data-anchor-id="créer-des-objets-linnet-et-lpp-de-a-à-z-et-visualiser-pour-comprendre-la-structure-des-objets">Créer des objets <code>linnet</code> et <code>lpp</code> de A à Z et visualiser pour comprendre la structure des objets</h3>
-<p>Dans un premier temps, nous montrons comment créer les objets <code>linnet</code> à partir de ses propres données. Le mini jeu de données concerne des affichages politiques dans l’espace public. Deux fichiers sont utilisés pour créer le réseau planaire : un fichier de points et leurs coordonnées ; un fichier de liens entre ces points (liens non orientés). Le dernier point de ce dernier fichier est volontairement situé hors du réseau planaire.</p>
+<p>Créer un objet <code>lpp</code> (<em>linear point pattern</em>) suppose d’ajouter à ce réseau <span class="math inline">L</span> un semis de points. Le fichier correspondant comprend au moins les coordonnées (x,y) de chacun des points, nécessairement situés sur <span class="math inline">L</span>, c’est-à-dire accrochés d’un point de vue topologique ; il peut comprendre autant de colonnes supplémentaires que d’attributs, les attributs pouvant être de types différents (entiers, flottants, chaîne de caractères, booléen). Si les coordonnées d’un sommet de ce semis de points sont situées en dehors du réseau planaire <span class="math inline">L</span>, le package accroche par défaut le sommet en question au lien le plus proche. Aucun avertissement n’est affiché par le package. En revanche, quand un point est situé en dehors de la fenêtre d’observation<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> dans laquelle est intégré le réseau étudié, il n’est pas accroché à un lien et un message avertit que le point a été rejeté de la construction du <code>lpp</code>.</p>
+</section>
+<section id="créer-des-objets-linnet-et-lpp-de-a-à-z-et-visualiser-pour-comprendre-la-structure-des-objets" class="level2">
+<h2 class="anchored" data-anchor-id="créer-des-objets-linnet-et-lpp-de-a-à-z-et-visualiser-pour-comprendre-la-structure-des-objets">Créer des objets <code>linnet</code> et <code>lpp</code> de A à Z et visualiser pour comprendre la structure des objets</h2>
+<p>Dans un premier temps, nous montrons comment créer les objets <code>linnet</code> à partir de ses propres données. Le mini jeu de données concerne des affichages politiques dans l’espace public. Deux fichiers sont utilisés pour créer le réseau planaire : un fichier de points et leurs coordonnées ; un fichier de liens entre ces points (liens non orientés). L’ultime point de ce dernier fichier est volontairement situé hors du réseau planaire.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#chargement des packages</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># chargement des packages</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf) <span class="co"># gestion de données spatiales vectorielles</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spatstat)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble) <span class="co"># construction de données tabulaires de type tibble()</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr) <span class="co"># modification de la forme et de la hiérarchie d'un tableau</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr) <span class="co"># manipulation de données tabulaires (filtrage, création de colonne, etc.)</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr) <span class="co"># manipulation de chaîne de charactère</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># import des fichiers</span></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>mini_node <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="at">file =</span> <span class="st">"data/data_mini/mini_node.txt"</span>, </span>
@@ -306,13 +302,14 @@ window.Quarto = {
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># transformation en objet ppp et matrice</span></span>
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>mini_node_ppp <span class="ot">&lt;-</span> <span class="fu">ppp</span>(<span class="at">x =</span> mini_node<span class="sc">$</span>x, </span>
 <span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> mini_node<span class="sc">$</span>y, </span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">10</span>), <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">10</span>))   <span class="co"># coordonnées de la fenêtre graphique</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>mini_edge_matrix <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(mini_edge, </span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>                              <span class="at">ncol =</span> <span class="dv">2</span>)</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>mini <span class="ot">&lt;-</span> <span class="fu">linnet</span>(<span class="at">vertices =</span> mini_node_ppp, </span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>               <span class="at">edges =</span> mini_edge_matrix)</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(mini)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>                     <span class="at">xrange =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">10</span>), </span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>                     <span class="at">yrange =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">10</span>))   <span class="co"># coordonnées de la fenêtre d'observation</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>mini_edge_matrix <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(mini_edge, </span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>                              <span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>mini <span class="ot">&lt;-</span> <span class="fu">linnet</span>(<span class="at">vertices =</span> mini_node_ppp, </span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>               <span class="at">edges =</span> mini_edge_matrix)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(mini)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "linnet" "list"  </code></pre>
 </div>
@@ -356,7 +353,7 @@ window.Quarto = {
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>collage_lpp <span class="ot">&lt;-</span> <span class="fu">lpp</span>(<span class="at">X =</span> semis_collage, </span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">L =</span> mini)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Les attributs des semis de points sont appelé <code>marks</code> dans le <em>package</em> <code>spatstat.linnet</code>. Par défaut, la fonction <code>plot</code> crée une visualisation par attribut et la variable visuelle s’adapte au type de l’attribut. Si l’on souhaite visualiser un attribut et un seul, on utilise l’argument <code>which.marks</code>.</p>
+<p>Les attributs des semis de points sont appelé <code>marks</code> dans le <em>package</em> <code>linnet</code>. Par défaut, la fonction <code>plot</code> crée une visualisation par attribut et la variable visuelle s’adapte au type de l’attribut. Si l’on souhaite visualiser un attribut et un seul, on utilise l’argument <code>which.marks</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(collage_lpp)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -463,12 +460,10 @@ Enclosing window: rectangle = [0, 10] x [0, 10] units</code></pre>
 </div>
 </div>
 <p>L’objectif des lignes précédentes était de montrer comment créer un objet <code>linnet</code> de A à Z et de présenter les mesures de base. Les objets créés sont cependant trop pauvres pour justifier des traitements plus avancés et, dans la suite du texte, le jeu de données est issu du projet <a href="https://soduco.geohistoricaldata.org/">SoDUCo</a>.</p>
-<!-- faire mesures de base ici puis modèles stats sur gros jeu. si point hors fenêtre, warning:  1 point was rejected as lying outside the specified window -->
 </section>
-<section id="créer-et-visualiser-des-objets-depuis-des-données-spatiales" class="level3">
-<h3 class="anchored" data-anchor-id="créer-et-visualiser-des-objets-depuis-des-données-spatiales">Créer et visualiser des objets depuis des données spatiales</h3>
-<!-- à partir de données spatiales ? -->
-<p>Les données sont dérivées <!-- issues ? --> de l’extraction des <em>Annuaires</em> commerciaux de la ville de Paris en 1839<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Les deux jeux de données listent les épiciers et les bijoutiers présents dans l’espace municipal à cette date.</p>
+<section id="créer-et-visualiser-des-objets-à-partir-de-données-spatiales" class="level2">
+<h2 class="anchored" data-anchor-id="créer-et-visualiser-des-objets-à-partir-de-données-spatiales">Créer et visualiser des objets à partir de données spatiales</h2>
+<p>Les données sont issues de l’extraction des <em>Annuaires</em> commerciaux de la ville de Paris en 1839<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. Les deux jeux de données listent les épiciers et les bijoutiers présents dans l’espace municipal à cette date.</p>
 <p>Le code suivant permet d’importer les données et de les transformer en objet <code>linnet</code>, puis en objet <code>lpp</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import du réseau viaire parisien en 1836</span></span>
@@ -525,7 +520,7 @@ Projected CRS: +proj=lcc +lat_0=46.5 +lon_0=3 +lat_1=49 +lat_2=44 +x_0=700000 +y
 </div>
 </div>
 </div>
-<p>La transformation des semis de points en objets spatstat se fait à l’aide de la fonction <code>as.ppp</code> (<em>planar point pattern</em>). Pour transformer le réseau viaire en objet <code>linnet</code>, deux étapes sont nécessaires : transformer le shapefile en objet <code>psp</code> (<em>planar segment pattern</em>) puis en objet <code>linnet</code> (<em>linear network</em>). La fonction <code>summary</code> permet de connaître les principales propriétés des objets créés (les longueurs sont ici exprimées en mètres).</p>
+<p>La transformation des semis de points en objets spatstat se fait à l’aide de la fonction <code>as.ppp</code> (<em>planar point pattern</em>). Pour transformer le réseau viaire en objet <code>linnet</code>, deux étapes sont nécessaires : transformer le <code>sf</code> en objet <code>psp</code> (<em>planar segment pattern</em>) puis en objet <code>linnet</code> (<em>linear network</em>). La fonction <code>summary</code> permet de connaître les principales propriétés des objets créés.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>epiciers_ppp <span class="ot">&lt;-</span> <span class="fu">as.ppp</span>(<span class="fu">st_geometry</span>(epiciers))</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>bijoutiers_ppp <span class="ot">&lt;-</span> <span class="fu">as.ppp</span>(<span class="fu">st_geometry</span>(bijoutiers))</span>
@@ -546,157 +541,8 @@ Numerical tolerance: 1.673106e-07 units
 Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</code></pre>
 </div>
 </div>
-<!--Concernant les informations sur le réseau viaire, la fonction `summary` renvoie -->
-<!--* le nombre de sommets et de liens (*7237 vertices and 8730 lines*)
-* la longueur totale du réseau (*total length 461193.7*)
-* le degré maximal (*maximum vertex degree 7*)
-* la connexité du réseau (*network is connected*)
-* le diamètre (*diameter 10017.93*)
-* le rayon (*bouding radius: 5058.732*)
-
-Longueur totale, diamètre et rayon se basent sur la distance géographique (exprimée en mètres) sur le réseau planaire et non sur la distance topologique (nombre de liens). Le diamètre donne donc ici la longueur en mètres du plus long des plus courts chemins. De manière générale, toutes les méthodes implémentées dans `linnet` se basents sur les distances géographiques sur le réseau planaire étudié.-->
-<!--## Propriétés des objets `linnet` et `lpp`-->
-<!-- pas besoin: vu sur petit jeu -->
-<!--Si on souhaite utiliser une mesure précise, il est possible d'obtenir ces informations avec des fonctions spécifiques :
-
-* nombre de sommets (`nvertices`) 
-* nombre de liens (`nsegments`)
-* longueur totale du réseau (`volume`)
-* diamètre du réseau planaire (`diameter`)
-* rayon du réseau (distance entre le ou les sommets centraux et les sommets les plus périphériques) (`boundingradius`)
-
-D'autres mesures sont également disponibles et notamment le degré de chaque sommet (`vertexdegree`).
-
-Le code suivant montre quelques-uns des résultats obtenus à l'aide de ces fonctions.
-# nombre de sommets
-nvertices(paris)
-# longueur totale du réseau viaire (en mètres)
-volume(paris)
-# degré moyen
-mean(vertexdegree(paris))
-
-Sur un objet de type `lpp` (*linear point pattern*), les principales mesures proposées sont les suivantes :
-
-* nombre de points (`npoints`)
-* nombre de points par unité de mesure (`intensity`)
-* matrice des plus courtes distances entre points (`pairdist`)
-* distance au plus proche voisin (`nndist`)
-* identifiant du plus proche voisin (`nnwhich`)
-
-La fonction `summary` permet là encore d'obtenir certaines de ces informations (nombre de points, nombre de points par unité), elle rappelle les caractéristiques principales du réseau (nombre de sommets, de liens et volume total) et enfin, elle fournit quartiles, médiane et moyenne des éventuels attributs numériques des points.
-
-Le code suivant permet de calculer ces différents éléments sur le semis des épiciers et des bijoutiers à Paris.
-
-
-
-::: {.cell}
-
-```{.r .cell-code}
-# semis des épiciers
-# nombre de points et nombre de points par mètre
-npoints(epiciers_ppp)
-```
-
-::: {.cell-output .cell-output-stdout}
-
-```
-[1] 1028
-```
-
-
-:::
-
-```{.r .cell-code}
-intensity(epiciers_ppp)
-```
-
-::: {.cell-output .cell-output-stdout}
-
-```
-[1] 2.371364e-05
-```
-
-
-:::
-
-```{.r .cell-code}
-# distance géographique (euclidienne) entre paires de points
-pairdist(epiciers_ppp)[1:5, 1:5] # matrice symétrique
-```
-
-::: {.cell-output .cell-output-stdout}
-
-```
-         [,1]      [,2]      [,3]     [,4]     [,5]
-[1,]    0.000 1422.0420 1801.8448 2484.028 2519.840
-[2,] 1422.042    0.0000  935.2616 1768.920 2550.447
-[3,] 1801.845  935.2616    0.0000 2669.784 1748.318
-[4,] 2484.028 1768.9197 2669.7838    0.000 4314.051
-[5,] 2519.840 2550.4468 1748.3184 4314.051    0.000
-```
-
-
-:::
-
-```{.r .cell-code}
-# distance géographique au plus proche voisin
-nndist(epiciers_ppp)[1:5] 
-```
-
-::: {.cell-output .cell-output-stdout}
-
-```
-[1] 138.1796741   0.8380856  54.8029292 168.5354131  45.1379248
-```
-
-
-:::
-
-```{.r .cell-code}
-# identifiant du plus proche voisin
-nnwhich(epiciers_ppp)[1:5] 
-```
-
-::: {.cell-output .cell-output-stdout}
-
-```
-[1] 110 263 990 847 429
-```
-
-
-:::
-
-```{.r .cell-code}
-# semis des bijouteries
-npoints(bijoutiers_ppp)
-```
-
-::: {.cell-output .cell-output-stdout}
-
-```
-[1] 341
-```
-
-
-:::
-
-```{.r .cell-code}
-intensity(bijoutiers_ppp)
-```
-
-::: {.cell-output .cell-output-stdout}
-
-```
-[1] 1.275689e-05
-```
-
-
-:::
-:::
-
-
--->
-<p>La dernière étape consiste à intégrer dans le même objet le réseau linéaire et le semis de points à l’aide de la fonction <code>lpp</code>.</p>
+<p>Le réseau parisien est composé de 7 237 sommets et 8 730 liens. La longueur totale du réseau, exprimée ici en mètres, est de 460 km dans un diamètre de 10 km. Ce dernier représente ici la longueur du plus long des plus courts chemins entre deux sommets.</p>
+<p>La dernière étape consiste à intégrer dans le même objet le réseau linéaire et chacun des semis de points à l’aide de la fonction <code>lpp</code><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. Les semis sont composés de 341 bijoutiers et 1 028 épiciers.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>epiciers_lpp <span class="ot">&lt;-</span> <span class="fu">lpp</span>(<span class="at">X =</span> epiciers_ppp, </span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">L =</span> paris)</span>
@@ -723,78 +569,14 @@ Unmarked
 Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</code></pre>
 </div>
 </div>
-<!-- inutile car vu sur le mini jeu de données  - Si l'on exécute la fonction `plot` sur un objet `lpp`, par défaut `linnet` propose un nombre de visualisations égal au nombre d'attributs des points, ces attributs étant appelés `marks`. Si je souhaite visualiser la répartion d'un attribut *Z* donné , j'utilise la syntaxe `plot(X, which.marks='Z')` -- le jeu de données utilisés ne comportant pas d'attributs pour les semis de points, cette option n'est pas mise en oeuvre ici. -->
-<!-- j'ai déplacé le chunk de la densité pour le mettre dans la section sur les clusters -->
 <p>Il est possible d’étudier un semis de points sur un réseau spatial selon les mêmes logiques qu’un semis dans un espace isotrope car diverses mesures ont été adaptées afin de considérer la structure du réseau <span class="citation" data-cites="okabe2012">(voir en particulier <a href="#ref-okabe2012" role="doc-biblioref">Okabe et Sugihara, 2012</a>)</span>.</p>
-</section>
-</section>
-</section>
-<section id="étudier-les-voisinages" class="level1">
-<h1>Étudier les voisinages</h1>
-<p>Différences d’approche entre fonction K et méthode du plus proche voisin</p>
-<!--Questions selon qu'on étudie un ou deux semis de points-->
-<section id="analyser-un-semis-de-points" class="level2">
-<h2 class="anchored" data-anchor-id="analyser-un-semis-de-points">Analyser un semis de points</h2>
-<p>Fonctions:</p>
-<p>linearK (plus court chemin) et linearKinhom (pcc et non homogène)</p>
-<p>linearKEuclid (distance euclidienne), linearKEuclidInhom (distance euclidienne et non homogène)</p>
-<!-- ## Analyser la relation entre deux semis de points - on vire
-
-A évoquer dans la conclusion générale
-
-
-
-::: {.cell}
-
-```{.r .cell-code}
-# étudier un semis par rapport à un autre
-
-crossdist(epiciers_ppp, bijoutiers_ppp)[1:5, 1:5] # shortest-path distances between pairs of ‘things’ taken from two different datasets.
-```
-
-::: {.cell-output .cell-output-stdout}
-
-```
-         [,1]     [,2]     [,3]     [,4]      [,5]
-[1,] 1725.354 1189.305 1524.982 2715.270 1354.0494
-[2,] 2198.302  680.736 1924.450 1321.922  243.2868
-[3,] 3039.742 1575.508 2769.227 1735.172 1173.2468
-[4,] 1721.839 1377.616 1569.930 1631.090 1569.6652
-[5,] 4199.966 3024.996 3964.274 3468.329 2745.1090
-```
-
-
-:::
-
-```{.r .cell-code}
-nncross(epiciers_ppp, bijoutiers_ppp)[1:5,]  # given two point patterns X and Y, finds the nearest neighbour in Y of each point of X.
-```
-
-::: {.cell-output .cell-output-stdout}
-
-```
-      dist which
-1 174.5787   257
-2 105.8595    71
-3 100.6455   122
-4 248.2634   312
-5 592.7533   163
-```
-
-
-:::
-:::
-
-
-
-Fonctions: linearKcross, linearKdot -->
 </section>
 </section>
 <section id="modéliser-la-géographie-du-semis-de-points" class="level1">
 <h1>Modéliser la géographie du semis de points</h1>
 <section id="répartitions-aléatoires-des-points-sur-un-réseau-spatial" class="level2">
 <h2 class="anchored" data-anchor-id="répartitions-aléatoires-des-points-sur-un-réseau-spatial">Répartitions aléatoires des points sur un réseau spatial</h2>
-<p>Il est possible de comparer la répartition du semis de points étudié par rapport à une situation aléatoire sur un réseau. Plusieurs processus aléatoires déterminant à la fois le nombre et la distribution spatiale des points peuvent être simulés dans <code>spatstat.linnet</code>. Dans le premier cas (fonction <code>runiflpp()</code>), le semis de points est généré de façon aléatoire et la position des points est fonction de la seule longueur des voies du réseau : plus un tronçon est long, plus il est probable qu’il accueille un ou plusieurs points. Cette hypothèse n’est pas toujours la plus pertinente : si on prend l’exemple des accidents de voiture, on peut supposer qu’ils sont plus fréquents à mesure que le trafic augmente (et non la seule longueur des routes). Les deux options suivantes (<code>rpoislpp()</code> et <code>rlpp()</code>) permettent de générer un semis de points aléatoire lié à une intensité variable sur le réseau. <!-- j'espère que j'écris pas de bêtises, la différence entre rpois et rl n'est pas encore très nette pour moi --></p>
+<p>Il est possible de comparer la répartition du semis de points étudié par rapport à une situation aléatoire sur un réseau. Plusieurs processus aléatoires déterminant à la fois le nombre et la distribution spatiale des points peuvent être simulés dans <code>linnet</code>. Dans le premier cas (fonction <code>runiflpp()</code>), le semis de points est généré de façon aléatoire et la position des points est fonction de la seule longueur des voies du réseau : plus un tronçon est long, plus il est probable qu’il accueille un ou plusieurs points. Cette hypothèse n’est pas toujours la plus pertinente : si on prend l’exemple des accidents de voiture, on peut supposer qu’ils sont plus fréquents à mesure que le trafic augmente (et non la seule longueur des routes). Les deux options suivantes (<code>rpoislpp()</code> et <code>rlpp()</code>) permettent de générer un semis de points aléatoire lié à une intensité variable sur le réseau. <!-- j'espère que j'écris pas de bêtises, la différence entre rpois et rl n'est pas encore très nette pour moi --></p>
 <p>Pour résumer, on peut simuler les trois semis suivants :</p>
 <ul>
 <li>Un processus aléatoire uniforme avec <code>runiflpp()</code>. La fonction génère <span class="math inline">n</span> points aléatoires, indépendamment et uniformément distribués, sur le réseau <span class="math inline">L</span>. La probabilité de tirer un tronçon <span class="math inline">Ls</span> du réseau dépend de sa longueur dans <span class="math inline">L</span>. Le point est généré selon une probabilité uniforme le long de <span class="math inline">Ls</span>.</li>
@@ -807,7 +589,7 @@ Fonctions: linearKcross, linearKdot -->
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rpoislpp</span>(<span class="at">lambda =</span> <span class="fu">intensity</span>(bijoutiers_lpp), <span class="at">L =</span> paris, <span class="at">nsim =</span> <span class="dv">1</span>) <span class="co"># le nombre de points est variable</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Point pattern on linear network
-353 points
+340 points
 Linear network with 7237 vertices and 8730 lines
 Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</code></pre>
 </div>
@@ -817,7 +599,7 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-12-1.svg" class="img-fluid figure-img"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-10-1.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -858,16 +640,16 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <pre><code># A tibble: 579,700 × 5
       Pi P     dist_pi_p type       n_sim
    &lt;int&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;      &lt;int&gt;
- 1     2 1         4652. simulation     1
- 2     3 1         3281. simulation     1
- 3     3 2         6431. simulation     1
- 4     4 1         2476. simulation     1
- 5     4 2         3096. simulation     1
- 6     4 3         5561. simulation     1
- 7     5 1         7165. simulation     1
- 8     5 2         5340. simulation     1
- 9     5 3         5423. simulation     1
-10     5 4         7468. simulation     1
+ 1     2 1         5693. simulation     1
+ 2     3 1         2525. simulation     1
+ 3     3 2         7886. simulation     1
+ 4     4 1         4411. simulation     1
+ 5     4 2         1625. simulation     1
+ 6     4 3         6430. simulation     1
+ 7     5 1         2284. simulation     1
+ 8     5 2         3604. simulation     1
+ 9     5 3         4426. simulation     1
+10     5 4         2323. simulation     1
 # ℹ 579,690 more rows</code></pre>
 </div>
 </div>
@@ -898,7 +680,7 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-15-1.svg" class="img-fluid figure-img"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-13-1.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -908,11 +690,14 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-17-1.svg" class="img-fluid figure-img"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-15-1.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
+</section>
+<section id="répartition-aléatoire-inhomogène" class="level2">
+<h2 class="anchored" data-anchor-id="répartition-aléatoire-inhomogène">Répartition aléatoire inhomogène</h2>
 <p>Mesurer l’écart à une répartition aléatoire inhomogène selon l’inverse de la distance au centre. <!-- expliciter choix du centre : signification --></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>center <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/halles.gpkg"</span>)  <span class="co"># Les Halles considérées comme centre économique</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -944,8 +729,8 @@ function (x, y = NULL, seg = NULL, tp = NULL, ...)
     d &lt;- 1/d
     return(d)
 }
-&lt;bytecode: 0x000002644ea11118&gt;
-&lt;environment: 0x000002645e797150&gt;
+&lt;bytecode: 0x000001c2cff5ee38&gt;
+&lt;environment: 0x000001c2dba4aee0&gt;
 Function domain:
 Linear network with 7237 vertices and 8730 lines
 Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</code></pre>
@@ -959,7 +744,7 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">lmax =</span> <span class="fl">0.05</span>,</span>
 <span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">nsim =</span> <span class="dv">1</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Il est important de spécifier <code>lmax</code> si possible afin de diminuer le temps de calcul<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p>
+<p>Il est important de spécifier <code>lmax</code> si possible afin de diminuer le temps de calcul<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>lmax_known <span class="ot">&lt;-</span> <span class="fu">as.linim</span>(f_dist2_center)</span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>tab_lmax <span class="ot">&lt;-</span> <span class="fu">attr</span>(<span class="at">x =</span> lmax_known, <span class="at">which =</span> <span class="st">"df"</span>)</span>
@@ -971,7 +756,7 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-22-1.svg" class="img-fluid figure-img"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-20-1.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -985,6 +770,8 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">nsim =</span> <span class="dv">10</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in datagen.rpoisppOnLines(lambda, S, ...): lmax is not an upper bound
+for lambda
+Warning in datagen.rpoisppOnLines(lambda, S, ...): lmax is not an upper bound
 for lambda
 Warning in datagen.rpoisppOnLines(lambda, S, ...): lmax is not an upper bound
 for lambda
@@ -1048,15 +835,73 @@ for lambda</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-24-1.svg" class="img-fluid figure-img"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-22-1.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<!-- ajouter ici ou en conclusion générale (?) : possibilité de considérer plusieurs points concomitamment (i.e. des pôles) -->
+<!-- ajouter ici : possibilité de considérer plusieurs points concomitamment (i.e. des pôles) -->
 </section>
-<section id="rechercher-et-analyser-les-clusters" class="level2">
-<h2 class="anchored" data-anchor-id="rechercher-et-analyser-les-clusters">Rechercher et analyser les clusters</h2>
+<section id="étudier-les-voisinages" class="level2">
+<h2 class="anchored" data-anchor-id="étudier-les-voisinages">Étudier les voisinages</h2>
+<p>Différences d’approche entre fonction K et méthode du plus proche voisin</p>
+<!--Questions selon qu'on étudie un ou deux semis de points-->
+<p>Fonctions:</p>
+<p>linearK (plus court chemin) et linearKinhom (pcc et non homogène)</p>
+<p>linearKEuclid (distance euclidienne), linearKEuclidInhom (distance euclidienne et non homogène)</p>
+<!-- ## Analyser la relation entre deux semis de points - on vire
+
+A évoquer dans la conclusion générale
+
+
+
+::: {.cell}
+
+```{.r .cell-code}
+# étudier un semis par rapport à un autre
+
+crossdist(epiciers_ppp, bijoutiers_ppp)[1:5, 1:5] # shortest-path distances between pairs of ‘things’ taken from two different datasets.
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+         [,1]     [,2]     [,3]     [,4]      [,5]
+[1,] 1725.354 1189.305 1524.982 2715.270 1354.0494
+[2,] 2198.302  680.736 1924.450 1321.922  243.2868
+[3,] 3039.742 1575.508 2769.227 1735.172 1173.2468
+[4,] 1721.839 1377.616 1569.930 1631.090 1569.6652
+[5,] 4199.966 3024.996 3964.274 3468.329 2745.1090
+```
+
+
+:::
+
+```{.r .cell-code}
+nncross(epiciers_ppp, bijoutiers_ppp)[1:5,]  # given two point patterns X and Y, finds the nearest neighbour in Y of each point of X.
+```
+
+::: {.cell-output .cell-output-stdout}
+
+```
+      dist which
+1 174.5787   257
+2 105.8595    71
+3 100.6455   122
+4 248.2634   312
+5 592.7533   163
+```
+
+
+:::
+:::
+
+
+
+Fonctions: linearKcross, linearKdot -->
+</section>
+<section id="rechercher-et-analyser-des-concentrations-hot-spots" class="level2">
+<h2 class="anchored" data-anchor-id="rechercher-et-analyser-des-concentrations-hot-spots">Rechercher et analyser des concentrations (hot spots)</h2>
 <!-- différence hot spot - cluster ? à creuser... -->
 <p>La recherche de clusters ou de hot spots, soit des zones du réseau où la densité de points est plus forte qu’attendue, suppose de comparer la répartion observée à une répartition homogène où la probabilité de chaque tronçon d’accueillir un sommet serait fonction de sa seule longueur. La fonction <code>intensity</code> renvoie ce résultat (nombre moyen de points par unité de longueur). La visualisation de certaines mesures est intégrée par défaut dans le <em>package</em> et c’est notamment le cas pour la densité (nombre de points par unité de mesure du réseau).</p>
 <div class="cell">
@@ -1074,7 +919,7 @@ for lambda</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-25-1.svg" class="img-fluid figure-img"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-24-1.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1086,7 +931,7 @@ for lambda</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-25-2.svg" class="img-fluid figure-img"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-24-2.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1111,7 +956,7 @@ alternative hypothesis: two-sided</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-26-1.svg" class="img-fluid figure-img"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-25-1.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1138,7 +983,7 @@ alternative hypothesis: two-sided</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-28-1.svg" class="img-fluid figure-img"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-27-1.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1149,9 +994,9 @@ alternative hypothesis: two-sided</code></pre>
 </section>
 <section id="intérêts-et-limites-du-package" class="level1">
 <h1>Intérêts et limites du package</h1>
-<p>Les méthodes d’analyse de semis de points sur réseaux planaires ne sont pas des méthodes statistiques stabilisées (voir par exemple une définition possible de la densité dans <span class="citation" data-cites="okabe2009">(<a href="#ref-okabe2009" role="doc-biblioref">Okabe et al., 2009</a>)</span> discutée dans <span class="citation" data-cites="mcswiggan2017">(<a href="#ref-mcswiggan2017" role="doc-biblioref">McSwiggan et al., 2017</a>)</span>) et les choix des développeurs de <code>spatstat.linnet</code> sont des choix possibles parmi d’autres ; ce ne sont pas nécessairement les plus pertinents pour une question de recherche donnée. Ceci pourrait expliquer le faible nombre de références présentes dans les descriptifs des fonctions. De manière générale, l’aide du seul package paraît insuffisante pour le prendre en main et il est nécessaire de la compléter avec les diverses publications des auteurs, notamment le chapitre 17 de <span class="citation" data-cites="baddeley2012">(<a href="#ref-baddeley2012" role="doc-biblioref">Baddeley et al., 2012</a>)</span><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
+<p>Les méthodes d’analyse de semis de points sur réseaux planaires ne sont pas des méthodes statistiques stabilisées (voir par exemple une définition possible de la densité dans <span class="citation" data-cites="okabe2009">(<a href="#ref-okabe2009" role="doc-biblioref">Okabe et al., 2009</a>)</span> discutée dans <span class="citation" data-cites="mcswiggan2017">(<a href="#ref-mcswiggan2017" role="doc-biblioref">McSwiggan et al., 2017</a>)</span>) et les choix des développeurs de <code>linnet</code> sont des choix possibles parmi d’autres ; ce ne sont pas nécessairement les plus pertinents pour une question de recherche donnée. Ceci pourrait expliquer le faible nombre de références présentes dans les descriptifs des fonctions. De manière générale, l’aide du seul package paraît insuffisante pour le prendre en main et il est nécessaire de la compléter avec les diverses publications des auteurs, notamment le chapitre 17 de <span class="citation" data-cites="baddeley2012">(<a href="#ref-baddeley2012" role="doc-biblioref">Baddeley et al., 2012</a>)</span><a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>.</p>
 <p>Une des limites concerne la non possibilité d’avoir des liens orientés sur le réseau : étudier certains phénomènes ponctuels en milieu urbain sans prendre en compte les sens de circulation automobile peut limiter l’intérêt des résultats. Il n’est pas non plus aisé de tester des hypothèses pourtant simples à formuler (lien entre semis de points et degré des sommets du réseau par exemple) tant il est nécessaire de jongler entre des objets de types différents. Créer ses propres fonctions est vite nécessaire pour tirer pleinement profit du package.</p>
-<p><code>spatstat.linnet</code> n’est évidemment pas le seul package permettant ce type d’analyse (voir <a href="https://cran.rstudio.com/web/packages/intensitynet/index.html"><code>intensitynet</code></a> ou <a href="https://cran.rstudio.com/web/packages/spatgraphs/index.html"><code>spatgraphs</code></a>) mais il reste l’un des plus efficaces, surtout si on analyse des semis sur des réseaux de grande taille. À défaut d’être le plus simple à prendre en main, il semble l’un des plus rapides pour calculer les différents indicateurs et modèles disponibles. <!-- contrôler la doc de ces packages --></p>
+<p><code>linnet</code> n’est évidemment pas le seul package permettant ce type d’analyse (voir <a href="https://cran.rstudio.com/web/packages/intensitynet/index.html"><code>intensitynet</code></a> ou <a href="https://cran.rstudio.com/web/packages/spatgraphs/index.html"><code>spatgraphs</code></a>) mais il reste l’un des plus efficaces, surtout si on analyse des semis sur des réseaux de grande taille. À défaut d’être le plus simple à prendre en main, il semble l’un des plus rapides pour calculer les différents indicateurs et modèles disponibles. <!-- contrôler la doc de ces packages --></p>
 </section>
 <section id="pour-aller-plus-loin" class="level1">
 <h1>Pour aller plus loin</h1>
@@ -1189,9 +1034,12 @@ Okabe, A. et Sugihara, K. (2012). <em>Spatial Analysis along Networks: Statistic
 </div></section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Glossaire et notes</h2>
 
 <ol>
-<li id="fn1"><p>Il s’agit plus précisément de l’extraction de la liste alphabétique de l’<em>Annuaire Général du Commerce</em> édité par Charles Lamy en 1839. Les informations plus précises sont inclues dans les métadonnées du dossier <em>data</em> (fichier <em>readme.md</em>).<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>Si lambda est une fonction et <code>lmax</code> n’est pas spécifié dans <code>rpoislpp()</code>, alors la fonction génère environ 10,000 points le long des tronçons pour estimer <code>lmax</code>. Si <code>lmax</code> est spécifié avec une valeur trop élevée, le nombre de point générés aléatoirement (Poisson) avant d’appliquer la méthode de Lewis-Shedler pour accepter ou rejetter ces points générés va être très élevé et donc le temps de calcul allongé.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3"><p>Ouvrage vendu à un tarif très élevé, visiter les archives d’Anna est recommandé.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>Pour simplifier la lecture, nous parlons dans la suite du texte du package <code>linnet</code>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Voir <code>owin.object</code> de <code>spatstat.geom</code> pour plus d’information sur la notion de fenêtre d’observation.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Il s’agit plus précisément de l’extraction de la liste alphabétique de l’<em>Annuaire Général du Commerce</em> édité par Charles Lamy en 1839. Les informations plus précises sont inclues dans les métadonnées du dossier <em>data</em> (fichier <em>readme.md</em>).<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Il aurait été possible de créer un unique objet <code>lpp</code> composé de points caractérisés comme “bijoutiers” ou “épiciers”.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Si lambda est une fonction et <code>lmax</code> n’est pas spécifié dans <code>rpoislpp()</code>, alors la fonction génère environ 10,000 points le long des tronçons pour estimer <code>lmax</code>. Si <code>lmax</code> est spécifié avec une valeur trop élevée, le nombre de point générés aléatoirement (Poisson) avant d’appliquer la méthode de Lewis-Shedler pour accepter ou rejetter ces points générés va être très élevé et donc le temps de calcul allongé.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>Ouvrage vendu à un tarif très élevé, visiter les archives d’Anna est recommandé.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section><section class="quarto-appendix-contents" id="quarto-reuse"><h2 class="anchored quarto-appendix-heading">Réutilisation</h2><div class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.fr_fr">CC BY-SA 4.0</a></div></div></section><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@article{beauguitte2025,
   author = {Beauguitte, Laurent and Gravier, Julie},
