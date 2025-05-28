@@ -53,7 +53,7 @@ Trois grands types de question sont généralement posées à ces données :
 
 # Le package linnet
 
-`spatstat.linnet`^[Pour simplifier la lecture, nous parlons dans la suite du texte du package `linnet`.] est un _package_ de la famille de _packages_ `spatstat` consacré à la statistique spatiale et notamment à l'analyse de semis de points.
+`spatstat.linnet`^[Pour simplifier la lecture, nous parlons dans la suite du texte du _package_ `linnet`.] est un _package_ de la famille de _packages_ `spatstat` consacrés à la statistique spatiale et notamment à l'analyse de semis de points.
 
 ## Préparer ses données
 
@@ -73,6 +73,7 @@ library(tibble) # construction de données tabulaires de type tibble()
 library(tidyr) # modification de la forme et de la hiérarchie d'un tableau
 library(dplyr) # manipulation de données tabulaires (filtrage, création de colonne, etc.)
 library(stringr) # manipulation de chaîne de charactère
+library(ggplot2) # construction et visualisation de graphiques
 
 # import des fichiers
 mini_node <- read.table(file = "data/data_mini/mini_node.txt", 
@@ -182,14 +183,14 @@ Le code suivant permet d'importer les données et de les transformer en objet `l
 
 ```{r, warning=FALSE, message=FALSE}
 # import du réseau viaire parisien en 1836
-paris <- st_read("data/1836_jacoubet.shp")
+paris <- st_read("data/1836_jacoubet.gpkg")
 
 # import des semis de points
 epiciers <- st_read(dsn = "data/grocers_1839.gpkg")
 bijoutiers <- st_read(dsn = "data/jewellers_1839.gpkg")
 
 # contrôle visuel des objets importés
-plot(paris$geometry)
+plot(paris$geom)
 plot(epiciers$geom, 
      pch = 15, 
      col = "blue", 
@@ -207,10 +208,10 @@ La transformation des semis de points en objets spatstat se fait à l'aide de la
 epiciers_ppp <- as.ppp(st_geometry(epiciers))
 bijoutiers_ppp <- as.ppp(st_geometry(bijoutiers))
 
-paris <- as.psp(st_geometry(paris))
-paris <- as.linnet(paris)
+paris_linnet <- as.psp(st_geometry(paris))
+paris_linnet <- as.linnet(paris_linnet)
 
-summary(paris)
+summary(paris_linnet)
 ```
 Le réseau parisien est composé de 7 237 sommets et 8 730 liens. La longueur totale du réseau, exprimée ici en mètres, est de 460 km dans un diamètre de 10 km. Ce dernier représente ici la longueur du plus long des plus courts chemins entre deux sommets.
 
@@ -218,11 +219,11 @@ La dernière étape consiste à intégrer dans le même objet le réseau linéai
 
 ```{r}
 epiciers_lpp <- lpp(X = epiciers_ppp, 
-                    L = paris)
+                    L = paris_linnet)
 summary(epiciers_lpp)
 
 bijoutiers_lpp <- lpp(X = bijoutiers_ppp, 
-                      L = paris)
+                      L = paris_linnet)
 summary(bijoutiers_lpp)
 ```
 
@@ -230,30 +231,34 @@ Il est possible d'étudier un semis de points sur un réseau spatial selon les m
 
 # Modéliser la géographie du semis de points
 
+La modélisation du semis de points implique conceptuellement de distinguer le motif ponctuel (_point pattern_) et le processus ponctuel (_point process_), ce dernier renvoyant au processus aléatoire qui permet de générer un semis de points. Dans le cas de `linnet`, il est possible de générer différents processus stochastiques sur un réseau. Il est donc possible de comparer la répartition spatiale du semis étudié par rapport à une situation aléatoire afin de mieux caractériser les processus potentiels ayant pu mener à la situation observée.
+
 ## Répartitions aléatoires des points sur un réseau spatial
 
-Il est possible de comparer la répartition du semis de points étudié par rapport à une situation aléatoire sur un réseau. Plusieurs processus aléatoires déterminant à la fois le nombre et la distribution spatiale des points peuvent être simulés dans `linnet`. Dans le premier cas (fonction `runiflpp()`), le semis de points est généré de façon aléatoire et la position des points est fonction de la seule longueur des voies du réseau : plus un tronçon est long, plus il est probable qu'il accueille un ou plusieurs points. Cette hypothèse n'est pas toujours la plus pertinente : si on prend l'exemple des accidents de voiture, on peut supposer qu'ils sont plus fréquents à mesure que le trafic augmente (et non la seule longueur des routes). Les deux options suivantes (`rpoislpp()` et `rlpp()`) permettent de générer un semis de points aléatoire lié à une intensité variable sur le réseau. <!-- j'espère que j'écris pas de bêtises, la différence entre rpois et rl n'est pas encore très nette pour moi -->
+Plusieurs processus aléatoires déterminant à la fois le nombre et la distribution spatiale des points peuvent être simulés dans `linnet`. Dans le premier cas (fonction `runiflpp()`), le semis de points est généré de façon aléatoire et la position des points est fonction de la structure du réseau, en l'occurrence la longueur des tronçons : plus un tronçon est long, plus il est probable qu'il accueille un ou plusieurs points. Cette hypothèse n'est pas toujours la plus pertinente. Si on prend l'exemple des accidents de voiture, on peut supposer qu'ils sont plus fréquents à mesure que le trafic augmente (et non par la seule longueur des routes). Les deux fonctions suivantes (`rpoislpp()` et `rlpp()`) permettent de générer un semis de points aléatoire lié à une intensité variable sur le réseau.
 
 Pour résumer, on peut simuler les trois semis suivants :
 
-* Un processus aléatoire uniforme avec `runiflpp()`. La fonction génère $n$ points aléatoires, indépendamment et uniformément distribués, sur le réseau $L$. La probabilité de tirer un tronçon $Ls$ du réseau dépend de sa longueur dans $L$. Le point est généré selon une probabilité uniforme le long de $Ls$.
+* Un processus aléatoire uniforme avec `runiflpp()`. La fonction génère $n$ points aléatoires, indépendamment et uniformément distribués, sur le réseau $L$. La probabilité de tirer un tronçon $Ls$ du réseau dépend de sa longueur dans $L$. Le point est ensuite généré selon une probabilité uniforme le long de $Ls$.
 * Un processus poissonien avec la fonction `rpoislpp()`. Elle génère une réalisation du processus de Poisson avec une intensité spécifiée (paramètre `lambda`) sur le réseau $L$.
 * Un processus aléatoire grâce à `rlpp()`, qui génère $n$ points aléatoires sur le réseau $L$ avec une densité de probabilité spécifiée (paramètre `f`). Cette dernière ne doit pas nécessairement être normalisée.
 
 Quelle que soit la fonction utilisée, il est possible de spécifier le nombre de simulations souhaitées grâce au paramètre `nsim`.
 
 ```{r}
-# génération d'une simulation selon un processus de Poisson avec une intensité uniforme égale à la densité moyenne
-rpoislpp(lambda = intensity(bijoutiers_lpp), L = paris, nsim = 1) # le nombre de points est variable
-
-# visualisation d'une simulation
-plot(x = rpoislpp(lambda = intensity(bijoutiers_lpp), L = paris, nsim = 1),
+# visualisation de la génération d'une simulation selon un processus de Poisson
+# avec une intensité uniforme égale à la densité moyenne
+plot(x = rpoislpp(lambda = intensity(bijoutiers_lpp), # le nombre de points est variable
+                  L = paris_linnet, 
+                  nsim = 1),
      pch = 15, main = NULL)
 ```
 
-Dans les cas de `rpoislpp()` et de `runiflpp()`, le paramètre `ex` permet d'intégrer un objet `lpp` afin de déterminer $L$, ainsi que $\lambda$ et $n$. La valeur par défaut de $\lambda$ est alors la densité moyenne des points du `lpp`, ou $n$ le nombre de points de l'objet `lpp`. 
+Dans les cas de `rpoislpp()` et de `runiflpp()`, le paramètre `ex` permet d'intégrer un objet `lpp` afin de déterminer $L$, ainsi que $\lambda$ et $n$. La valeur par défaut de $\lambda$ est alors la densité moyenne des points du `lpp`, ou $n$ le nombre de points de l'objet `lpp`.
 
-## Mesurer l'écart aux distributions aléatoires
+## Mesurer l'écart des distributions observées aux distributions aléatoires
+
+Au même titre que dans le cadre d'analyse de semis de points dans un espace 
 
 <!-- à écrire --> 
 Cas des bijoutiers, distances points aléatoires VS distances observées.
@@ -307,8 +312,6 @@ Comparaison visuelle <!-- à commenter -->
 ```{r}
 bijoutiers_ecart <- table_simulated_dist %>%
   dplyr::bind_rows(dist_bijoutiers)
-
-library(ggplot2)
 
 bijoutiers_ecart %>%
   ggplot(aes(x = dist_pi_p, color = type)) +
@@ -381,7 +384,7 @@ Mesurer l'écart à une répartition aléatoire inhomogène selon l'inverse de l
 ```{r}
 center <- st_read(dsn = "data/halles.gpkg")  # Les Halles considérées comme centre économique
 center_ppp <- as.ppp(st_geometry(center))    # semis de points
-center_lpp <- lpp(X = center_ppp, L = paris) # semis de points sur le réseau
+center_lpp <- lpp(X = center_ppp, L = paris_linnet) # semis de points sur le réseau
 ```
 
 <!-- expliciter import de la fonction (vérifier encore une fois inexistance inverse de la distance) -->
@@ -400,7 +403,7 @@ i.e. plus on s'éloigne, plus la probabilité qu'un point soit simulé sur un tr
 
 # simulation aléatoire de Poisson
 dist2_center_bijoutiers <- rpoislpp(lambda = f_dist2_center, # fonction d'intensité
-                                    L = paris,               # réseau
+                                    L = paris_linnet,               # réseau
                                     lmax = 0.05,
                                     nsim = 1)
 ```
@@ -422,9 +425,11 @@ plot(dist2_center_bijoutiers, pch = 15)
 Calcul des distances entre les points simulés et le centre. Deux lpp avec `crossdist.lpp()`
 
 ```{r}
+#| warning: false
+
 # génération de 10 simulations (Poisson)
 bijoutiers_10sim <- rpoislpp(lambda = f_dist2_center, # fonction d'intensité
-                             L = paris, # réseau
+                             L = paris_linnet, # réseau
                              lmax = 0.05, # cf. plus bas
                              nsim = 10)
 
@@ -488,6 +493,41 @@ linearK (plus court chemin) et linearKinhom (pcc et non homogène)
 
 linearKEuclid (distance euclidienne), linearKEuclidInhom (distance euclidienne et non homogène)
 
+```{r}
+kth_neighbour <- seq(1, 20, 1)
+
+nndist <- tibble()
+for (i in kth_neighbour) {
+  compute_nndist_bij <- nndist.lpp(X = bijoutiers_lpp, k = i)
+  compute_nndist_epi <- nndist.lpp(X = epiciers_lpp, k = i)
+  
+  nndist <- nndist %>%
+    bind_rows(tibble(type = "bijoutiers", 
+                       ppv = i,
+                       dist = compute_nndist_bij)) %>%
+    bind_rows(tibble(type = "épiciers", 
+                       ppv = i,
+                       dist = compute_nndist_epi))
+}
+
+nndist_summary <- nndist %>%
+  group_by(type, ppv) %>%
+  summarise(mean = mean(dist), sd = sd(dist))
+
+nndist_summary %>%
+  ggplot(mapping = aes(x = ppv, y = mean, color = type)) +
+  geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd), 
+                width = 0.1, alpha = 0.4,
+                position = position_dodge(0.05)) +
+  geom_point() +
+  geom_line() +
+  xlab("Plus proche voisin") +
+  ylab("Distance moyenne (en m.)") +
+  theme_bw()
+  
+```
+
+
 <!-- ## Analyser la relation entre deux semis de points - on vire
 
 A évoquer dans la conclusion générale
@@ -502,7 +542,7 @@ nncross(epiciers_ppp, bijoutiers_ppp)[1:5,]  # given two point patterns X and Y,
 
 Fonctions: linearKcross, linearKdot -->
 
-## Rechercher et analyser des concentrations (hot spots)
+## Rechercher et analyser des clusters (hot spots)
 <!-- différence hot spot - cluster ? à creuser... -->
 La recherche de clusters ou de hot spots, soit des zones du réseau où la densité de points est plus forte qu'attendue, suppose de comparer la répartion observée à une répartition homogène où la probabilité de chaque tronçon d'accueillir un sommet serait fonction de sa seule longueur. La fonction `intensity` renvoie ce résultat (nombre moyen de points par unité de longueur). La visualisation de certaines mesures est intégrée par défaut dans le *package* et c'est notamment le cas pour la densité (nombre de points par unité de mesure du réseau).
 

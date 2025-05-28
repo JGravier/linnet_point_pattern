@@ -241,10 +241,10 @@ window.Quarto = {
   <li><a href="#modéliser-la-géographie-du-semis-de-points" id="toc-modéliser-la-géographie-du-semis-de-points" class="nav-link" data-scroll-target="#modéliser-la-géographie-du-semis-de-points">Modéliser la géographie du semis de points</a>
   <ul class="collapse">
   <li><a href="#répartitions-aléatoires-des-points-sur-un-réseau-spatial" id="toc-répartitions-aléatoires-des-points-sur-un-réseau-spatial" class="nav-link" data-scroll-target="#répartitions-aléatoires-des-points-sur-un-réseau-spatial">Répartitions aléatoires des points sur un réseau spatial</a></li>
-  <li><a href="#mesurer-lécart-aux-distributions-aléatoires" id="toc-mesurer-lécart-aux-distributions-aléatoires" class="nav-link" data-scroll-target="#mesurer-lécart-aux-distributions-aléatoires">Mesurer l’écart aux distributions aléatoires</a></li>
+  <li><a href="#mesurer-lécart-des-distributions-observées-aux-distributions-aléatoires" id="toc-mesurer-lécart-des-distributions-observées-aux-distributions-aléatoires" class="nav-link" data-scroll-target="#mesurer-lécart-des-distributions-observées-aux-distributions-aléatoires">Mesurer l’écart des distributions observées aux distributions aléatoires</a></li>
   <li><a href="#répartition-aléatoire-inhomogène" id="toc-répartition-aléatoire-inhomogène" class="nav-link" data-scroll-target="#répartition-aléatoire-inhomogène">Répartition aléatoire inhomogène</a></li>
   <li><a href="#étudier-les-voisinages" id="toc-étudier-les-voisinages" class="nav-link" data-scroll-target="#étudier-les-voisinages">Étudier les voisinages</a></li>
-  <li><a href="#rechercher-et-analyser-des-concentrations-hot-spots" id="toc-rechercher-et-analyser-des-concentrations-hot-spots" class="nav-link" data-scroll-target="#rechercher-et-analyser-des-concentrations-hot-spots">Rechercher et analyser des concentrations (hot spots)</a></li>
+  <li><a href="#rechercher-et-analyser-des-clusters-hot-spots" id="toc-rechercher-et-analyser-des-clusters-hot-spots" class="nav-link" data-scroll-target="#rechercher-et-analyser-des-clusters-hot-spots">Rechercher et analyser des clusters (hot spots)</a></li>
   </ul></li>
   <li><a href="#intérêts-et-limites-du-package" id="toc-intérêts-et-limites-du-package" class="nav-link" data-scroll-target="#intérêts-et-limites-du-package">Intérêts et limites du package</a></li>
   <li><a href="#pour-aller-plus-loin" id="toc-pour-aller-plus-loin" class="nav-link" data-scroll-target="#pour-aller-plus-loin">Pour aller plus loin</a></li>
@@ -272,7 +272,7 @@ window.Quarto = {
 </section>
 <section id="le-package-linnet" class="level1">
 <h1>Le package linnet</h1>
-<p><code>spatstat.linnet</code><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> est un <em>package</em> de la famille de <em>packages</em> <code>spatstat</code> consacré à la statistique spatiale et notamment à l’analyse de semis de points.</p>
+<p><code>spatstat.linnet</code><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> est un <em>package</em> de la famille de <em>packages</em> <code>spatstat</code> consacrés à la statistique spatiale et notamment à l’analyse de semis de points.</p>
 <section id="préparer-ses-données" class="level2">
 <h2 class="anchored" data-anchor-id="préparer-ses-données">Préparer ses données</h2>
 <p>La première étape consiste à créer un objet <code>linnet</code> (<em>linear network</em> ou <span class="math inline">L</span>) à l’aide de deux fichiers : un fichier correspondant aux sommets (intersections et extrémités des liens), un fichier correspondant aux liens entre ces sommets. Le fichier des sommets comprend trois colonnes correspondant à l’identifiant et aux coordonnées de chaque sommet ; le fichier des liens comprend <em>a minima</em> deux colonnes correspondant aux deux extrémités de chaque lien. L’orientation des liens n’est pas prise en compte : un lien <em>a-b</em> implique nécessairement un lien <em>b-a</em>, il n’est donc pas utile d’avoir deux lignes différentes.</p>
@@ -289,27 +289,28 @@ window.Quarto = {
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr) <span class="co"># modification de la forme et de la hiérarchie d'un tableau</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr) <span class="co"># manipulation de données tabulaires (filtrage, création de colonne, etc.)</span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr) <span class="co"># manipulation de chaîne de charactère</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># import des fichiers</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>mini_node <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="at">file =</span> <span class="st">"data/data_mini/mini_node.txt"</span>, </span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>                        <span class="at">header =</span> <span class="cn">TRUE</span>, </span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>                        <span class="at">row.names =</span> <span class="dv">1</span>, </span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>                        <span class="at">sep =</span> <span class="st">","</span>)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>mini_edge <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"data/data_mini/mini_edge.txt"</span>, </span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>                        <span class="at">header =</span> <span class="cn">FALSE</span>, </span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>                        <span class="at">sep =</span> <span class="st">","</span>)</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># transformation en objet ppp et matrice</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>mini_node_ppp <span class="ot">&lt;-</span> <span class="fu">ppp</span>(<span class="at">x =</span> mini_node<span class="sc">$</span>x, </span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> mini_node<span class="sc">$</span>y, </span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>                     <span class="at">xrange =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">10</span>), </span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>                     <span class="at">yrange =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">10</span>))   <span class="co"># coordonnées de la fenêtre d'observation</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>mini_edge_matrix <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(mini_edge, </span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>                              <span class="at">ncol =</span> <span class="dv">2</span>)</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>mini <span class="ot">&lt;-</span> <span class="fu">linnet</span>(<span class="at">vertices =</span> mini_node_ppp, </span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>               <span class="at">edges =</span> mini_edge_matrix)</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(mini)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) <span class="co"># construction et visualisation de graphiques</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># import des fichiers</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>mini_node <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="at">file =</span> <span class="st">"data/data_mini/mini_node.txt"</span>, </span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>                        <span class="at">header =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>                        <span class="at">row.names =</span> <span class="dv">1</span>, </span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>                        <span class="at">sep =</span> <span class="st">","</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>mini_edge <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"data/data_mini/mini_edge.txt"</span>, </span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>                        <span class="at">header =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                        <span class="at">sep =</span> <span class="st">","</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># transformation en objet ppp et matrice</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>mini_node_ppp <span class="ot">&lt;-</span> <span class="fu">ppp</span>(<span class="at">x =</span> mini_node<span class="sc">$</span>x, </span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> mini_node<span class="sc">$</span>y, </span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>                     <span class="at">xrange =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">10</span>), </span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>                     <span class="at">yrange =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">10</span>))   <span class="co"># coordonnées de la fenêtre d'observation</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>mini_edge_matrix <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(mini_edge, </span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>                              <span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>mini <span class="ot">&lt;-</span> <span class="fu">linnet</span>(<span class="at">vertices =</span> mini_node_ppp, </span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>               <span class="at">edges =</span> mini_edge_matrix)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(mini)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "linnet" "list"  </code></pre>
 </div>
@@ -467,11 +468,11 @@ Enclosing window: rectangle = [0, 10] x [0, 10] units</code></pre>
 <p>Le code suivant permet d’importer les données et de les transformer en objet <code>linnet</code>, puis en objet <code>lpp</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import du réseau viaire parisien en 1836</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>paris <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"data/1836_jacoubet.shp"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>paris <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"data/1836_jacoubet.gpkg"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `1836_jacoubet' from data source 
-  `D:\jgravier\Sync\publications\linnet_point_pattern\data\1836_jacoubet.shp' 
-  using driver `ESRI Shapefile'
+  `D:\jgravier\Sync\publications\linnet_point_pattern\data\1836_jacoubet.gpkg' 
+  using driver `GPKG'
 Simple feature collection with 4266 features and 2 fields
 Geometry type: LINESTRING
 Dimension:     XY
@@ -502,7 +503,7 @@ Bounding box:  xmin: 648631.2 ymin: 6860188 xmax: 654177.7 ymax: 6865008
 Projected CRS: +proj=lcc +lat_0=46.5 +lon_0=3 +lat_1=49 +lat_2=44 +x_0=700000 +y_0=6600000 +ellps=GRS80 +units=m +no_defs</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># contrôle visuel des objets importés</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(paris<span class="sc">$</span>geometry)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(paris<span class="sc">$</span>geom)</span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(epiciers<span class="sc">$</span>geom, </span>
 <span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">15</span>, </span>
 <span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">"blue"</span>, </span>
@@ -525,10 +526,10 @@ Projected CRS: +proj=lcc +lat_0=46.5 +lon_0=3 +lat_1=49 +lat_2=44 +x_0=700000 +y
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>epiciers_ppp <span class="ot">&lt;-</span> <span class="fu">as.ppp</span>(<span class="fu">st_geometry</span>(epiciers))</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>bijoutiers_ppp <span class="ot">&lt;-</span> <span class="fu">as.ppp</span>(<span class="fu">st_geometry</span>(bijoutiers))</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>paris <span class="ot">&lt;-</span> <span class="fu">as.psp</span>(<span class="fu">st_geometry</span>(paris))</span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>paris <span class="ot">&lt;-</span> <span class="fu">as.linnet</span>(paris)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>paris_linnet <span class="ot">&lt;-</span> <span class="fu">as.psp</span>(<span class="fu">st_geometry</span>(paris))</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>paris_linnet <span class="ot">&lt;-</span> <span class="fu">as.linnet</span>(paris_linnet)</span>
 <span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(paris)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(paris_linnet)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Linear network with 7237 vertices and 8730 lines
 Total length 461193.7 units
@@ -545,7 +546,7 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <p>La dernière étape consiste à intégrer dans le même objet le réseau linéaire et chacun des semis de points à l’aide de la fonction <code>lpp</code><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. Les semis sont composés de 341 bijoutiers et 1 028 épiciers.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>epiciers_lpp <span class="ot">&lt;-</span> <span class="fu">lpp</span>(<span class="at">X =</span> epiciers_ppp, </span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">L =</span> paris)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">L =</span> paris_linnet)</span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(epiciers_lpp)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Point pattern on linear network
@@ -557,7 +558,7 @@ Unmarked
 Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>bijoutiers_lpp <span class="ot">&lt;-</span> <span class="fu">lpp</span>(<span class="at">X =</span> bijoutiers_ppp, </span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">L =</span> paris)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">L =</span> paris_linnet)</span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(bijoutiers_lpp)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Point pattern on linear network
@@ -574,28 +575,24 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 </section>
 <section id="modéliser-la-géographie-du-semis-de-points" class="level1">
 <h1>Modéliser la géographie du semis de points</h1>
+<p>La modélisation du semis de points implique conceptuellement de distinguer le motif ponctuel (<em>point pattern</em>) et le processus ponctuel (<em>point process</em>), ce dernier renvoyant au processus aléatoire qui permet de générer un semis de points. Dans le cas de <code>linnet</code>, il est possible de générer différents processus aléatoires sur un réseau. Il devient donc possible de comparer la répartition spatiale du semis étudié par rapport à une situation aléatoire afin de mieux caractériser les processus potentiels ayant pu mener à la situation observée.</p>
 <section id="répartitions-aléatoires-des-points-sur-un-réseau-spatial" class="level2">
 <h2 class="anchored" data-anchor-id="répartitions-aléatoires-des-points-sur-un-réseau-spatial">Répartitions aléatoires des points sur un réseau spatial</h2>
-<p>Il est possible de comparer la répartition du semis de points étudié par rapport à une situation aléatoire sur un réseau. Plusieurs processus aléatoires déterminant à la fois le nombre et la distribution spatiale des points peuvent être simulés dans <code>linnet</code>. Dans le premier cas (fonction <code>runiflpp()</code>), le semis de points est généré de façon aléatoire et la position des points est fonction de la seule longueur des voies du réseau : plus un tronçon est long, plus il est probable qu’il accueille un ou plusieurs points. Cette hypothèse n’est pas toujours la plus pertinente : si on prend l’exemple des accidents de voiture, on peut supposer qu’ils sont plus fréquents à mesure que le trafic augmente (et non la seule longueur des routes). Les deux options suivantes (<code>rpoislpp()</code> et <code>rlpp()</code>) permettent de générer un semis de points aléatoire lié à une intensité variable sur le réseau. <!-- j'espère que j'écris pas de bêtises, la différence entre rpois et rl n'est pas encore très nette pour moi --></p>
+<p>Plusieurs processus aléatoires déterminant à la fois le nombre et la distribution spatiale des points peuvent être simulés dans <code>linnet</code>. Dans le premier cas (fonction <code>runiflpp()</code>), le semis de points est généré de façon aléatoire et la position des points est fonction de la structure du réseau, en l’occurrence la longueur des tronçons : plus un tronçon est long, plus il est probable qu’il accueille un ou plusieurs points. Cette hypothèse n’est pas toujours la plus pertinente. Si on prend l’exemple des accidents de voiture, on peut supposer qu’ils sont plus fréquents à mesure que le trafic augmente (et non par la seule longueur des routes). Les deux options suivantes (<code>rpoislpp()</code> et <code>rlpp()</code>) permettent de générer un semis de points aléatoire lié à une intensité variable sur le réseau.</p>
 <p>Pour résumer, on peut simuler les trois semis suivants :</p>
 <ul>
-<li>Un processus aléatoire uniforme avec <code>runiflpp()</code>. La fonction génère <span class="math inline">n</span> points aléatoires, indépendamment et uniformément distribués, sur le réseau <span class="math inline">L</span>. La probabilité de tirer un tronçon <span class="math inline">Ls</span> du réseau dépend de sa longueur dans <span class="math inline">L</span>. Le point est généré selon une probabilité uniforme le long de <span class="math inline">Ls</span>.</li>
+<li>Un processus aléatoire uniforme avec <code>runiflpp()</code>. La fonction génère <span class="math inline">n</span> points aléatoires, indépendamment et uniformément distribués, sur le réseau <span class="math inline">L</span>. La probabilité de tirer un tronçon <span class="math inline">Ls</span> du réseau dépend de sa longueur dans <span class="math inline">L</span>. Le point est ensuite généré selon une probabilité uniforme le long de <span class="math inline">Ls</span>.</li>
 <li>Un processus poissonien avec la fonction <code>rpoislpp()</code>. Elle génère une réalisation du processus de Poisson avec une intensité spécifiée (paramètre <code>lambda</code>) sur le réseau <span class="math inline">L</span>.</li>
 <li>Un processus aléatoire grâce à <code>rlpp()</code>, qui génère <span class="math inline">n</span> points aléatoires sur le réseau <span class="math inline">L</span> avec une densité de probabilité spécifiée (paramètre <code>f</code>). Cette dernière ne doit pas nécessairement être normalisée.</li>
 </ul>
 <p>Quelle que soit la fonction utilisée, il est possible de spécifier le nombre de simulations souhaitées grâce au paramètre <code>nsim</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># génération d'une simulation selon un processus de Poisson avec une intensité uniforme égale à la densité moyenne</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rpoislpp</span>(<span class="at">lambda =</span> <span class="fu">intensity</span>(bijoutiers_lpp), <span class="at">L =</span> paris, <span class="at">nsim =</span> <span class="dv">1</span>) <span class="co"># le nombre de points est variable</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Point pattern on linear network
-340 points
-Linear network with 7237 vertices and 8730 lines
-Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># visualisation d'une simulation</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> <span class="fu">rpoislpp</span>(<span class="at">lambda =</span> <span class="fu">intensity</span>(bijoutiers_lpp), <span class="at">L =</span> paris, <span class="at">nsim =</span> <span class="dv">1</span>),</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">15</span>, <span class="at">main =</span> <span class="cn">NULL</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># visualisation de la génération d'une simulation selon un processus de Poisson</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="co"># avec une intensité uniforme égale à la densité moyenne</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> <span class="fu">rpoislpp</span>(<span class="at">lambda =</span> <span class="fu">intensity</span>(bijoutiers_lpp), <span class="co"># le nombre de points est variable</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">L =</span> paris_linnet, </span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">nsim =</span> <span class="dv">1</span>),</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">15</span>, <span class="at">main =</span> <span class="cn">NULL</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -606,77 +603,76 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 </div>
 <p>Dans les cas de <code>rpoislpp()</code> et de <code>runiflpp()</code>, le paramètre <code>ex</code> permet d’intégrer un objet <code>lpp</code> afin de déterminer <span class="math inline">L</span>, ainsi que <span class="math inline">\lambda</span> et <span class="math inline">n</span>. La valeur par défaut de <span class="math inline">\lambda</span> est alors la densité moyenne des points du <code>lpp</code>, ou <span class="math inline">n</span> le nombre de points de l’objet <code>lpp</code>.</p>
 </section>
-<section id="mesurer-lécart-aux-distributions-aléatoires" class="level2">
-<h2 class="anchored" data-anchor-id="mesurer-lécart-aux-distributions-aléatoires">Mesurer l’écart aux distributions aléatoires</h2>
+<section id="mesurer-lécart-des-distributions-observées-aux-distributions-aléatoires" class="level2">
+<h2 class="anchored" data-anchor-id="mesurer-lécart-des-distributions-observées-aux-distributions-aléatoires">Mesurer l’écart des distributions observées aux distributions aléatoires</h2>
+<p>Au même titre que dans le cadre d’analyse de semis de points dans un espace</p>
 <!-- à écrire -->
 <p>Cas des bijoutiers, distances points aléatoires VS distances observées. Ici : proposition d’une boucle et de l’utilisation des packages de la famille du <code>tydiverse</code> à visée pédagogique, mais mieux de faire une fonction pour paralléliser le calcul matriciel si l’on a un nombre de simulations élevés (e.g.&nbsp;100) et un semis initial et un réseau plus important, et d’utiliser plutôt des packages comme <code>dtplyr</code> ou directement <code>data.table</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># génération de 10 simulations</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>bijoutiers_10sim <span class="ot">&lt;-</span> <span class="fu">runiflpp</span>(<span class="at">ex =</span> bijoutiers_lpp, <span class="at">nsim =</span> <span class="dv">10</span>)</span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="co"># calcul des distances entre les points simulés aléatoirement sur le réseau</span></span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>list_simulated_dist <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
-<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(bijoutiers_10sim)) {</span>
-<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># calculs des plus courts chemins sur réseau</span></span>
-<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>    dist_pi_p <span class="ot">&lt;-</span> spatstat.geom<span class="sc">::</span><span class="fu">pairdist</span>(<span class="at">X =</span> bijoutiers_10sim[[i]])</span>
-<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>    dist_pi_p[<span class="fu">upper.tri</span>(<span class="at">x =</span> dist_pi_p, <span class="at">diag =</span> <span class="cn">TRUE</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>    dist_pi_p <span class="ot">&lt;-</span> dist_pi_p <span class="sc">%&gt;%</span></span>
-<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>      tibble<span class="sc">::</span><span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>      tibble<span class="sc">::</span><span class="fu">rowid_to_column</span>(<span class="at">var =</span> <span class="st">"Pi"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>      tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>Pi, <span class="at">names_to =</span> <span class="st">"P"</span>, <span class="at">values_to =</span> <span class="st">"dist_pi_p"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(dist_pi_p)) <span class="sc">%&gt;%</span></span>
-<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">P =</span> stringr<span class="sc">::</span><span class="fu">str_replace_all</span>(<span class="at">string =</span> P, <span class="at">pattern =</span> <span class="st">"V"</span>, <span class="at">replacement =</span> <span class="st">""</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">type =</span> <span class="st">"simulation"</span>, <span class="at">n_sim =</span> i)</span>
-<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a>   list_simulated_dist[[i]] <span class="ot">&lt;-</span> dist_pi_p   </span>
-<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a><span class="co"># création d'un unique tableau et non d'une liste de tableaux</span></span>
-<span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a>table_simulated_dist <span class="ot">&lt;-</span> <span class="fu">do.call</span>(<span class="at">what =</span> <span class="st">"rbind"</span>, <span class="at">args =</span> list_simulated_dist)</span>
-<span id="cb39-25"><a href="#cb39-25" aria-hidden="true" tabindex="-1"></a>table_simulated_dist</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># génération de 10 simulations</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>bijoutiers_10sim <span class="ot">&lt;-</span> <span class="fu">runiflpp</span>(<span class="at">ex =</span> bijoutiers_lpp, <span class="at">nsim =</span> <span class="dv">10</span>)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="co"># calcul des distances entre les points simulés aléatoirement sur le réseau</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>list_simulated_dist <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(bijoutiers_10sim)) {</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># calculs des plus courts chemins sur réseau</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>    dist_pi_p <span class="ot">&lt;-</span> spatstat.geom<span class="sc">::</span><span class="fu">pairdist</span>(<span class="at">X =</span> bijoutiers_10sim[[i]])</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>    dist_pi_p[<span class="fu">upper.tri</span>(<span class="at">x =</span> dist_pi_p, <span class="at">diag =</span> <span class="cn">TRUE</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>    dist_pi_p <span class="ot">&lt;-</span> dist_pi_p <span class="sc">%&gt;%</span></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>      tibble<span class="sc">::</span><span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>      tibble<span class="sc">::</span><span class="fu">rowid_to_column</span>(<span class="at">var =</span> <span class="st">"Pi"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>      tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>Pi, <span class="at">names_to =</span> <span class="st">"P"</span>, <span class="at">values_to =</span> <span class="st">"dist_pi_p"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(dist_pi_p)) <span class="sc">%&gt;%</span></span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">P =</span> stringr<span class="sc">::</span><span class="fu">str_replace_all</span>(<span class="at">string =</span> P, <span class="at">pattern =</span> <span class="st">"V"</span>, <span class="at">replacement =</span> <span class="st">""</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">type =</span> <span class="st">"simulation"</span>, <span class="at">n_sim =</span> i)</span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>   list_simulated_dist[[i]] <span class="ot">&lt;-</span> dist_pi_p   </span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a><span class="co"># création d'un unique tableau et non d'une liste de tableaux</span></span>
+<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a>table_simulated_dist <span class="ot">&lt;-</span> <span class="fu">do.call</span>(<span class="at">what =</span> <span class="st">"rbind"</span>, <span class="at">args =</span> list_simulated_dist)</span>
+<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a>table_simulated_dist</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 579,700 × 5
       Pi P     dist_pi_p type       n_sim
    &lt;int&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;      &lt;int&gt;
- 1     2 1         5693. simulation     1
- 2     3 1         2525. simulation     1
- 3     3 2         7886. simulation     1
- 4     4 1         4411. simulation     1
- 5     4 2         1625. simulation     1
- 6     4 3         6430. simulation     1
- 7     5 1         2284. simulation     1
- 8     5 2         3604. simulation     1
- 9     5 3         4426. simulation     1
-10     5 4         2323. simulation     1
+ 1     2 1         2944. simulation     1
+ 2     3 1         1480. simulation     1
+ 3     3 2         3283. simulation     1
+ 4     4 1         2882. simulation     1
+ 5     4 2         4781. simulation     1
+ 6     4 3         1498. simulation     1
+ 7     5 1         1795. simulation     1
+ 8     5 2         1471. simulation     1
+ 9     5 3         2555. simulation     1
+10     5 4         4052. simulation     1
 # ℹ 579,690 more rows</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calcul des distances entre les points observés des bijoutiers en 1839</span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>dist_bijoutiers <span class="ot">&lt;-</span> spatstat.geom<span class="sc">::</span><span class="fu">pairdist</span>(<span class="at">X =</span> bijoutiers_lpp)</span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>dist_bijoutiers[<span class="fu">upper.tri</span>(<span class="at">x =</span> dist_bijoutiers, <span class="at">diag =</span> <span class="cn">TRUE</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>dist_bijoutiers <span class="ot">&lt;-</span> dist_bijoutiers <span class="sc">%&gt;%</span></span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowid_to_column</span>(<span class="at">var =</span> <span class="st">"Pi"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>Pi, <span class="at">names_to =</span> <span class="st">"P"</span>, <span class="at">values_to =</span> <span class="st">"dist_pi_p"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(dist_pi_p)) <span class="sc">%&gt;%</span></span>
-<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">P =</span> stringr<span class="sc">::</span><span class="fu">str_replace_all</span>(<span class="at">string =</span> P, <span class="at">pattern =</span> <span class="st">"V"</span>, <span class="at">replacement =</span> <span class="st">""</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">type =</span> <span class="st">"observation"</span>, <span class="at">n_sim =</span> <span class="cn">NA</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calcul des distances entre les points observés des bijoutiers en 1839</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>dist_bijoutiers <span class="ot">&lt;-</span> spatstat.geom<span class="sc">::</span><span class="fu">pairdist</span>(<span class="at">X =</span> bijoutiers_lpp)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>dist_bijoutiers[<span class="fu">upper.tri</span>(<span class="at">x =</span> dist_bijoutiers, <span class="at">diag =</span> <span class="cn">TRUE</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>dist_bijoutiers <span class="ot">&lt;-</span> dist_bijoutiers <span class="sc">%&gt;%</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowid_to_column</span>(<span class="at">var =</span> <span class="st">"Pi"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>Pi, <span class="at">names_to =</span> <span class="st">"P"</span>, <span class="at">values_to =</span> <span class="st">"dist_pi_p"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(dist_pi_p)) <span class="sc">%&gt;%</span></span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">P =</span> stringr<span class="sc">::</span><span class="fu">str_replace_all</span>(<span class="at">string =</span> P, <span class="at">pattern =</span> <span class="st">"V"</span>, <span class="at">replacement =</span> <span class="st">""</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">type =</span> <span class="st">"observation"</span>, <span class="at">n_sim =</span> <span class="cn">NA</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Comparaison visuelle <!-- à commenter --></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>bijoutiers_ecart <span class="ot">&lt;-</span> table_simulated_dist <span class="sc">%&gt;%</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">bind_rows</span>(dist_bijoutiers)</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>bijoutiers_ecart <span class="sc">%&gt;%</span></span>
-<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> dist_pi_p, <span class="at">color =</span> type)) <span class="sc">+</span></span>
-<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>bijoutiers_ecart <span class="ot">&lt;-</span> table_simulated_dist <span class="sc">%&gt;%</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">bind_rows</span>(dist_bijoutiers)</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>bijoutiers_ecart <span class="sc">%&gt;%</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> dist_pi_p, <span class="at">color =</span> type)) <span class="sc">+</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -700,7 +696,7 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 <h2 class="anchored" data-anchor-id="répartition-aléatoire-inhomogène">Répartition aléatoire inhomogène</h2>
 <p>Mesurer l’écart à une répartition aléatoire inhomogène selon l’inverse de la distance au centre. <!-- expliciter choix du centre : signification --></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>center <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/halles.gpkg"</span>)  <span class="co"># Les Halles considérées comme centre économique</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>center <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/halles.gpkg"</span>)  <span class="co"># Les Halles considérées comme centre économique</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `notre-dame' from data source 
   `D:\jgravier\Sync\publications\linnet_point_pattern\data\halles.gpkg' 
@@ -711,15 +707,15 @@ Dimension:     XY
 Bounding box:  xmin: 651980.5 ymin: 6862655 xmax: 651980.5 ymax: 6862655
 Projected CRS: RGF93 v1 / Lambert-93</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>center_ppp <span class="ot">&lt;-</span> <span class="fu">as.ppp</span>(<span class="fu">st_geometry</span>(center))    <span class="co"># semis de points</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>center_lpp <span class="ot">&lt;-</span> <span class="fu">lpp</span>(<span class="at">X =</span> center_ppp, <span class="at">L =</span> paris) <span class="co"># semis de points sur le réseau</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>center_ppp <span class="ot">&lt;-</span> <span class="fu">as.ppp</span>(<span class="fu">st_geometry</span>(center))    <span class="co"># semis de points</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>center_lpp <span class="ot">&lt;-</span> <span class="fu">lpp</span>(<span class="at">X =</span> center_ppp, <span class="at">L =</span> paris_linnet) <span class="co"># semis de points sur le réseau</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <!-- expliciter import de la fonction (vérifier encore une fois inexistance inverse de la distance) -->
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import fonction</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="at">file =</span> <span class="st">"local-functions.R"</span>) <span class="co"># adaptation de spatstat.linnet::distfun.lpp()</span></span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>f_dist2_center <span class="ot">&lt;-</span> <span class="fu">distfun.inverse.lpp</span>(<span class="at">X =</span> center_lpp) <span class="co"># création de la fonction d'intensité</span></span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>f_dist2_center</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import fonction</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="at">file =</span> <span class="st">"local-functions.R"</span>) <span class="co"># adaptation de spatstat.linnet::distfun.lpp()</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>f_dist2_center <span class="ot">&lt;-</span> <span class="fu">distfun.inverse.lpp</span>(<span class="at">X =</span> center_lpp) <span class="co"># création de la fonction d'intensité</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>f_dist2_center</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Function on linear network:
 function (x, y = NULL, seg = NULL, tp = NULL, ...) 
@@ -729,8 +725,8 @@ function (x, y = NULL, seg = NULL, tp = NULL, ...)
     d &lt;- 1/d
     return(d)
 }
-&lt;bytecode: 0x000001c2cff5ee38&gt;
-&lt;environment: 0x000001c2dba4aee0&gt;
+&lt;bytecode: 0x0000026111356e70&gt;
+&lt;environment: 0x000002610d70e008&gt;
 Function domain:
 Linear network with 7237 vertices and 8730 lines
 Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</code></pre>
@@ -738,21 +734,21 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 </div>
 <p>Répartition aléatoire inhomogène selon l’inverse de la distance au centre, i.e.&nbsp;plus on s’éloigne, plus la probabilité qu’un point soit simulé sur un tronçon diminue. <!-- à commenter --></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># simulation aléatoire de Poisson</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>dist2_center_bijoutiers <span class="ot">&lt;-</span> <span class="fu">rpoislpp</span>(<span class="at">lambda =</span> f_dist2_center, <span class="co"># fonction d'intensité</span></span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">L =</span> paris,               <span class="co"># réseau</span></span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">lmax =</span> <span class="fl">0.05</span>,</span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">nsim =</span> <span class="dv">1</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># simulation aléatoire de Poisson</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>dist2_center_bijoutiers <span class="ot">&lt;-</span> <span class="fu">rpoislpp</span>(<span class="at">lambda =</span> f_dist2_center, <span class="co"># fonction d'intensité</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">L =</span> paris_linnet,               <span class="co"># réseau</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">lmax =</span> <span class="fl">0.05</span>,</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">nsim =</span> <span class="dv">1</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Il est important de spécifier <code>lmax</code> si possible afin de diminuer le temps de calcul<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>lmax_known <span class="ot">&lt;-</span> <span class="fu">as.linim</span>(f_dist2_center)</span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>tab_lmax <span class="ot">&lt;-</span> <span class="fu">attr</span>(<span class="at">x =</span> lmax_known, <span class="at">which =</span> <span class="st">"df"</span>)</span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(tab_lmax<span class="sc">$</span>values)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>lmax_known <span class="ot">&lt;-</span> <span class="fu">as.linim</span>(f_dist2_center)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>tab_lmax <span class="ot">&lt;-</span> <span class="fu">attr</span>(<span class="at">x =</span> lmax_known, <span class="at">which =</span> <span class="st">"df"</span>)</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(tab_lmax<span class="sc">$</span>values)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Visualisation</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dist2_center_bijoutiers, <span class="at">pch =</span> <span class="dv">15</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dist2_center_bijoutiers, <span class="at">pch =</span> <span class="dv">15</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -763,75 +759,54 @@ Enclosing window: rectangle = [647640.1, 656138.1] x [6859014, 6865167] units</c
 </div>
 <p>Calcul des distances entre les points simulés et le centre. Deux lpp avec <code>crossdist.lpp()</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># génération de 10 simulations (Poisson)</span></span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>bijoutiers_10sim <span class="ot">&lt;-</span> <span class="fu">rpoislpp</span>(<span class="at">lambda =</span> f_dist2_center, <span class="co"># fonction d'intensité</span></span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">L =</span> paris, <span class="co"># réseau</span></span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">lmax =</span> <span class="fl">0.05</span>, <span class="co"># cf. plus bas</span></span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">nsim =</span> <span class="dv">10</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in datagen.rpoisppOnLines(lambda, S, ...): lmax is not an upper bound
-for lambda
-Warning in datagen.rpoisppOnLines(lambda, S, ...): lmax is not an upper bound
-for lambda
-Warning in datagen.rpoisppOnLines(lambda, S, ...): lmax is not an upper bound
-for lambda
-Warning in datagen.rpoisppOnLines(lambda, S, ...): lmax is not an upper bound
-for lambda
-Warning in datagen.rpoisppOnLines(lambda, S, ...): lmax is not an upper bound
-for lambda
-Warning in datagen.rpoisppOnLines(lambda, S, ...): lmax is not an upper bound
-for lambda
-Warning in datagen.rpoisppOnLines(lambda, S, ...): lmax is not an upper bound
-for lambda
-Warning in datagen.rpoisppOnLines(lambda, S, ...): lmax is not an upper bound
-for lambda
-Warning in datagen.rpoisppOnLines(lambda, S, ...): lmax is not an upper bound
-for lambda
-Warning in datagen.rpoisppOnLines(lambda, S, ...): lmax is not an upper bound
-for lambda</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>list_simulated_dist <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(bijoutiers_10sim)) {</span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  dist_pi_p <span class="ot">&lt;-</span> <span class="fu">crossdist.lpp</span>(<span class="at">X =</span> bijoutiers_10sim[[i]], <span class="at">Y =</span> center_lpp) <span class="co"># distances au plus court chemin entre deux lpp</span></span>
-<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>  dist_pi_p[<span class="fu">upper.tri</span>(<span class="at">x =</span> dist_pi_p, <span class="at">diag =</span> <span class="cn">TRUE</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>  dist_pi_p <span class="ot">&lt;-</span> dist_pi_p <span class="sc">%&gt;%</span></span>
-<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>    tibble<span class="sc">::</span><span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>    tibble<span class="sc">::</span><span class="fu">rowid_to_column</span>(<span class="at">var =</span> <span class="st">"Pi"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>    tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>Pi, <span class="at">names_to =</span> <span class="st">"P"</span>, <span class="at">values_to =</span> <span class="st">"dist_pi_p"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(dist_pi_p)) <span class="sc">%&gt;%</span></span>
-<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">P =</span> stringr<span class="sc">::</span><span class="fu">str_replace_all</span>(<span class="at">string =</span> P, <span class="at">pattern =</span> <span class="st">"V"</span>, <span class="at">replacement =</span> <span class="st">""</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">type =</span> <span class="st">"simulation"</span>, <span class="at">n_sim =</span> i)</span>
-<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a>  list_simulated_dist[[i]] <span class="ot">&lt;-</span> dist_pi_p   </span>
-<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb53-17"><a href="#cb53-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-18"><a href="#cb53-18" aria-hidden="true" tabindex="-1"></a>table_simulated_dist <span class="ot">&lt;-</span> <span class="fu">do.call</span>(<span class="at">what =</span> <span class="st">"rbind"</span>, <span class="at">args =</span> list_simulated_dist)</span>
-<span id="cb53-19"><a href="#cb53-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-20"><a href="#cb53-20" aria-hidden="true" tabindex="-1"></a><span class="co"># calcul des distances entre les points observés des bijoutiers et le centre</span></span>
-<span id="cb53-21"><a href="#cb53-21" aria-hidden="true" tabindex="-1"></a>dist_bijoutiers <span class="ot">&lt;-</span> <span class="fu">crossdist.lpp</span>(<span class="at">X =</span> bijoutiers_lpp, <span class="at">Y =</span> center_lpp)</span>
-<span id="cb53-22"><a href="#cb53-22" aria-hidden="true" tabindex="-1"></a>dist_bijoutiers[<span class="fu">upper.tri</span>(<span class="at">x =</span> dist_bijoutiers, <span class="at">diag =</span> <span class="cn">TRUE</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb53-23"><a href="#cb53-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-24"><a href="#cb53-24" aria-hidden="true" tabindex="-1"></a>dist_bijoutiers <span class="ot">&lt;-</span> dist_bijoutiers <span class="sc">%&gt;%</span></span>
-<span id="cb53-25"><a href="#cb53-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb53-26"><a href="#cb53-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowid_to_column</span>(<span class="at">var =</span> <span class="st">"Pi"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb53-27"><a href="#cb53-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>Pi, <span class="at">names_to =</span> <span class="st">"P"</span>, <span class="at">values_to =</span> <span class="st">"dist_pi_p"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb53-28"><a href="#cb53-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(dist_pi_p)) <span class="sc">%&gt;%</span></span>
-<span id="cb53-29"><a href="#cb53-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">P =</span> stringr<span class="sc">::</span><span class="fu">str_replace_all</span>(<span class="at">string =</span> P, <span class="at">pattern =</span> <span class="st">"V"</span>, <span class="at">replacement =</span> <span class="st">""</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb53-30"><a href="#cb53-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">type =</span> <span class="st">"observation"</span>, <span class="at">n_sim =</span> <span class="cn">NA</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># génération de 10 simulations (Poisson)</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>bijoutiers_10sim <span class="ot">&lt;-</span> <span class="fu">rpoislpp</span>(<span class="at">lambda =</span> f_dist2_center, <span class="co"># fonction d'intensité</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">L =</span> paris_linnet, <span class="co"># réseau</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">lmax =</span> <span class="fl">0.05</span>, <span class="co"># cf. plus bas</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">nsim =</span> <span class="dv">10</span>)</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>list_simulated_dist <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(bijoutiers_10sim)) {</span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>  dist_pi_p <span class="ot">&lt;-</span> <span class="fu">crossdist.lpp</span>(<span class="at">X =</span> bijoutiers_10sim[[i]], <span class="at">Y =</span> center_lpp) <span class="co"># distances au plus court chemin entre deux lpp</span></span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>  dist_pi_p[<span class="fu">upper.tri</span>(<span class="at">x =</span> dist_pi_p, <span class="at">diag =</span> <span class="cn">TRUE</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a>  dist_pi_p <span class="ot">&lt;-</span> dist_pi_p <span class="sc">%&gt;%</span></span>
+<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a>    tibble<span class="sc">::</span><span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a>    tibble<span class="sc">::</span><span class="fu">rowid_to_column</span>(<span class="at">var =</span> <span class="st">"Pi"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb49-16"><a href="#cb49-16" aria-hidden="true" tabindex="-1"></a>    tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>Pi, <span class="at">names_to =</span> <span class="st">"P"</span>, <span class="at">values_to =</span> <span class="st">"dist_pi_p"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb49-17"><a href="#cb49-17" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(dist_pi_p)) <span class="sc">%&gt;%</span></span>
+<span id="cb49-18"><a href="#cb49-18" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">P =</span> stringr<span class="sc">::</span><span class="fu">str_replace_all</span>(<span class="at">string =</span> P, <span class="at">pattern =</span> <span class="st">"V"</span>, <span class="at">replacement =</span> <span class="st">""</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb49-19"><a href="#cb49-19" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">type =</span> <span class="st">"simulation"</span>, <span class="at">n_sim =</span> i)</span>
+<span id="cb49-20"><a href="#cb49-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb49-21"><a href="#cb49-21" aria-hidden="true" tabindex="-1"></a>  list_simulated_dist[[i]] <span class="ot">&lt;-</span> dist_pi_p   </span>
+<span id="cb49-22"><a href="#cb49-22" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb49-23"><a href="#cb49-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-24"><a href="#cb49-24" aria-hidden="true" tabindex="-1"></a>table_simulated_dist <span class="ot">&lt;-</span> <span class="fu">do.call</span>(<span class="at">what =</span> <span class="st">"rbind"</span>, <span class="at">args =</span> list_simulated_dist)</span>
+<span id="cb49-25"><a href="#cb49-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-26"><a href="#cb49-26" aria-hidden="true" tabindex="-1"></a><span class="co"># calcul des distances entre les points observés des bijoutiers et le centre</span></span>
+<span id="cb49-27"><a href="#cb49-27" aria-hidden="true" tabindex="-1"></a>dist_bijoutiers <span class="ot">&lt;-</span> <span class="fu">crossdist.lpp</span>(<span class="at">X =</span> bijoutiers_lpp, <span class="at">Y =</span> center_lpp)</span>
+<span id="cb49-28"><a href="#cb49-28" aria-hidden="true" tabindex="-1"></a>dist_bijoutiers[<span class="fu">upper.tri</span>(<span class="at">x =</span> dist_bijoutiers, <span class="at">diag =</span> <span class="cn">TRUE</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb49-29"><a href="#cb49-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-30"><a href="#cb49-30" aria-hidden="true" tabindex="-1"></a>dist_bijoutiers <span class="ot">&lt;-</span> dist_bijoutiers <span class="sc">%&gt;%</span></span>
+<span id="cb49-31"><a href="#cb49-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb49-32"><a href="#cb49-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowid_to_column</span>(<span class="at">var =</span> <span class="st">"Pi"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb49-33"><a href="#cb49-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>Pi, <span class="at">names_to =</span> <span class="st">"P"</span>, <span class="at">values_to =</span> <span class="st">"dist_pi_p"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb49-34"><a href="#cb49-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(dist_pi_p)) <span class="sc">%&gt;%</span></span>
+<span id="cb49-35"><a href="#cb49-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">P =</span> stringr<span class="sc">::</span><span class="fu">str_replace_all</span>(<span class="at">string =</span> P, <span class="at">pattern =</span> <span class="st">"V"</span>, <span class="at">replacement =</span> <span class="st">""</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb49-36"><a href="#cb49-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">type =</span> <span class="st">"observation"</span>, <span class="at">n_sim =</span> <span class="cn">NA</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Visualisation</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>bijoutiers_ecart <span class="ot">&lt;-</span> table_simulated_dist <span class="sc">%&gt;%</span></span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">bind_rows</span>(dist_bijoutiers)</span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>bijoutiers_ecart <span class="sc">%&gt;%</span></span>
-<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> dist_pi_p, <span class="at">color =</span> type)) <span class="sc">+</span></span>
-<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"distance en mètres"</span>) <span class="sc">+</span></span>
-<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"KDE"</span>) <span class="sc">+</span></span>
-<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>bijoutiers_ecart <span class="ot">&lt;-</span> table_simulated_dist <span class="sc">%&gt;%</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">bind_rows</span>(dist_bijoutiers)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>bijoutiers_ecart <span class="sc">%&gt;%</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> dist_pi_p, <span class="at">color =</span> type)) <span class="sc">+</span></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"distance en mètres"</span>) <span class="sc">+</span></span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"KDE"</span>) <span class="sc">+</span></span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -849,6 +824,48 @@ for lambda</code></pre>
 <p>Fonctions:</p>
 <p>linearK (plus court chemin) et linearKinhom (pcc et non homogène)</p>
 <p>linearKEuclid (distance euclidienne), linearKEuclidInhom (distance euclidienne et non homogène)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>kth_neighbour <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">20</span>, <span class="dv">1</span>)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>nndist <span class="ot">&lt;-</span> <span class="fu">tibble</span>()</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> kth_neighbour) {</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  compute_nndist_bij <span class="ot">&lt;-</span> <span class="fu">nndist.lpp</span>(<span class="at">X =</span> bijoutiers_lpp, <span class="at">k =</span> i)</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  compute_nndist_epi <span class="ot">&lt;-</span> <span class="fu">nndist.lpp</span>(<span class="at">X =</span> epiciers_lpp, <span class="at">k =</span> i)</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>  nndist <span class="ot">&lt;-</span> nndist <span class="sc">%&gt;%</span></span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_rows</span>(<span class="fu">tibble</span>(<span class="at">type =</span> <span class="st">"bijoutiers"</span>, </span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>                       <span class="at">ppv =</span> i,</span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a>                       <span class="at">dist =</span> compute_nndist_bij)) <span class="sc">%&gt;%</span></span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_rows</span>(<span class="fu">tibble</span>(<span class="at">type =</span> <span class="st">"épiciers"</span>, </span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a>                       <span class="at">ppv =</span> i,</span>
+<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a>                       <span class="at">dist =</span> compute_nndist_epi))</span>
+<span id="cb51-15"><a href="#cb51-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb51-16"><a href="#cb51-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-17"><a href="#cb51-17" aria-hidden="true" tabindex="-1"></a>nndist_summary <span class="ot">&lt;-</span> nndist <span class="sc">%&gt;%</span></span>
+<span id="cb51-18"><a href="#cb51-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(type, ppv) <span class="sc">%&gt;%</span></span>
+<span id="cb51-19"><a href="#cb51-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean =</span> <span class="fu">mean</span>(dist), <span class="at">sd =</span> <span class="fu">sd</span>(dist))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'type'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>nndist_summary <span class="sc">%&gt;%</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> ppv, <span class="at">y =</span> mean, <span class="at">color =</span> type)) <span class="sc">+</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> mean <span class="sc">-</span> sd, <span class="at">ymax =</span> mean <span class="sc">+</span> sd), </span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">alpha =</span> <span class="fl">0.4</span>,</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="fl">0.05</span>)) <span class="sc">+</span></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Plus proche voisin"</span>) <span class="sc">+</span></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Distance moyenne (en m.)"</span>) <span class="sc">+</span></span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-23-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
 <!-- ## Analyser la relation entre deux semis de points - on vire
 
 A évoquer dans la conclusion générale
@@ -900,38 +917,38 @@ nncross(epiciers_ppp, bijoutiers_ppp)[1:5,]  # given two point patterns X and Y,
 
 Fonctions: linearKcross, linearKdot -->
 </section>
-<section id="rechercher-et-analyser-des-concentrations-hot-spots" class="level2">
-<h2 class="anchored" data-anchor-id="rechercher-et-analyser-des-concentrations-hot-spots">Rechercher et analyser des concentrations (hot spots)</h2>
+<section id="rechercher-et-analyser-des-clusters-hot-spots" class="level2">
+<h2 class="anchored" data-anchor-id="rechercher-et-analyser-des-clusters-hot-spots">Rechercher et analyser des clusters (hot spots)</h2>
 <!-- différence hot spot - cluster ? à creuser... -->
 <p>La recherche de clusters ou de hot spots, soit des zones du réseau où la densité de points est plus forte qu’attendue, suppose de comparer la répartion observée à une répartition homogène où la probabilité de chaque tronçon d’accueillir un sommet serait fonction de sa seule longueur. La fonction <code>intensity</code> renvoie ce résultat (nombre moyen de points par unité de longueur). La visualisation de certaines mesures est intégrée par défaut dans le <em>package</em> et c’est notamment le cas pour la densité (nombre de points par unité de mesure du réseau).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calcul de la densité de points par unité de réseau</span></span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="co"># l'option finespacing n'est pas nécessaire pour un réseau de petite taille</span></span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>densite_bij <span class="ot">&lt;-</span> <span class="fu">density.lpp</span>(<span class="at">x =</span> bijoutiers_lpp, </span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">finespacing =</span> <span class="cn">FALSE</span>, </span>
-<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">distance =</span> <span class="st">"path"</span>)</span>
-<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>densite_epic <span class="ot">&lt;-</span> <span class="fu">density.lpp</span>(epiciers_lpp, </span>
-<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>                            <span class="at">finespacing =</span> <span class="cn">FALSE</span>, </span>
-<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>                            <span class="at">distance =</span> <span class="st">"path"</span>)</span>
-<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a><span class="co"># option couleur (par défaut)</span></span>
-<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(densite_epic)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calcul de la densité de points par unité de réseau</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="co"># l'option finespacing n'est pas nécessaire pour un réseau de petite taille</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>densite_bij <span class="ot">&lt;-</span> <span class="fu">density.lpp</span>(<span class="at">x =</span> bijoutiers_lpp, </span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">finespacing =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">distance =</span> <span class="st">"path"</span>)</span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>densite_epic <span class="ot">&lt;-</span> <span class="fu">density.lpp</span>(epiciers_lpp, </span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>                            <span class="at">finespacing =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>                            <span class="at">distance =</span> <span class="st">"path"</span>)</span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a><span class="co"># option couleur (par défaut)</span></span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(densite_epic)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-24-1.svg" class="img-fluid figure-img"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-25-1.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># option épaisseur des liens du réseau</span></span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> densite_bij, </span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Densité de bijoutiers"</span>,</span>
-<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">style =</span> <span class="st">"width"</span>, </span>
-<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">adjust =</span> <span class="fl">0.5</span>)  <span class="co"># contrôler épaisseur max</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># option épaisseur des liens du réseau</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> densite_bij, </span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Densité de bijoutiers"</span>,</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">style =</span> <span class="st">"width"</span>, </span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">adjust =</span> <span class="fl">0.5</span>)  <span class="co"># contrôler épaisseur max</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-24-2.svg" class="img-fluid figure-img"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-25-2.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -940,10 +957,10 @@ Fonctions: linearKcross, linearKdot -->
 <!-- découper, pas au bon endroit - garder un test et l'expliquer et signaler les autres tests possibles -->
 <p>Il est possible de tester la densité des points en fontion d’une variable spatiale. L’opposition socio-spatiale ouest-est étant une donnée ancienne de Paris, on pourrait par exemple tester la densité des bijoutiers en fonction des x. Différents tests statistiques permettent ensuite de vérifier si le lien entre la densité du semis et la variable considérée est statistiquement significatif. Le test utilisé ci-dessous se base sur l’article de Mark Berman <span class="citation" data-cites="berman1986">(<a href="#ref-berman1986" role="doc-biblioref">1986</a>)</span>. La valeur <span class="math inline">Z_1</span>, appelée aussi test de Lawson-Waller en épidémiologie, mesure l’écart entre le semis observé et un semis suivant une répartition de Poisson. <!--; il est avec la fonction `cdf.test` d'utiliser les tests de Kolmogorov-Smirnov, Cramer-von Mises ou Anderson-Darling.--></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># bijoutiers plus présents à l'ouest ?</span></span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="co"># test de Berman</span></span>
-<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>btB <span class="ot">&lt;-</span> <span class="fu">berman.test</span>(bijoutiers_lpp, <span class="st">"x"</span>)</span>
-<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>btB</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># bijoutiers plus présents à l'ouest ?</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="co"># test de Berman</span></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>btB <span class="ot">&lt;-</span> <span class="fu">berman.test</span>(bijoutiers_lpp, <span class="st">"x"</span>)</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>btB</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Berman Z1 test of CSR in linear network
@@ -952,11 +969,11 @@ data:  covariate 'x' evaluated at points of 'bijoutiers_lpp'
 Z1 = 0.013408, p-value = 0.9893
 alternative hypothesis: two-sided</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(btB)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(btB)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-25-1.svg" class="img-fluid figure-img"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-26-1.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -964,26 +981,26 @@ alternative hypothesis: two-sided</code></pre>
 <p>Comparer la courbe en pointillé (distribution attendue si le semis homogène était fonction de la variation de x) et la courbe noire (distribution observée) montre une plus faible présence aux extremités de la zone observée ; inversement, les bijoutiers sont davantage présents au centre de l’espace considéré (cf la pente de la courbe pleine). Les traits verticaux indiquent la médiane, en pointillés pour la répartition uniforme, en trait plein pour la répartition observée.</p>
 <p>Si l’on observe une relation claire - ce qui n’est pas le cas ici - entre la densité du semis de points et une variable spatiale, il est possible de modéliser la relation entre les deux et d’étudier la qualité du modèle retenu. Le script suivant est donné uniquement à des fins pédagogiques, les résultats précédents ne montrant pas de relation significative entre semis et variable considérée.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># modéliser la relation entre présence de bijoutiers et axe ouest-est</span></span>
-<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lppm</span>(bijoutiers_lpp <span class="sc">~</span> x)</span>
-<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span>
-<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>lam <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit, <span class="at">dimyx=</span><span class="dv">512</span>)</span>
-<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lam)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># modéliser la relation entre présence de bijoutiers et axe ouest-est</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lppm</span>(bijoutiers_lpp <span class="sc">~</span> x)</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>lam <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit, <span class="at">dimyx=</span><span class="dv">512</span>)</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lam)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <!-- à commenter quand j'aurai compris... à mettre après hot spot car logique répartition uniforme et non aléatoire-->
 <p>Caractériser la répartition du semis de points peut se fait à une échelle plus fine, celle du tronçon. Dans le cas de commerces, on pourrait par exemple supposer qu’il est plus intéressant d’être à proximité des intersections (visibilité et accessibilité plus grandes).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># épiciers davantage présents à proximité des intersections ?</span></span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="co"># création du objet linfun (fonction d'un réseau linéaire)</span></span>
-<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>alongE <span class="ot">&lt;-</span> <span class="fu">linfun</span>(<span class="cf">function</span>(x,y,seg,tp) { tp }, </span>
-<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">domain</span>(epiciers_lpp))</span>
-<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a><span class="co"># relation entre semis de point et fonction</span></span>
-<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>rhoalongE <span class="ot">&lt;-</span> <span class="fu">rhohat</span>(epiciers_lpp, alongE)</span>
-<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(rhoalongE)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># épiciers davantage présents à proximité des intersections ?</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="co"># création du objet linfun (fonction d'un réseau linéaire)</span></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>alongE <span class="ot">&lt;-</span> <span class="fu">linfun</span>(<span class="cf">function</span>(x,y,seg,tp) { tp }, </span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">domain</span>(epiciers_lpp))</span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a><span class="co"># relation entre semis de point et fonction</span></span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>rhoalongE <span class="ot">&lt;-</span> <span class="fu">rhohat</span>(epiciers_lpp, alongE)</span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(rhoalongE)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-27-1.svg" class="img-fluid figure-img"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-28-1.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1034,7 +1051,7 @@ Okabe, A. et Sugihara, K. (2012). <em>Spatial Analysis along Networks: Statistic
 </div></section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Glossaire et notes</h2>
 
 <ol>
-<li id="fn1"><p>Pour simplifier la lecture, nous parlons dans la suite du texte du package <code>linnet</code>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>Pour simplifier la lecture, nous parlons dans la suite du texte du <em>package</em> <code>linnet</code>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>Voir <code>owin.object</code> de <code>spatstat.geom</code> pour plus d’information sur la notion de fenêtre d’observation.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn3"><p>Il s’agit plus précisément de l’extraction de la liste alphabétique de l’<em>Annuaire Général du Commerce</em> édité par Charles Lamy en 1839. Les informations plus précises sont inclues dans les métadonnées du dossier <em>data</em> (fichier <em>readme.md</em>).<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn4"><p>Il aurait été possible de créer un unique objet <code>lpp</code> composé de points caractérisés comme “bijoutiers” ou “épiciers”.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>

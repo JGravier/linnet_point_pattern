@@ -2,7 +2,7 @@
 
 ## Réseau de rues de Jacoubet
 ### Référence
-Les données spatiales "1836_jacoubet.shp" (format .shp et associés) sont issues de GeoHistoricalData. 2019. 
+Les données spatiales "1836_jacoubet.gpkg" sont issues de GeoHistoricalData. 2019. 
 « “Verniquet map” and “Jacoubet Atlas” Paris street networks ». Harvard Dataverse. [https://doi.org/10.7910/DVN/CCESX4](https://doi.org/10.7910/DVN/CCESX4).
 
 ### Description
